@@ -31,7 +31,7 @@ router.post('/register',  async (req,res)=>{
     try{
         const savedUser =  await user.save();
         //res.send({userId : user._id });
-        console.log('succes')
+        console.log('Signed Up')
     }
     catch(err){
         res.status(400).send(err);
@@ -65,7 +65,7 @@ router.post('/login', async (req,res) => {
     //home_register()    //
 
 
-    //console.log('Logged in !');
+    console.log('Logged in !');
 });
 
 

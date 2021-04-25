@@ -9,7 +9,7 @@ import Register from './src/client/components/Register';
 import LogIn from './src/client/components/LogIn';
 import HomePage from './src/client/components/HomePage';
 import { AuthContext} from './src/client/components/context'
-import RootStackScreen from './src/client/screens/RootStackScreen'
+
 import { Provider } from'react-redux'
 
 
