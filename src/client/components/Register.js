@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import {View,Button,TextInput } from 'react-native'
+const axios = require('axios');
+
 //wimport { withNavigation } from 'react-navigation/native';
 
 export class Register extends Component {
@@ -14,7 +16,26 @@ export class Register extends Component {
     }
 
     SignUp(){
+        const { email, password, username } = this.state;
+        axios({
+            method: 'post',
+            url: '/register',
+            baseURL: 'http://localhost:3000',
+            data: {
+              name: username,
+              email: email,
+              password: password
+            }
+            })
 
+        .then(function (reponse) {
+                //On traite la suite une fois la réponse obtenue 
+                console.log(reponse);
+        })
+        .catch(function (error) {
+                //On traite ici les erreurs éventuellement survenues
+                console.log(error["data"]);
+        });
     }
 
     render() {

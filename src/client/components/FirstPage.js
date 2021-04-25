@@ -1,4 +1,4 @@
- import React,{Component} from 'react'
+import React,{Component} from 'react'
 import { Text,Button,View,TouchableOpacity} from 'react-native'
  
  export default function FirstPage({navigation}) {
@@ -16,7 +16,7 @@ import { Text,Button,View,TouchableOpacity} from 'react-native'
             <Button
                 color="#a7b960"
                 title="Home"
-                onPress={() => navigation.navigate("Home")} />
+                onPress={() => navigation.navigate("HomePage")} />
             <Button
                 color="#f2b727"
                 title="Profile"
