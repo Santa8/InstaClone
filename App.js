@@ -1,16 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
-import React,{useEffect}from 'react';
+import React,{  useEffect }from 'react';
+//const mongoose = require('mongoose')
 
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import FirstPage from './src/client/components/FirstPage';
-import Register from './src/client/components/Register';
-import LogIn from './src/client/components/LogIn';
-import HomePage from './src/client/components/HomePage';
-import { AuthContext} from './src/client/components/context'
+import { ActivityIndicator,StyleSheet, Text, View } from 'react-native';
 
-import { Provider } from'react-redux'
+import { Provider } from 'react-redux';
+import { store, persistor } from './store';
+import { PersistGate } from 'redux-persist/integration/react';
+import jwt from "jsonwebtoken";
+import axios from "axios";
+import {setCurrentUser,logout} from "./src/actions/loginActions"
+
+import RootNavigation from './src/navigation/rootNavigation';
 
 
 const initialLoginStatut ={
@@ -19,50 +20,7 @@ const initialLoginStatut ={
   userToken: null,
 }
 
-/*const loginReducer= (prevState, action) => {
-  switch(action.type){
 
-    case 'Ret_TOKEN':
-      return{
-        ...prevState,
-        userToken = action.token,
-        isLoading: false,
-      };
-
-    case 'Login':
-      return{
-        ...prevState,
-        userName: action.id,
-        userToken = action.token,
-        isLoading: false,
-      };
-
-    case 'Logout':
-      return{
-        ...prevState,
-        userName: null,
-        userToken = null,
-        isLoading: false,
-      };  
-
-    case 'Register':
-      return{
-        ...prevState,
-        userName: action.id,
-        userToken = action.token,
-        isLoading: false,
-    };      
-  
-  }
-}*/
-
-/*const [loginStat,dispatch] = React.useReducer(loginReducer,initialLoginStatut);
-
-const authContext = React.useMemo(() => ({
-  signIn: (userName,pa)
-}*/
-
-const Stack = createStackNavigator();
 export default function App() {
 
   const [isLoading, setIsLoading] = React.useState(true);
@@ -96,20 +54,32 @@ export default function App() {
       </View>
     );
   }
+ /** if(localStorage.jwtToken){
+    if(localStorage.jwtToken){
+      axios.defaults.headers.common['Authorization']=`Bearer ${localStorage.jwtToken}`;
+    }else{
+        delete axios.defaults.headers.common['Authorization'];
+    }
+ }   
+   jwt.verify(localStorage.jwtToken,'secret',function(err,decode){
+    if(err){
+        store.dispatch(logout());
+    }else{
+     //console.log(decode);
+      store.dispatch(setCurrentUser(decode));
+    }
+   });*/
+
     
 
 
   return (
-    <AuthContext.Provider value={authContext}>
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName='FirstPage'>
-          <Stack.Screen name='FirstPage' component={FirstPage} options={{headerShown :false}} />
-          <Stack.Screen name='Register' component={Register} />
-          <Stack.Screen name='LogIn' component={LogIn} />
+    <Provider store={store}>
+       <PersistGate loading={null} persistor={persistor}>
+       <RootNavigation/>
+       </PersistGate>
+    </Provider>
+    
 
-          <Stack.Screen name='HomePage' component={HomePage} />
-      </Stack.Navigator>
-    </NavigationContainer>
-    </AuthContext.Provider>
   );
 }

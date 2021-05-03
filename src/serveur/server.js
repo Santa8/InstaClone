@@ -6,7 +6,8 @@ const https = require('httpolyglot')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
-const authRoute = require('./routes/auth');
+
+const userapi = require('./routes/userapi');
 const jwt = require('jsonwebtoken');
 
 dotenv.config();
@@ -26,7 +27,8 @@ mongoose.connect(process.env.DB_URL,
 app.use(express.json());
 app.use('/',cors());
 
-app.use('/',authRoute);
+
+app.use('/',userapi);
 
 
 app.get('/', function (req, res) {
