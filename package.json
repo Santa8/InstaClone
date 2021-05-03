@@ -26,6 +26,7 @@
     "react-native-elements": "^2.2.1",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-paper": "^3.6.0",
+    "react-native-reanimated": "^2.1.0",
     "react-native-screens": "^3.1.0",
     "react-native-tab-view": "^2.15.1",
     "react-native-vector-icons": "^6.6.0",
@@ -37,7 +38,8 @@
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "sweetalert": "^2.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

@@ -27,11 +27,7 @@ router.post('/register',  async (req,res)=>{
  
   const {error} = registerValidation(req.body);
   if(error) {
-    return res.json({
-      message:"email or username or password not correct",
-     
-  });
-    
+    res.send(error.details[0].message);
   }
 
   // check if user already exist
