@@ -15,6 +15,8 @@ import Home from '../Screens/Home/Home';
 import MainScreen from '../Screens/MainScreen';
 import EditProfile from '../Screens/EditProfile/EditProfile'
 
+import Search from '../Screens/Home/Search';
+
 
 
 
@@ -28,6 +30,10 @@ const AppNavigator = createBottomTabNavigator(
          },
          Profile : {
             screen: Profile,
+            
+         },
+         Search : {
+            screen: Search,
             
          },
          EditProfile: {
@@ -76,7 +82,7 @@ const AppNavigator = createBottomTabNavigator(
       initialRouteName: 'Auth'
     }
   );
-  
+
   const AppContainer = createAppContainer(AppSwitch)
 
 

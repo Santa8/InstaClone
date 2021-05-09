@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+//require('mongoose-type-url');
+
+
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
@@ -18,7 +21,13 @@ const userSchema = new Schema(
       maxlength: [20, "User name too long"],
       //minlength: [3, "Fist name too short"]
     },
-
+    url: {
+      type: String,
+      trim: true,
+      //required: true,
+      //maxlength: [5000, "User name too long"],
+      //minlength: [3, "Fist name too short"]
+    },    
     bio: {
       type: String,
       trim: true,

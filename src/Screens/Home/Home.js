@@ -1,7 +1,7 @@
 
 import { Component } from "react";
 import React, { useState, useRef, useEffect } from 'react';
-import {View,Button,TextInput,Text,Alert,StyleSheet, Header,Image } from 'react-native'
+import {View,Button,TextInput,Text,Alert,StyleSheet, Header,Image} from 'react-native'
 import AuthStyle from './AuthStyle'
 import { connect } from 'react-redux';
 

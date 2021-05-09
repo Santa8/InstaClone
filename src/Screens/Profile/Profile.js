@@ -1,5 +1,9 @@
+
+
+
+
 import React, { Component } from 'react'
-import { Animated,Image, Button, ScrollView, StyleSheet,Text,View,AsyncStorage} from 'react-native';
+import { Animated,Image,TextInput, Button, ScrollView, StyleSheet,Text,View,AsyncStorage} from 'react-native';
 
 //import {AsyncStorage} from "@react-native-community/async-storage"
 //import { Icon } from 'react-native-elements'
@@ -20,9 +24,11 @@ import Posts from './Posts'
 import { connect } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native'
 import axios from'axios'
+import { logout } from '../../actions/loginActions';
 
-import { Icon } from 'native-base'
 
+
+import {Icon } from 'native-base'
 
  
 class Profile extends Component {
@@ -33,19 +39,22 @@ class Profile extends Component {
         authToken:this.props.authToken,  
         id:this.props.userDetails,
         name:"",
-        username:""
+        url:"",
+        username:"",
+        urlpost:"",
+        bio:""
         
       }
       
   }
+
 
   static navigationOptions = {
 
     tabBarIcon: ({ tintColor }) => (
         <Icon name="person" style={{ color: tintColor }} />
     )
-}
-
+  }
 
   fetchUserDetails= (user_id)=> {
     console.log('dkhaaaal');
@@ -66,8 +75,11 @@ class Profile extends Component {
     .then(res=>{
         console.log(res);
         this.setState({name:res.data.results[0].name});
+        this.setState({url:res.data.results[0].url});
         this.setState({username:res.data.results[0].username});
+        this.setState({bio:res.data.results[0].bio});
         
+        //console.log(this.state.profileimage);
     })
     .catch(err=>console.log(err))
 }
@@ -121,12 +133,32 @@ class Profile extends Component {
   onPressPlace = () => {
     console.log('place')
   }
-  componentWillMount() {
-    console.log('dkhaaaal');
+  componentDidMount () {
     this.fetchUserDetails(this.props.userDetails);
-    //this.setState({
-      //postsMasonry: image.mansonry(this.props.posts, 'imageHeight'),
-   // })
+    this.willFocusSubscription = this.props.navigation.addListener(
+      'willFocus',
+      () => {
+        this.fetchUserDetails(this.props.userDetails);
+      }
+    );
+  }
+  /*componentWillMount() {
+    this.fetchUserDetails(this.props.userDetails);
+    this.willFocusSubscription = this.props.navigation.addListener(
+      'willFocus',
+      () => {
+        this.fetchUserDetails(this.props.userDetails);
+      }
+    );
+  } */
+  componentWillUnmount() {
+    this.willFocusSubscription.remove();
+  } 
+  
+
+  LogOut = () =>{
+    this.props.logout();
+     this.props.navigation.navigate('LogIn');
   }
   handleIndexChange = index => {
     this.setState({
@@ -192,23 +224,23 @@ class Profile extends Component {
         <View style={styles.userRow}>
               <Image
                 style={styles.userImage}
-                source={ImageProfil}
+                source={{uri:this.state.url}}
               />
              </View>
+             
           </View>
           
           <View style={styles.item2}>
             <View style={{ height: 70, marginTop: 10 , marginRight:50}}>
             <Button
           title="logout" 
-          onPress={() => this.props.navigation.navigate('LogIn')} 
+          onPress={this.LogOut} 
         />
             <Button
           title="Edit Profile" 
           onPress={() => this.props.navigation.navigate('EditProfile')} 
         />
-            </View>
-          
+    </View>
           <View style={styles.userRow}>
                
                
@@ -219,10 +251,10 @@ class Profile extends Component {
                   </View>
                   <View style={styles.userNameRow}>
                  
-                      <Text style={styles.userNameText}> {this.state.username}</Text>
+                      <Text style={styles.userNameText}>@{this.state.username}</Text>
                   </View>
                   <View style={styles.userBioRow}>
-                       <Text style={styles.userBioText}>ELEVE INGENIEUR</Text>
+                       <Text style={styles.userBioText}>{this.state.bio}</Text>
                         
                    </View>
               </View>
@@ -288,6 +320,12 @@ class Profile extends Component {
    
   }
  }
+ const mapDispatchToProps = dispatch => {
+  return {
+    // only map needed dispatches here
+    logout: () => dispatch(logout()),
+  }
+}
  
 
- export default connect(mapStatetoProps) (Profile);
+ export default connect(mapStatetoProps,mapDispatchToProps) (Profile);

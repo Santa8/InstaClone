@@ -1,14 +1,15 @@
 export default {
 
-    container: {
+
+   /* container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     
-      },
+      },*/
       //for login and signup inputs
       TextInput: {
-        height: 40,
+        height: 55,
         width: 300,
         borderColor: 'grey',
         borderBottomWidth: 1,
@@ -25,8 +26,14 @@ export default {
           color:'#0000FF',
         fontSize: 40,
         fontWeight: "bold"
-      }
+      },
 
+      container:{
+        backgroundColor:'white',
+    },
+    itemStyle:{
+        padding:10
+    },
 
 
 
