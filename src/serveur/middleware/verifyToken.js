@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const verifyToken = (req, res, next) => {
   const token = req.header("auth-token");
   console.log("koko");
-  console.log(token);
+  console.log(JSON.stringify(req.headers));
 
   if (!token) return res.status(402).send("Access Denied");
   try {

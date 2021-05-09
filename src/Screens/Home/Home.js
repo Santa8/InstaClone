@@ -14,7 +14,11 @@ import { connect } from "react-redux";
 const styles1 = StyleSheet.create({ ...AuthStyle });
 import { SearchBar } from "react-native-elements";
 
-function Home(props) {}
+function Home(props) {
+  if (!isLogedIn()) {
+    props.navigation.navigate("LogIn");
+  }
+}
 
 const mapStateToProps = (state) => {
   return {

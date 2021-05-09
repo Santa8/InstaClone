@@ -20,3 +20,10 @@ export const tokenConfig = () => {
 
   return config;
 };
+
+export const isLogedIn = () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    return true;
+  } else return false;
+};
