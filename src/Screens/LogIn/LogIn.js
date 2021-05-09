@@ -1,19 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
-import {View,Button,TextInput,Text,Alert,StyleSheet } from 'react-native'
-const axios = require('axios');
-import { connect } from 'react-redux';
-import AuthStyle from './AuthStyle'
-const styles = StyleSheet.create({ ...AuthStyle})
+import React, { useState, useRef, useEffect } from "react";
+import { View, Button, TextInput, Text, Alert, StyleSheet } from "react-native";
+const axios = require("axios");
+import { connect } from "react-redux";
+import AuthStyle from "./AuthStyle";
+const styles = StyleSheet.create({ ...AuthStyle });
 
-import { login } from '../../actions/loginActions';
-
+import { login } from "../../actions/loginActions";
 
 function LogIn(props) {
-
-
-    
-
-    const [email, putEmail] = useState("");
+  const [email, putEmail] = useState("");
   const [password, putPassword] = useState("");
 
   // useRef hook to check whether the component has just mounted or updated
@@ -27,7 +22,7 @@ function LogIn(props) {
     if (didMountRef.current) {
       // if login success, go to home screen
       if (props.isAuth) {
-        props.navigation.navigate('Home');
+        props.navigation.navigate("Register");
       } else if (!props.isAuth && !props.isLoading) {
         Alert.alert(props.errMsg);
       }
@@ -40,66 +35,56 @@ function LogIn(props) {
   const loginHandler = () => {
     const loginData = {
       email: email,
-      password: password
-    }
+      password: password,
+    };
     // calling login() dispatch function
     props.login(loginData);
-  }
+  };
 
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>INPGRAM </Text>
+      <Text style={styles.titleText}>Login</Text>
+      <TextInput
+        style={styles.TextInput}
+        placeholder="Email"
+        id="email"
+        onChangeText={(text) => putEmail(text)}
+      />
+      <TextInput
+        style={styles.TextInput}
+        id="password"
+        placeholder="Password"
+        secureTextEntry={true}
+        onChangeText={(text) => putPassword(text)}
+      />
 
-    
- 
+      <Button onPress={loginHandler} title="Log In" />
+      <Button
+        onPress={() => props.navigation.navigate("Register")}
+        title="Sign Up"
+      />
+      <Button
+        onPress={() => props.navigation.navigate("Home")}
+        title="Passage"
+      />
+    </View>
+  );
+}
 
-        return (
-            
-            <View style={styles.container}>
-                <Text style={styles.title}>INPGRAM </Text>
-                <Text style={styles.titleText}>Login</Text>
-                <TextInput style={styles.TextInput}
-                    placeholder="Email"
-                    id='email' 
-                    onChangeText={text => putEmail(text)}
-                />
-                <TextInput style={styles.TextInput}
-                   id='password' placeholder='Password' secureTextEntry={true} onChangeText={text => putPassword(text)}
-                />  
-                
-                <Button
-                onPress={loginHandler }
-                   title="Log In"  
-                /> 
-                <Button
-                    onPress={() => props.navigation.navigate('Register')} 
-                    title="Sign Up"  
-                /> 
-                <Button
-                    onPress={() => props.navigation.navigate('Home')} 
-                    title="Passage"  
-                />                          
-            </View>
-           
-        );
-    }
-    
-    const mapStateToProps = state => {
-        return {
-          // only map needed states here
-          isLoading: state.loginReducer.isLoading,
-          isAuth: state.loginReducer.isAuth,
-          errMsg: state.loginReducer.errMsg,
-        }
-      }
-      const mapDispatchToProps = dispatch => {
-        return {
-          // only map needed dispatches here
-          login: loginData => dispatch(login(loginData)),
-        }
-      }
-      
+const mapStateToProps = (state) => {
+  return {
+    // only map needed states here
+    isLoading: state.loginReducer.isLoading,
+    isAuth: state.loginReducer.isAuth,
+    errMsg: state.loginReducer.errMsg,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    // only map needed dispatches here
+    login: (loginData) => dispatch(login(loginData)),
+  };
+};
+
 export default connect(mapStateToProps, mapDispatchToProps)(LogIn);
-
-
-
-
-
-

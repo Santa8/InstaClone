@@ -14,8 +14,7 @@ import PropTypes from 'prop-types'
 import { image } from './utils'
 import profileStyles from './ProfileStyle'
 export const ImageProfil = require('./images/photo_cv.jpg'); 
-const styles = StyleSheet.create({ ...profileStyles })
-import {Item,Input} from 'native-base'
+const styles = StyleSheet.create({ ...profileStyles });
 import Posts from './Posts'
 import { connect } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native'

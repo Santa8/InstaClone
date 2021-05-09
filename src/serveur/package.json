@@ -18,7 +18,8 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "http-errors": "~1.6.3",
+    "express-async-handler": "^1.1.4",
+    "http-errors": "^1.6.3",
     "httpolyglot": "^0.1.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.3"

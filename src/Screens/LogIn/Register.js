@@ -83,42 +83,48 @@ function Register(props) {
 
   
         return (
-            <View style={styles.container}>
-                <Text style={styles.title}>INPGRAM </Text>
-                <Text style={styles.titleText}>SignUp  </Text>
+          <View style={styles.container}>
+            <Text style={styles.title}>INPGRAM </Text>
+            <Text style={styles.titleText}>SignUp </Text>
             <View>
-                <TextInput style={styles.TextInput}
-                    placeholder="email"
-                    onChangeText={text => setEmail(text)}
-                    value={email} 
-                />
-                <TextInput style={styles.TextInput}
-                    placeholder="name"
-                    onChangeText={ text => setName(text)}
-                    value={name} 
-                />
-                <TextInput style={styles.TextInput}
-                    placeholder="username"
-                    onChangeText={ text => setUsername(text)}
-                    value={username} 
-                />
-                <TextInput style={styles.TextInput}
-                    placeholder="password"
-                    secureTextEntry={true}
-                    onChangeText={ text => setPassword(text)}
-                    value={password} 
-                />  
-                <Button style={styles.TextInput}
-                    onPress={signupHandler} 
-                    title="Sign Up"  
-                />  
-                <Button style={styles.TextInput}
-                    onPress={() => props.navigation.navigate('LogIn')} 
-                    title="LogIn"  
-                />                          
+              <TextInput
+                style={styles.TextInput}
+                placeholder="email"
+                onChangeText={(text) => setEmail(text)}
+                value={email}
+              />
+              <TextInput
+                style={styles.TextInput}
+                placeholder="username"
+                onChangeText={(text) => setUsername(text)}
+                value={username}
+              />
+                <TextInput
+                style={styles.TextInput}
+                placeholder="name"
+                onChangeText={(text) => setName(text)}
+                value={name}
+              />
+              <TextInput
+                style={styles.TextInput}
+                placeholder="password"
+                secureTextEntry={true}
+                onChangeText={(text) => setPassword(text)}
+                value={password}
+              />
+              <Button
+                style={styles.TextInput}
+                onPress={signupHandler}
+                title="Sign Up"
+              />
+              <Button
+                style={styles.TextInput}
+                onPress={() => props.navigation.navigate("LogIn")}
+                title="LogIn"
+              />
             </View>
-            </View>
-        )
+          </View>
+        );
     
 }
 

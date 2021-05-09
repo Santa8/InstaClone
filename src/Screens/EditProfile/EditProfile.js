@@ -6,7 +6,6 @@ import {View, Text,Image, Button,TextInput, StyleSheet,Alert,AsyncStorage} from 
 
 import EditStyle from './EditStyle'
 //mport { Item } from 'react-native-paper/lib/typescript/src/components/List/List';
-import {Item,Input} from 'native-base'
 import { connect } from 'react-redux';
 export const ImageProfil = require('./imagea.jpeg'); 
 const styles = StyleSheet.create({ ...EditStyle})
