@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 export const ImageProfil = require('./imagea.jpeg'); 
 const styles = StyleSheet.create({ ...EditStyle})
 import axios from'axios'
+import { Icon } from 'native-base'
 
 class EditProfile extends Component {
 
@@ -24,6 +25,14 @@ class EditProfile extends Component {
       }
       
   }
+
+
+  static navigationOptions = {
+
+    tabBarIcon: ({ tintColor }) => (
+      <Icon name="ios-pencil" style={{ color: tintColor }} />
+    )
+}
 
   fetchUserDetails= (user_id)=> {
    

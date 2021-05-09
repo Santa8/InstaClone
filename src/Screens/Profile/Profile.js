@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native'
 import axios from'axios'
 
+import { Icon } from 'native-base'
 
 
  
@@ -37,6 +38,14 @@ class Profile extends Component {
       }
       
   }
+
+  static navigationOptions = {
+
+    tabBarIcon: ({ tintColor }) => (
+        <Icon name="person" style={{ color: tintColor }} />
+    )
+}
+
 
   fetchUserDetails= (user_id)=> {
     console.log('dkhaaaal');

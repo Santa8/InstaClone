@@ -3,54 +3,68 @@
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
 
+import React, { useState, useRef, useEffect } from 'react';
+import {View,Button,TextInput,Text,Alert,StyleSheet, Platform } from 'react-native'
+
 //import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import LogIn from '../Screens/LogIn/LogIn';
 import Register from '../Screens/LogIn/Register';
 import Profile from '../Screens/Profile/Profile';
 import Home from '../Screens/Home/Home';
+import MainScreen from '../Screens/MainScreen';
 import EditProfile from '../Screens/EditProfile/EditProfile'
+
+
 
 
 
 const AppNavigator = createBottomTabNavigator(
     {
         
-       Home : {
+        Home : {
             screen: Home,
-            navigationOptions:{
-                header :null
-             }
+           
          },
          Profile : {
             screen: Profile,
-            navigationOptions:{
-                header :null
-             }
+            
          },
          EditProfile: {
             screen: EditProfile,
-            navigationOptions:{
-                header :null
-             }
-         },
+            
+         } },
+         {
+            animationEnabled: true,
+            swipeEnabled: true,
+            tabBarPosition: "bottom",
+            tabBarOptions: {
+                style: {
+                    ...Platform.select({
+                        android: {
+                            backgroundColor: 'white'
+                        }
+                    })
+                },
+                activeTintColor: '#000',
+                inactiveTintColor: '#d1cece',
+                showLabel: false,
+                showIcon: true
+            }
+        }
   
-               }
+               
                       );
   
   const AuthNavigator = createStackNavigator(
     {
         LogIn : {
             screen: LogIn,
-            navigationOptions:{
-                header :null
-             }
+            
          },
          Register : {
             screen: Register,
-            navigationOptions:{
-                header :null
-             }
+           
          },
         }
   );
@@ -59,11 +73,12 @@ const AppNavigator = createBottomTabNavigator(
       App: AppNavigator
     },
     {
-      
       initialRouteName: 'Auth'
     }
   );
+  
   const AppContainer = createAppContainer(AppSwitch)
+
 
   export default AppContainer
  

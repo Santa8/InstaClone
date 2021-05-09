@@ -1,54 +1,75 @@
+
+import { Component } from "react";
 import React, { useState, useRef, useEffect } from 'react';
-import {View,Button,TextInput,Text,Alert,StyleSheet } from 'react-native'
+import {View,Button,TextInput,Text,Alert,StyleSheet, Header,Image } from 'react-native'
 import AuthStyle from './AuthStyle'
 import { connect } from 'react-redux';
-const styles = StyleSheet.create({ ...AuthStyle})
 
 
 
-function Home(props) {
 
-    /*useEffect(() => {
-        setTimeout(() => {
-          props.navigation.navigate(props.authToken ? 'App' : 'Auth');
-        }, 20000);
-      }, []);*/
+import { Container, Content, Icon } from 'native-base'
 
-      //const didMountRef = useRef(false);
-      //const user_id = props.authToken;
+import instalogo from './insta.png'
 
-      /*fetchUserDetails=(user_id)=>{
-        //console.log(user_id);
-        axios.get("http://localhost:3000/getUserDetails/"+user_id,{
-            headers: {
-                "content-type": "application/json"
-              }
-        }).then(res=>{
-            console.log(res);
-            this.setState({email:res.data.results[0].email});
-            this.setState({profileImage:res.data.results[0].profileImage})
-        })
-        .catch(err=>console.log(err))
-    }*/
+import dm from './dm.png'
 
-    return (
+import PostComponent from './PostComponent'
+
+
+
+
+class Home extends Component {
+
+
+    static navigationOptions = {
+
+        tabBarIcon: ({ tintColor }) => (
+            <Icon name="ios-home" style={{ color: tintColor }} />
+        )
+    }
+    
+
+    render() {
+        return (
+            <View style={{flex:1, height :100, backgroundColor : "white"}}>
+
+                
+                <Image source = {instalogo} style = {{width : 120 , height : 35 ,marginLeft : 20 , tintColor : "black", marginTop : 10 , marginBottom :10}}   ></Image>
+                <Image source = {dm} style = {{width : 25 , height : 25 , marginRight : 20 , alignSelf : "flex-end" , tintColor : "black", marginTop : -40 }}   ></Image>
             
-        <View style={styles.container}>
-            <Text> {props.authToken}</Text>
-            <Button
-                onPress={() => props.navigation.navigate('Profile')} 
-                title="Profil"  
-            />  
-             <Button
-                onPress={() => props.navigation.navigate('LogIn')} 
-                title="Retour"  
-            />                          
-        </View>
-       
-    );
+                <Container style= {styles.container}>
+                <Content>
+                    <PostComponent imageSource="1" likes="101" />
+                    <PostComponent imageSource="2" likes="201" />
+                    <PostComponent imageSource="3" likes="301" />
+                    
+                </Content>
+            </Container>
+            </View>
 
+           
+           
+        );
+    }
+
+
+    
+
+    
 
 }
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor : "white",
+        marginTop : 15
+    }
+});
+
+
 const mapStateToProps = state => {
     return {
         authToken: state.loginReducer.authToken,
@@ -57,4 +78,4 @@ const mapStateToProps = state => {
 
  
    
-export default connect(mapStateToProps)(Home);
+export default Home;
