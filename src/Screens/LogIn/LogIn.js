@@ -4,10 +4,13 @@ const axios = require("axios");
 import { connect } from "react-redux";
 import AuthStyle from "./AuthStyle";
 const styles = StyleSheet.create({ ...AuthStyle });
-
+import { isLogedIn } from "../../actions/AuthActions";
 import { login } from "../../actions/loginActions";
 
 function LogIn(props) {
+  if (isLogedIn()) {
+    props.navigation.navigate("Home");
+  }
   const [email, putEmail] = useState("");
   const [password, putPassword] = useState("");
 
@@ -22,7 +25,7 @@ function LogIn(props) {
     if (didMountRef.current) {
       // if login success, go to home screen
       if (props.isAuth) {
-        props.navigation.navigate("Register");
+        props.navigation.navigate("Home");
       } else if (!props.isAuth && !props.isLoading) {
         Alert.alert(props.errMsg);
       }

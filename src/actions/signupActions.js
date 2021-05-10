@@ -41,8 +41,9 @@ export const signup = (signupData) => {
         email: signupData.email,
         password: signupData.password,
       },
+
       headers: {
-        "auth-token": AsyncStorage.getItem("token"),
+        "auth-token": localStorage.getItem("token"),
       },
     })
       .then((res) => {
@@ -57,10 +58,7 @@ export const signup = (signupData) => {
         }
       })
       .catch((err) => {
-        console.log(
-          "signupActions.js, Signup Request Error: ",
-          err.response.message
-        );
+        console.log("signupActions.js, Signup Request Error: ", err);
         dispatch(signupFailure("Fail to Sign Up"));
       });
   };

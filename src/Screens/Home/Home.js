@@ -16,10 +16,33 @@ import dm from './dm.png'
 
 import PostComponent from './PostComponent'
 
+import {isLogedIn } from '../../actions/AuthActions'
+
 
 
 
 class Home extends Component {
+
+
+    verifyConnexion = () => {
+    if (!isLogedIn()) {
+      this.props.navigation.navigate("LogIn");
+    }
+   } 
+
+   componentDidMount () {
+    this.verifyConnexion();
+    this.willFocusSubscription = this.props.navigation.addListener(
+      'willFocus',
+      () => {
+        this.verifyConnexion();
+      }
+    );
+  }
+ 
+  componentWillUnmount() {
+    this.willFocusSubscription.remove();
+  } 
 
 
     static navigationOptions = {
@@ -70,11 +93,7 @@ const styles = StyleSheet.create({
 });
 
 
-const mapStateToProps = state => {
-    return {
-        authToken: state.loginReducer.authToken,
-    }
-  }
+
 
  
    

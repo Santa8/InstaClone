@@ -142,15 +142,7 @@ class Profile extends Component {
       }
     );
   }
-  /*componentWillMount() {
-    this.fetchUserDetails(this.props.userDetails);
-    this.willFocusSubscription = this.props.navigation.addListener(
-      'willFocus',
-      () => {
-        this.fetchUserDetails(this.props.userDetails);
-      }
-    );
-  } */
+ 
   componentWillUnmount() {
     this.willFocusSubscription.remove();
   } 

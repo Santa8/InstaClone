@@ -47,7 +47,10 @@ export const setCurrentUser = (userId) => {
 
 export const logout = () => {
   return function (dispatch) {
-    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("token");
+    
+    localStorage.removeItem("Id");
+
     // setAuthenticationToken(false);
     delete axios.defaults.headers.common["Authorization"];
     dispatch(setCurrentUser({}));

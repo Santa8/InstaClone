@@ -10,7 +10,7 @@ const { registerValidation, loginValidation } = require("./validation");
 const { verifyToken } = require("../middleware/verifyToken");
 //=================================================================
 // signup a new user
-router.post("/register", verifyToken, async (req, res) => {
+router.post("/register", async (req, res) => {
   // Validate data
 
   const { error } = registerValidation(req.body);
