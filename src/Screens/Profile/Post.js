@@ -9,23 +9,21 @@ const styles = StyleSheet.create({
 
 const Post = ({
   containerStyle,
-  image,
-  imageHeight,
-  imageWidth,
-  postWidth,
+  urlpost,
+  
 }) => {
   return (
     <View style={[styles.container, containerStyle]}>
-      {image && (
+      { urlpost&& (
         <Image
           style={[
             styles.postImage,
             {
-              width: postWidth*0.5,
-              height: postWidth * (imageHeight / imageWidth)*0.5,
+              width: 500*0.5,
+              height: 500 * (500/ 500)*0.5,
             },
           ]}
-          source={ImageProfil }
+          source={{uri: urlpost}}
         />
       )}
     </View>
@@ -34,18 +32,14 @@ const Post = ({
 
 Post.propTypes = {
   containerStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
-  image: PropTypes.string,
-  imageHeight: PropTypes.number,
-  imageWidth: PropTypes.number,
-  postWidth: PropTypes.number,
+  urlpost: PropTypes.string,
+  
 }
 
 Post.defaultProps = {
   containerStyle: {},
-  image: null,
-  imageHeight: null,
-  imageWidth: null,
-  postWidth: null,
+  urlpost: null,
+  
 }
 
 export default Post

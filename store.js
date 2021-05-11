@@ -6,12 +6,14 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import loginReducer from './src/reducers/loginReducer';
 import signupReducer from './src/reducers/signupReducer';
+import postsReducer from './src/reducers/postsReducer';
 
 // rootRecuder is now being put in this file (Store.js) 
 const rootReducer = combineReducers({
 
   loginReducer: loginReducer,
   signupReducer: signupReducer,
+  postsReducer: postsReducer,
 
 });
 

@@ -35,6 +35,10 @@ const userSchema = new Schema(
       maxlength: [20, "User name too long"],
       //minlength: [3, "Fist name too short"]
     },
+    posts:{
+      type: Array,
+      default : []
+    },
     website: {
       type: String,
       trim: true,

@@ -22,8 +22,8 @@ const mansonry = (items, propName) => {
     {
       leftCol: [items[0]],
       rightCol: [items[1]],
-      leftHeight: items[0].imageHeight,
-      rightHeight: items[1].imageHeight,
+      leftHeight: 826,
+      rightHeight: 826,
     }
   )
 }
