@@ -21,9 +21,8 @@ class Posts extends Component {
     containerStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
     posts: PropTypes.arrayOf(
       PropTypes.shape({
-        image: PropTypes.string,
-        imageHeight: PropTypes.number,
-        imageWidth: PropTypes.number,
+        urlpost: PropTypes.string,
+        
       })
     ).isRequired,
   }
@@ -42,7 +41,7 @@ class Posts extends Component {
         renderItem={list => {
           return (
             <Post
-              key={`post-${list.item.id} `}
+              key={`post-${list.item.Id} `}
               containerStyle={styles.postContainer}
               postWidth={postContainerWidth}
               {...list.item}

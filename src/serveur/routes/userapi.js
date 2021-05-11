@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const createError = require("http-errors");
 const joi = require("@hapi/joi");
 const jwt = require("jsonwebtoken");
+const { v4 : uuidV4} = require('uuid');
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 const User = require("../models/user.model");
@@ -95,7 +96,7 @@ router.post(
 router.post("/getUserDetails",function(req,res){
   console.log('dkhaaaal');
   var id=req.body.userid;
-  var getUserDetails= User.find({_id:id},{'name':1,'username':1,'bio':1,'website':1,'url':1});
+  var getUserDetails= User.find({_id:id},{'name':1,'username':1,'bio':1,'website':1,'url':1,'posts':1});
   getUserDetails.exec()
   .then(data=>{
       res.status(200).json({
@@ -153,7 +154,7 @@ router.post("/getUserDetails",function(req,res){
      });
 
 
-//upload post
+//upload profile photo
 
 router.post("/uploadprofilephoto",function(req,res){
            
@@ -165,6 +166,46 @@ router.post("/uploadprofilephoto",function(req,res){
 
     user.url= url;
     
+     
+    user.save()
+     .then(doc =>{
+          res.status(201).json({
+
+              message:"POST UPLOADED",
+              results:doc
+
+
+          }); 
+
+     })
+     .catch(error=>{
+       res.json(error);
+
+     })
+
+
+
+
+  })
+
+
+
+
+
+   });
+
+   //upload post
+
+router.post("/uploadpost",function(req,res){
+           
+  var id=req.body.id;
+  var  urlpost=req.body. urlpost;
+  
+
+  User.findById(id, function(error,user){
+
+    user.posts.push({Id:uuidV4(), urlpost:urlpost});
+     
      
     user.save()
      .then(doc =>{

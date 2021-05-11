@@ -3,10 +3,11 @@
 
 
 import React, { Component } from 'react'
-import { Animated,Image,TextInput, Button, ScrollView, StyleSheet,Text,View,AsyncStorage} from 'react-native';
+import { Animated,Image,TextInput, Button, ScrollView,Alert ,StyleSheet,Text,View,AsyncStorage} from 'react-native';
 
 //import {AsyncStorage} from "@react-native-community/async-storage"
 //import { Icon } from 'react-native-elements'
+import {uploadpost} from '../../actions/postsActions';
 
 import {
   TabView,
@@ -42,7 +43,19 @@ class Profile extends Component {
         url:"",
         username:"",
         urlpost:"",
-        bio:""
+        bio:"",
+        post:"",
+        posts:[],
+        tabs: {
+          index: 0,
+          routes: [
+            
+            { key: '1', title: 'Posts', count: 2},
+            { key: '2', title: 'following', count: '192 M' },
+            { key: '3', title: 'followers', count: '83' },
+          ],
+        },
+        postsMasonry: {},
         
       }
       
@@ -78,12 +91,38 @@ class Profile extends Component {
         this.setState({url:res.data.results[0].url});
         this.setState({username:res.data.results[0].username});
         this.setState({bio:res.data.results[0].bio});
-        
+        this.setState({post:res.data.results[0].posts[0].urlpost});
+        this.setState({posts:res.data.results[0].posts});
+          this.ModifyNumber();
         //console.log(this.state.profileimage);
     })
     .catch(err=>console.log(err))
 }
+ModifyNumber= () => {
 
+  let routes = [...this.state.tabs.routes];
+  
+  let tab = {
+    ...routes[1],
+    count: this.state.posts.length
+}
+routes[1]=tab;
+
+this.setState({tabs});
+
+}
+
+UploadPost = () => {
+
+  const Data = {
+   id:this.props.userDetails,
+   urlpost: this.state.urlpost
+    
+  }
+  // calling signup() dispatch
+  
+  this.props.uploadpost(Data);
+}
 /*ComponentDidMount () {
   console.log('dkhaaaal'); 
     this.fetchUserDetails(this.props.userDetails);
@@ -117,7 +156,7 @@ class Profile extends Component {
     tabContainerStyle: {},
   }*/
 
-  stat = {
+  /*stat = {
     tabs: {
       index: 0,
       routes: [
@@ -129,12 +168,14 @@ class Profile extends Component {
     },
     postsMasonry: {},
   }
-
+*/
   onPressPlace = () => {
     console.log('place')
   }
   componentDidMount () {
+    
     this.fetchUserDetails(this.props.userDetails);
+   
     this.willFocusSubscription = this.props.navigation.addListener(
       'willFocus',
       () => {
@@ -142,11 +183,30 @@ class Profile extends Component {
       }
     );
   }
- 
+  componentDidUpdate() {
+    if (this.props.isUploaded) {
+      Alert.alert('POST UPLOADED');
+      this.props.navigation.navigate('Profile');
+    }
+     if (!this.props.isUploaded && !this.props.isLoading) {
+      Alert.alert(this.props.errMsg);
+    }
+  };
+  componentWillReceiveProps(newProps) {
+    if (newProps.isUploaded !== this.props.isUploaded) {
+      console.log('bibi')
+      this.fetchUserDetails(this.props.userDetails);
+    }
+  }
   componentWillUnmount() {
+   
     this.willFocusSubscription.remove();
   } 
-  
+  /*componentWillMount() {
+    this.setState({
+      //postsMasonry: image.mansonry(this.state.posts, 'imageHeight'),
+    })
+  }*/
 
   LogOut = () =>{
     this.props.logout();
@@ -155,7 +215,7 @@ class Profile extends Component {
   handleIndexChange = index => {
     this.setState({
       tabs: {
-        ...this.stat.tabs,
+        ...this.state.tabs,
         index,
       },
     })
@@ -199,7 +259,7 @@ class Profile extends Component {
 
     switch (key) {
         case '1':
-            //return this.renderMansonry2Col()
+            return this.renderMansonry2Col()
       
       default:
         return <View />
@@ -228,10 +288,24 @@ class Profile extends Component {
           title="logout" 
           onPress={this.LogOut} 
         />
-            <Button
+           { /*<Button
           title="Edit Profile" 
           onPress={() => this.props.navigation.navigate('EditProfile')} 
-        />
+        />*/}
+             
+    </View>
+    
+    <View style={styles.userRow} >
+    <TextInput style={styles.TextInputurl} style={{ height: 30, marginTop: 10 , marginBottom: 10 , marginRight:1}}
+                    placeholder="urlpost"
+                    onChangeText={ text => this.setState({urlpost: text})}
+                    value={this.state.urlpost} 
+                /> 
+                
+                <Button
+                onPress={this.UploadPost }
+                   title="upload post"  
+                />  
     </View>
           <View style={styles.userRow}>
                
@@ -244,6 +318,7 @@ class Profile extends Component {
                   <View style={styles.userNameRow}>
                  
                       <Text style={styles.userNameText}>@{this.state.username}</Text>
+                      
                   </View>
                   <View style={styles.userBioRow}>
                        <Text style={styles.userBioText}>{this.state.bio}</Text>
@@ -259,16 +334,17 @@ class Profile extends Component {
   renderMansonry2Col = () => {
     return (
       <View style={styles.masonryContainer}>
-        {/*<View>
-          <Posts
-            containerStyle={styles.sceneContainer}
-            posts={this.state.postsMasonry.leftCol}
-          />
-        </View>
         <View>
           <Posts
             containerStyle={styles.sceneContainer}
-            posts={this.state.postsMasonry.rightCol}
+           // posts={this.state.postsMasonry.leftCol}
+           posts={this.state.posts}
+          />
+        </View>
+        {/*<View>
+          <Posts
+            containerStyle={styles.sceneContainer}
+            //posts={this.state.postsMasonry.rightCol}
           />
         </View>*/}
       </View>
@@ -286,7 +362,7 @@ class Profile extends Component {
             
             <TabView
               style={[styles.tabContainer, this.props.tabContainerStyle]}
-              navigationState={this.stat.tabs}
+              navigationState={this.state.tabs}
               renderScene={this.renderScene}
               renderTabBar={this.renderTabBar}
               onIndexChange={this.handleIndexChange}
@@ -309,6 +385,9 @@ class Profile extends Component {
   return{
     authToken: state.loginReducer.authToken,
     userDetails: state.loginReducer.userDetails,
+    isLoading: state.postsReducer.isLoading,
+    isUploaded: state.postsReducer.isUploaded,
+    errMsg: state.postsReducer.errMsg,
    
   }
  }
@@ -316,6 +395,7 @@ class Profile extends Component {
   return {
     // only map needed dispatches here
     logout: () => dispatch(logout()),
+    uploadpost: Data => dispatch(uploadpost(Data)),
   }
 }
  

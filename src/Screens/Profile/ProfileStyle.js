@@ -10,8 +10,8 @@ export default {
   headerContainer: {
     
     backgroundColor: '#FFF',
-    marginBottom: 10,
-    marginTop: 45,
+    marginBottom: 15,
+    marginTop: 25,
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',

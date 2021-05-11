@@ -63,3 +63,41 @@ export const uploadprofilephoto = (Data)=> {
       });
   }
 }
+export const uploadpost = (Data)=> {
+  
+  return   dispatch => {
+   dispatch(uploadRequest());
+    //const signupUri = 'http://localhost:3000/register';
+       axios({
+            method: 'post',
+            url: '/uploadpost',
+            baseURL: 'http://localhost:3000',
+            data: { 
+              id:Data.id,  
+              urlpost:Data.urlpost
+              
+             
+              }
+          })
+      .then(res => {
+        const message=res.data.message;
+        console.log("Status: ", res.status);
+        console.log(res.data);
+        if(message==='POST UPLOADED'){
+
+          dispatch(uploadSuccess(Data));
+        }
+        else{
+          console.log(message);
+          dispatch(uploadFailure(message));
+
+
+        }
+        
+      })
+      .catch(err => {
+        console.log("postsActions.js, upload Request Error: ", err.message);
+        dispatch(uploadFailure("Fail to Upload"));
+      });
+  }
+}
