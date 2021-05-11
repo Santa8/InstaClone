@@ -10,6 +10,32 @@ const { registerValidation, loginValidation } = require("./validation");
 const { verifyToken } = require("../middleware/verifyToken");
 //=================================================================
 // signup a new user
+
+
+router.post("/listUsers",async (req, res) => {
+
+
+  const list = await User.find({}, 'username');
+
+   const lista = [];
+
+   list.forEach(user => {
+
+    lista.push({"name" : user.username , "follow" : 1 })
+     
+   });
+
+
+  console.log(lista);
+
+
+  return res.send({lista});
+
+
+})
+
+
+
 router.post("/register", async (req, res) => {
   // Validate data
 

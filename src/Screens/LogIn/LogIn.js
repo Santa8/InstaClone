@@ -9,7 +9,7 @@ import { login } from "../../actions/loginActions";
 
 function LogIn(props) {
   if (isLogedIn()) {
-    props.navigation.navigate("Home");
+    props.navigation.navigate("Profile");
   }
   const [email, putEmail] = useState("");
   const [password, putPassword] = useState("");
@@ -25,7 +25,7 @@ function LogIn(props) {
     if (didMountRef.current) {
       // if login success, go to home screen
       if (props.isAuth) {
-        props.navigation.navigate("Home");
+        props.navigation.navigate("Profile");
       } else if (!props.isAuth && !props.isLoading) {
         Alert.alert(props.errMsg);
       }

@@ -20,8 +20,19 @@ const userShema = new mongoose.Schema({
         //maxlength: [20, "Password too long"],
         //minlength: [6, "Password too short"]
       },
+
+      followers: {
+        type: Array,
+        default : []
+      },
+
+      following: {
+        type: Array,
+        default : []
+      }
     
 })
 
 
 module.exports = mongoose.model('User', userShema);
+

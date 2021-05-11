@@ -79,6 +79,8 @@ export const login = (loginData) => {
       .then((res) => {
         if (res.data.value) {
           dispatch(loginSuccess(res.data));
+
+          console.log(res.data.token);
         } else {
           swal({
             title: res.data.message,
