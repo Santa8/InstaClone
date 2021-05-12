@@ -56,6 +56,10 @@ class Profile extends Component {
           ],
         },
         postsMasonry: {},
+
+        following : [],
+
+        followers : []
         
       }
       
@@ -93,6 +97,11 @@ class Profile extends Component {
         this.setState({bio:res.data.results[0].bio});
         this.setState({post:res.data.results[0].posts[0].urlpost});
         this.setState({posts:res.data.results[0].posts});
+
+        console.log(res.data.results[0].following);
+
+        this.setState({followers:res.data.results[0].followers});
+        this.setState({following:res.data.results[0].following});
           this.ModifyNumber();
         //console.log(this.state.profileimage);
     })
@@ -260,11 +269,54 @@ UploadPost = () => {
     switch (key) {
         case '1':
             return this.renderMansonry2Col()
+        case '2':
+          return  <View> <ScrollView>  {this.following()} </ScrollView> </View>
+        case '3':
+          return  <View> <ScrollView>  {this.followers()} </ScrollView> </View>
       
       default:
         return <View />
     }
   }
+
+
+  following = () => {
+
+
+    return this.state.following.map((user,index) => {
+      return (
+
+        <View>   
+       
+        <Text>  {user.name.username}  </Text> </View>
+            
+        
+                
+      );
+    });
+
+  }
+
+
+  followers = () => {
+
+
+    return this.state.followers.map((user,index) => {
+      return (
+
+        <View>   
+       
+        <Text>  {user.name.username}  </Text> </View>
+            
+        
+                
+      );
+    });
+
+  }
+ 
+
+
  
   renderContactHeader = () => {
     //const { avatar, name, bio } = this.props

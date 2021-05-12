@@ -13,6 +13,108 @@ const { verifyToken } = require("../middleware/verifyToken");
 // signup a new user
 
 
+router.post("/follow",async (req, res) => {
+
+
+  const id = req.body.Id;
+  const followId= req.body.followId;
+   
+  const nameFollow = await User.findById( followId , 'username');
+
+  //console.log(nameFollow);
+  const nameUser = await User.findById( id , 'username');
+
+
+  User.findById(id, function(error,user){
+
+    user.following.push({Id: followId , name: nameFollow});
+     
+     
+    user.save()
+     .then(doc =>{
+          res.status(201).json({
+
+              message:"add Following",
+              results:doc
+
+
+          }); 
+
+     })
+     .catch(error=>{
+       res.json(error);
+
+     })
+
+  })
+
+  User.findById(followId, function(error,user){
+
+    user.followers.push({Id: id , name: nameUser});
+     
+     
+    user.save()
+     /*.then(doc =>{
+          res.status(201).json({
+
+              message:"add Follower",
+              results:doc
+
+
+          }); 
+
+     })
+     .catch(error=>{
+       res.json(error);
+
+     })*/
+
+  })
+
+
+})
+
+router.post("/listPosts",async (req, res) => {
+
+   const id = req.body.Id;
+   const following = await User.findById(id, 'following');
+
+   const totalPosts = [];
+
+
+   for (let index = 0; index < following.following.length; index++) { 
+
+
+    var posts = await User.findById( following.following[index].Id , 'posts');  
+
+    console.log("yooow");
+     if (  posts.posts.length != 0   ) {
+
+      posts.posts.forEach(post => {
+          
+        totalPosts.push({"username" : following.following[index].name.username , "posts" : post.urlpost }) 
+
+        
+      });
+
+     }
+
+    //totalPosts.push({"username" : following.following[index].name , "posts" : posts }) 
+
+
+   }
+
+     
+      console.log(totalPosts);
+
+
+      return res.send({totalPosts});
+
+
+})
+
+
+
 router.post("/listUsers",async (req, res) => {
 
 
@@ -22,7 +124,7 @@ router.post("/listUsers",async (req, res) => {
 
    list.forEach(user => {
 
-    lista.push({"name" : user.username , "follow" : 1 })
+    lista.push({"name" : user.username , "follow" : 1 , "Id" : user._id  })
      
    });
 
@@ -122,13 +224,15 @@ router.post(
 router.post("/getUserDetails",function(req,res){
   console.log('dkhaaaal');
   var id=req.body.userid;
-  var getUserDetails= User.find({_id:id},{'name':1,'username':1,'bio':1,'website':1,'url':1,'posts':1});
+  var getUserDetails= User.find({_id:id},{'name':1,'username':1,'bio':1,'website':1,'url':1,'posts':1 , 'followers': 1 , 'following' :1});
   getUserDetails.exec()
   .then(data=>{
       res.status(200).json({
           message:"OK",
           results:data
       });
+
+      //console.log(data)
   })
   .catch(err=>{
       res.json(err);

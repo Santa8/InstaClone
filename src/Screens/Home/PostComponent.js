@@ -10,6 +10,9 @@ import { Card, CardItem, Thumbnail, Body, Left, Right, Button, Icon } from 'nati
 
 class PostComponent extends Component {
 
+
+    
+
     render() {
 
         const images = {
@@ -18,6 +21,7 @@ class PostComponent extends Component {
             "2": require('./naruto.jpg'),
             "3": require('./naruto.jpg')
         }
+        console.log(this.props.imageSource);
 
         return (
             <Card>
@@ -25,13 +29,13 @@ class PostComponent extends Component {
                     <Left>
                         <Thumbnail source={require('./me.jpg')} />
                         <Body>
-                            <Text> Narutoyy </Text>
+                            <Text> {this.props.username}</Text>
                             <Text note> Mai 10, 2021</Text>
                         </Body>
                     </Left>
                 </CardItem>
                 <CardItem cardBody>
-                    <Image source={images[this.props.imageSource]} style={{ height: 200, width: null, flex: 1 }} />
+                    <Image source={this.props.imageSource} style={{ height: 200, width: null, flex: 1 }} />
                 </CardItem>
                 <CardItem style={{ height: 45 }}>
                     <Left>
@@ -55,7 +59,7 @@ class PostComponent extends Component {
                 <CardItem>
                     <Body>
                         <Text>
-                            <Text style={{ fontWeight: "900" }}>Narutoy </Text>
+                            <Text style={{ fontWeight: "900" }}>{this.props.username} </Text>
                                   Saluut cavaaa
                         </Text>
                     </Body>

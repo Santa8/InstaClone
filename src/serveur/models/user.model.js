@@ -58,6 +58,15 @@ const userSchema = new Schema(
       maxlength: [30, "Email exceed the maximum length"],
       //minlength: [6, "Email invalid"]
     },
+    followers: {
+      type: Array,
+      default : []
+    },
+
+    following: {
+      type: Array,
+      default : []
+    }
 }
     
 );

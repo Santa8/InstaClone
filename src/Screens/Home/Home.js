@@ -41,7 +41,8 @@ class Home extends Component {
     super(props);
     
       this.state={
-        data : []
+        data : [],
+        posts: []
         
       }
       
@@ -69,22 +70,36 @@ class Home extends Component {
 
                 });
   };
-     
 
-   /*  loadListUsers = () => {
+
+  listPosts = () => {
+    
+     
+    axios({
+      method: "post",
+      url: "/listPosts",
+      baseURL: "http://localhost:3000",
+      data : {
+        Id: localStorage.getItem("Id"),
+      }
+    })
+      .then((res) => {
+
+
+        console.log(res.data.totalPosts);
+
+        this.setState ({ posts : res.data.totalPosts });
 
         
-      const lista = listUsers();
-
-      this.list=lista;
-      console.log(lista);
-
-      this.setState ({ data : lista  });
-
-      return lista;
 
 
-    }*/
+      })
+
+      .catch((err) => {
+        console.log(err.message);
+
+                });
+  };
 
 
 
@@ -107,6 +122,7 @@ class Home extends Component {
       }
     );
      this.listUsers();
+     this.listPosts();
   }
  
   componentWillUnmount() {
@@ -136,10 +152,74 @@ class Home extends Component {
                       <Button
                       title= { user.follow ? "unfollow"  : "follow" }
                       style={{ marginHorizontal: 5 , width : 10, height : 10 }}
+
+                      onPress ={ () => {
+                        
+                         console.log(user.Id)
+     
+                          axios({
+                            method: "post",
+                            url: "/follow",
+                            baseURL: "http://localhost:3000",
+                            data: { 
+                              Id: localStorage.getItem("Id"),
+                      
+                              followId : user.Id
+                      
+                            
+                              }
+                          })
+                            .then((res) => {
+                      
+                      
+                              //console.log(res.data.lista);
+                      
+                              console.log(res.message)
+                      
+                            })
+                      
+                            .catch((err) => {
+                              console.log(err.message);
+                      
+                                      });
+                        
+
+                      }} 
                        
                       />
           </View>
         );
+      });
+    };
+
+
+    renderPosts = posts => {
+      
+      return posts.map((post,index) => {
+        
+        var name = post.username;
+        var url = post.posts;
+
+       return (<PostComponent imageSource={url} likes="101" username = {name}/>  );
+
+       /* if(havePosts.length !=0){
+
+         
+
+          havePosts.forEach( post => {
+
+            console.log(post.urlpost);
+
+            return (
+              <View>
+              <PostComponent imageSource={post.urlpost} likes="101" username = {name}/> </View>
+            );
+            
+          });
+
+        }*/
+
+       
       });
     };
     
@@ -178,9 +258,18 @@ class Home extends Component {
                             </ScrollView>
                         </View>
                   </View>
-                    <PostComponent imageSource="1" likes="101" />
+
+                  <View>
+                 
+                  {this.renderPosts(this.state.posts)}
+
+                  </View>
+
+                    {/* <PostComponent imageSource="1" likes="101" />
                     <PostComponent imageSource="2" likes="201" />
-                    <PostComponent imageSource="3" likes="301" />
+                    <PostComponent imageSource="3" likes="301" /> */}
+
+                  
                     
                 </Content>
             </Container>
