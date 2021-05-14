@@ -41,6 +41,7 @@ class Profile extends Component {
         id:this.props.userDetails,
         name:"",
         url:"",
+        description:"",
         username:"",
         urlpost:"",
         bio:"",
@@ -50,7 +51,7 @@ class Profile extends Component {
           index: 0,
           routes: [
             
-            { key: '1', title: 'Posts', count: 2},
+            { key: '1', title: 'Posts', count: '5'},
             { key: '2', title: 'following', count: '192 M' },
             { key: '3', title: 'followers', count: '83' },
           ],
@@ -96,28 +97,28 @@ class Profile extends Component {
         this.setState({username:res.data.results[0].username});
         this.setState({bio:res.data.results[0].bio});
         this.setState({post:res.data.results[0].posts[0].urlpost});
-        this.setState({posts:res.data.results[0].posts});
+        
 
-        console.log(res.data.results[0].following);
+        const reversePosts=res.data.results[0].posts.reverse();
+
+        this.setState({posts:reversePosts});
 
         this.setState({followers:res.data.results[0].followers});
         this.setState({following:res.data.results[0].following});
-          this.ModifyNumber();
+       // this.ModifyNumber(this.state.tabs);
+
         //console.log(this.state.profileimage);
     })
     .catch(err=>console.log(err))
 }
-ModifyNumber= () => {
+ModifyNumber= (tabs) => {
 
-  let routes = [...this.state.tabs.routes];
-  
-  let tab = {
-    ...routes[1],
-    count: this.state.posts.length
-}
-routes[1]=tab;
-
-this.setState({tabs});
+       var newtabs=[...tabs];
+       console.log(newtabs)
+       var newroutes=[...newtabs.routes];
+        var newroute=[...newroutes[0]];
+        newroute.count=reversePosts.length;
+        this.setState({tabs:newtabs});
 
 }
 
@@ -125,59 +126,17 @@ UploadPost = () => {
 
   const Data = {
    id:this.props.userDetails,
-   urlpost: this.state.urlpost
+   urlpost: this.state.urlpost,
+   description:this.state.description,
+   date:new Date().toISOString()
     
   }
   // calling signup() dispatch
   
   this.props.uploadpost(Data);
 }
-/*ComponentDidMount () {
-  console.log('dkhaaaal'); 
-    this.fetchUserDetails(this.props.userDetails);
-
-    //AsyncStorage.getItem('name').then((value)=> this.setState({'name':value}));
-   
-     //AsyncStorage.getItem('username').then((value)=> this.setState({'username':value}));
-    //AsyncStorage.getItem('website').then((value)=> this.setState({'website':value}));
-    //AsyncStorage.getItem('bio').then((value)=> this.setState({'bio':value}));
-
-  }*/
 
 
-/*useEffect(() => {
-  setTimeout(() => {
-    props.navigation.navigate(props.authToken ? 'App' : 'Auth');
-  }, 2000);
-}, []);*/
-
-
-
-    /*static propTypes = {
-        
-        bio: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired
-        
-      }
-
-  static defaultProps = {
-    containerStyle: {},
-    tabContainerStyle: {},
-  }*/
-
-  /*stat = {
-    tabs: {
-      index: 0,
-      routes: [
-        
-        { key: '1', title: 'Posts', count: 2},
-        { key: '2', title: 'following', count: '192 M' },
-        { key: '3', title: 'followers', count: '83' },
-      ],
-    },
-    postsMasonry: {},
-  }
-*/
   onPressPlace = () => {
     console.log('place')
   }
@@ -185,13 +144,16 @@ UploadPost = () => {
     
     this.fetchUserDetails(this.props.userDetails);
    
+   
     this.willFocusSubscription = this.props.navigation.addListener(
       'willFocus',
       () => {
         this.fetchUserDetails(this.props.userDetails);
+        
       }
     );
   }
+
   componentDidUpdate() {
     if (this.props.isUploaded) {
       Alert.alert('POST UPLOADED');
@@ -201,16 +163,19 @@ UploadPost = () => {
       Alert.alert(this.props.errMsg);
     }
   };
+
   componentWillReceiveProps(newProps) {
     if (newProps.isUploaded !== this.props.isUploaded) {
       console.log('bibi')
       this.fetchUserDetails(this.props.userDetails);
     }
   }
+
   componentWillUnmount() {
    
     this.willFocusSubscription.remove();
   } 
+
   /*componentWillMount() {
     this.setState({
       //postsMasonry: image.mansonry(this.state.posts, 'imageHeight'),
@@ -353,6 +318,12 @@ UploadPost = () => {
                     onChangeText={ text => this.setState({urlpost: text})}
                     value={this.state.urlpost} 
                 /> 
+
+<TextInput style={styles.TextInputurl} style={{ height: 30, marginTop: 10 , marginBottom: 10 , marginRight:1}}
+                    placeholder="Description"
+                    onChangeText={ text => this.setState({description: text})}
+                    value={this.state.description} 
+                />            
                 
                 <Button
                 onPress={this.UploadPost }
@@ -391,6 +362,7 @@ UploadPost = () => {
             containerStyle={styles.sceneContainer}
            // posts={this.state.postsMasonry.leftCol}
            posts={this.state.posts}
+           userid={this.state.id}
           />
         </View>
         {/*<View>

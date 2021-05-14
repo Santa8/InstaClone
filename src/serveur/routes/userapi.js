@@ -329,12 +329,14 @@ router.post("/uploadprofilephoto",function(req,res){
 router.post("/uploadpost",function(req,res){
            
   var id=req.body.id;
-  var  urlpost=req.body. urlpost;
+  var  urlpost=req.body.urlpost;
+  var  description=req.body.description;
+  var  date=req.body.date;
   
 
   User.findById(id, function(error,user){
 
-    user.posts.push({Id:uuidV4(), urlpost:urlpost});
+    user.posts.push({Id:uuidV4(), urlpost:urlpost, description:description, date:date});
      
      
     user.save()
@@ -363,6 +365,68 @@ router.post("/uploadpost",function(req,res){
 
 
    });
+ 
+   router.post("/UpdatePost",function(req,res){
+           
+    var userid=req.body.userid;
+    var postid=req.body.postid;
+    var description=req.body.description;
+    
+    User.findById(userid, function(error,user){
+
+      /*for(let i=0;i< user.posts.length;i++){
+
+        if( user.posts[i].Id === postid ){
+              user.posts[i].description=description
+              var a=i;
+              //console.log(user.posts[i])
+        }
+        
+      }*/
+      console.log(description)
+    
+      user.updateOne({'posts.Id': postid }, 
+      {'$set': { 'posts.$.description':  description   }}
+      
+      )
+      user.save()
+       .then(doc =>{
+            res.json({
+
+                message:"POST UPDATED",
+                results:doc
+
+
+            }); 
+
+       })
+       .catch(error=>{
+         res.json(error);
+
+       })
+      
+
+
+
+    })
+    User.findById(userid, function(error,user){
+      for(let i=0;i< user.posts.length;i++){
+
+        if( user.posts[i].Id === postid ){
+             
+              console.log(user.posts[i])
+        }
+        
+      }
+     
+    })
+
+
+   
+
+
+
+     });
 
 module.exports = router;
 

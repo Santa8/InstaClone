@@ -22,9 +22,13 @@ class Posts extends Component {
     posts: PropTypes.arrayOf(
       PropTypes.shape({
         urlpost: PropTypes.string,
+        description:PropTypes.string,
+        date:PropTypes.string,
+
         
       })
     ).isRequired,
+    userid:PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
   }
 
   static defaultProps = {
@@ -43,6 +47,7 @@ class Posts extends Component {
             <Post
               key={`post-${list.item.Id} `}
               containerStyle={styles.postContainer}
+              userid={this.props.userid}
               postWidth={postContainerWidth}
               {...list.item}
             />

@@ -74,7 +74,9 @@ export const uploadpost = (Data)=> {
             baseURL: 'http://localhost:3000',
             data: { 
               id:Data.id,  
-              urlpost:Data.urlpost
+              urlpost:Data.urlpost,
+              description:Data.description,
+              date:Data.date,
               
              
               }
