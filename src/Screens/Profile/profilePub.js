@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 import { uploadpost } from "../../actions/postsActions";
+import { baseURL } from "../../constants";
 
 import {
   TabView,
@@ -87,7 +88,7 @@ class Profile extends Component {
     axios({
       method: "post",
       url: "/getUserDetails",
-      baseURL: "http://localhost:3000",
+      baseURL: baseURL,
       data: {
         userid: user_id,
       },

@@ -14,6 +14,7 @@ import {
 import AsyncStorage from "@react-native-community/async-storage";
 //import { Icon } from 'react-native-elements'
 import { uploadpost } from "../../actions/postsActions";
+import { baseURL } from "../../constants";
 
 import {
   TabView,

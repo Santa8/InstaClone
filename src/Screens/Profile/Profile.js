@@ -14,6 +14,7 @@ import {
 import AsyncStorage from "@react-native-community/async-storage";
 //import { Icon } from 'react-native-elements'
 import { uploadpost } from "../../actions/postsActions";
+import swal from "sweetalert";
 
 import {
   TabView,
@@ -31,6 +32,7 @@ import Posts from "./Posts";
 import { connect } from "react-redux";
 import axios from "axios";
 import { logout } from "../../actions/loginActions";
+import { baseURL } from "../../constants";
 
 import { Icon } from "native-base";
 
@@ -80,7 +82,7 @@ class Profile extends Component {
     axios({
       method: "post",
       url: "/getUserDetails",
-      baseURL: "http://localhost:3000",
+      baseURL: baseURL,
       data: {
         userid: user_id,
       },
@@ -99,9 +101,18 @@ class Profile extends Component {
 
         this.setState({ followers: res.data.results[0].followers });
         this.setState({ following: res.data.results[0].following });
-        // this.ModifyNumber(this.state.tabs);
-
-        //console.log(this.state.profileimage);
+        var followersnumber = this.state.followers.length;
+        var followingnumber = this.state.following.length;
+        var newroutes = [...this.state.tabs.routes];
+        newroutes[0].count = this.state.posts.length - 1;
+        newroutes[1].count = followingnumber;
+        newroutes[2].count = followersnumber;
+        this.setState({
+          tabs: {
+            ...this.state.tabs,
+            newroutes,
+          },
+        });
       })
       .catch((err) => console.log(err));
   };
@@ -114,17 +125,77 @@ class Profile extends Component {
     this.setState({ tabs: newtabs });
   };
 
-  UploadPost = () => {
-    const Data = {
-      id: this.props.userDetails,
-      urlpost: this.state.urlpost,
-      description: this.state.description,
-      date: new Date().toISOString(),
-    };
-    // calling signup() dispatch
+  Upload = () => {
+    swal({
+      title: "Upload Post",
+      text: "Url",
+      content: {
+        element: "input",
+        attributes: {
+          value: "Url",
+          type: "Url",
+        },
+      },
+      button: {
+        text: "Upload",
+        closeModal: false,
+      },
+    }).then((Url) => {
+      const url = Url;
 
-    this.props.uploadpost(Data);
+      swal({
+        title: "UploadPost:",
+        text: "Description",
+        icon: Url,
+        content: {
+          element: "input",
+          attributes: {
+            value: "",
+            type: "Description",
+          },
+        },
+        button: {
+          text: "Upload",
+          closeModal: false,
+        },
+      }).then((Description) => {
+        const description = Description;
+        axios({
+          method: "post",
+          url: "/uploadpost",
+          baseURL: baseURL,
+          data: {
+            id: this.state.id,
+            urlpost: url,
+            description: description,
+            date: new Date().toISOString(),
+          },
+        })
+          .then((res) => {
+            const message = res.data.message;
+            console.log(message);
+            if (res.data.value) {
+              swal(message);
+            }
+          })
+          .catch((err) => console.log(err));
+      });
+    });
   };
+
+  /*UploadPost = () => {
+
+  const Data = {
+   id:this.props.userDetails,
+   urlpost: this.state.urlpost,
+   description:this.state.description,
+   date:new Date().toISOString()
+    
+  }
+  // calling signup() dispatch
+  
+  this.props.uploadpost(Data);
+}*/
 
   onPressPlace = () => {
     console.log("place");
@@ -167,12 +238,6 @@ class Profile extends Component {
   componentWillUnmount() {
     this.willFocusSubscription.remove();
   }
-
-  /*componentWillMount() {
-    this.setState({
-      //postsMasonry: image.mansonry(this.state.posts, 'imageHeight'),
-    })
-  }*/
 
   LogOut = async () => {
     // this.props.logout();
@@ -292,33 +357,19 @@ class Profile extends Component {
           </View>
 
           <View style={styles.userRow}>
-            <TextInput
-              style={styles.TextInputurl}
-              style={{
-                height: 30,
-                marginTop: 10,
-                marginBottom: 10,
-                marginRight: 1,
-              }}
-              placeholder="urlpost"
-              onChangeText={(text) => this.setState({ urlpost: text })}
-              value={this.state.urlpost}
-            />
+            {/*<TextInput style={styles.TextInputurl} style={{ height: 30, marginTop: 10 , marginBottom: 10 , marginRight:1}}
+                    placeholder="urlpost"
+                    onChangeText={ text => this.setState({urlpost: text})}
+                    value={this.state.urlpost} 
+                /> 
 
-            <TextInput
-              style={styles.TextInputurl}
-              style={{
-                height: 30,
-                marginTop: 10,
-                marginBottom: 10,
-                marginRight: 1,
-              }}
-              placeholder="Description"
-              onChangeText={(text) => this.setState({ description: text })}
-              value={this.state.description}
-            />
+<TextInput style={styles.TextInputurl} style={{ height: 30, marginTop: 10 , marginBottom: 10 , marginRight:1}}
+                    placeholder="Description"
+                    onChangeText={ text => this.setState({description: text})}
+                    value={this.state.description} 
+                />   */}
 
-            <Button onPress={this.UploadPost} title="upload post" />
+            <Button onPress={this.Upload} title="upload post" />
           </View>
           <View style={styles.userRow}>
             <View style={styles.userNameRow}>
@@ -337,25 +388,34 @@ class Profile extends Component {
   };
 
   renderMansonry2Col = () => {
-    return (
-      <View style={styles.masonryContainer}>
+    if (this.state.posts.length < 2) {
+      return (
         <View>
-          <Posts
-            containerStyle={styles.sceneContainer}
-            // posts={this.state.postsMasonry.leftCol}
-            posts={this.state.posts}
-            userid={this.state.id}
-          />
+          <Text>AUCUN POST </Text>
         </View>
-        {/*<View>
+      );
+    } else {
+      return (
+        <View style={styles.masonryContainer}>
+          <View>
+            <Posts
+              containerStyle={styles.sceneContainer}
+              // posts={this.state.postsMasonry.leftCol}
+              posts={this.state.posts}
+              userid={this.state.id}
+            />
+          </View>
+          {/*<View>
           <Posts
             containerStyle={styles.sceneContainer}
             //posts={this.state.postsMasonry.rightCol}
           />
         </View>*/}
-      </View>
-    );
+        </View>
+      );
+    }
   };
+
   render() {
     return (
       <ScrollView style={styles.scroll}>
@@ -376,13 +436,6 @@ class Profile extends Component {
     );
   }
 }
-
-/*const mapStatetoProps=(state)=>{
-  return{
-    // id: state.loginReducer.authToken.id,
-      
-  }
- }*/
 
 const mapStatetoProps = (state) => {
   return {

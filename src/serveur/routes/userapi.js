@@ -285,9 +285,9 @@ router.post("/uploadpost", function (req, res) {
     user
       .save()
       .then((doc) => {
-        res.status(201).json({
+        res.send({
+          value: true,
           message: "POST UPLOADED",
-          results: doc,
         });
       })
       .catch((error) => {
@@ -301,41 +301,55 @@ router.post("/UpdatePost", function (req, res) {
   var postid = req.body.postid;
   var description = req.body.description;
 
-  User.findById(userid, function (error, user) {
-    /*for(let i=0;i< user.posts.length;i++){
+  User.updateOne(
+    { "posts.Id": postid },
+    { $set: { "posts.$.description": description } },
 
-        if( user.posts[i].Id === postid ){
-              user.posts[i].description=description
-              var a=i;
-              //console.log(user.posts[i])
-        }
-        
-      }*/
-    console.log(description);
-
-    user.updateOne(
-      { "posts.Id": postid },
-      { $set: { "posts.$.description": description } }
-    );
-    user
-      .save()
-      .then((doc) => {
-        res.json({
-          message: "POST UPDATED",
-          results: doc,
-        });
-      })
-      .catch((error) => {
-        res.json(error);
+    function (err, doc) {
+      res.send({
+        value: true,
+        message: "POST UPDATED",
       });
-  });
-  User.findById(userid, function (error, user) {
-    for (let i = 0; i < user.posts.length; i++) {
-      if (user.posts[i].Id === postid) {
-        console.log(user.posts[i]);
-      }
     }
-  });
+  );
+});
+
+router.post("/DeletePost", function (req, res) {
+  var userid = req.body.userid;
+  var postid = req.body.postid;
+
+  User.updateOne(
+    { _id: userid },
+    { $pull: { posts: { Id: postid } } },
+    { safe: true, multi: true },
+    function (err, obj) {
+      //do something smart
+      res.send({
+        value: true,
+        message: "POST DELETED",
+      });
+    }
+  );
+
+  /*User.updateOne({ },{'$pull':{ 'posts':{'Id': postid }}},{multi:true}, function(err,doc) { 
+      res.send({
+
+        value:true,
+        message:'POST DELETED'
+        
+    })
+  })*/
+  /*User.deleteOne({'posts.Id':postid }, 
+      {'$pullAll': { 'posts.Id':postid  }}
+      
+      , function(err,doc) { 
+        res.send({
+
+          value:true,
+          message:'POST DELETED'
+          
+      }); 
+    }) */
 });
 
 module.exports = router;
