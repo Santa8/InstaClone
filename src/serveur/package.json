@@ -22,6 +22,7 @@
     "http-errors": "^1.6.3",
     "httpolyglot": "^0.1.2",
     "jsonwebtoken": "^8.5.1",
+    "jws": "^3.2.2",
     "mongoose": "^5.12.3",
     "uuid": "^8.3.2"
   },

@@ -15,8 +15,8 @@ const initState = {
   isAuth: false,
   loginData: {},
   errMsg: "",
-  authToken: localStorage.getItem("token"),
-  userDetails: localStorage.getItem("Id"),
+  authToken: AsyncStorage.getItem("token"),
+  userDetails: AsyncStorage.getItem("Id"),
 };
 
 const loginReducer = (state = initState, action) => {
@@ -27,8 +27,8 @@ const loginReducer = (state = initState, action) => {
         isLoading: true,
       };
     case LOGIN_SUCCESS:
-      localStorage.setItem("token", action.payload.token);
-      localStorage.setItem("Id", action.payload.id);
+      AsyncStorage.setItem("token", action.payload.token);
+      AsyncStorage.setItem("Id", action.payload.id);
 
       return {
         isAuth: true,

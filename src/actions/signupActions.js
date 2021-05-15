@@ -1,11 +1,12 @@
 import AsyncStorage from "@react-native-community/async-storage";
 import axios from "axios";
-import swal from "sweetalert";
+//import swal from "sweetalert";
 import { tokenConfig } from "./AuthActions";
 // action types
 export const SIGNUP_REQUEST = "SIGNUP_REQUEST";
 export const SIGNUP_SUCCESS = "SIGNUP_SUCCESS";
 export const SIGNUP_FAILURE = "SIGNUP_FAILURE";
+import { baseURL } from "../constants";
 
 // action creators
 export const signupRequest = () => {
@@ -34,7 +35,7 @@ export const signup = (signupData) => {
     axios({
       method: "post",
       url: "/register",
-      baseURL: "http://localhost:3000",
+      baseURL: baseURL,
       data: {
         name: signupData.name,
         username: signupData.username,
@@ -43,17 +44,17 @@ export const signup = (signupData) => {
       },
 
       headers: {
-        "auth-token": localStorage.getItem("token"),
+        "auth-token": AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
         if (res.data.value) {
           dispatch(signupSuccess(signupData));
         } else {
-          swal({
+          /*swal({
             title: res.data.message,
             icon: "warning",
-          });
+          });*/
           dispatch(signupFailure(message));
         }
       })

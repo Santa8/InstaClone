@@ -8,7 +8,6 @@ const styles = StyleSheet.create({ ...AuthStyle });
 
 import { signup } from "../../actions/signupActions";
 
-
 import { isLogedIn } from "../../actions/AuthActions";
 
 function Register(props) {
@@ -39,37 +38,6 @@ function Register(props) {
       didMountRef.current = true;
     }
   }, [props.isAuth, props.isLoading]);
-
-  /*SignUp(){
-        const { email, password, username } = this.state;
-        const navigation=this.props.navigation;
-        axios({
-            method: 'post',
-            url: '/register',
-            baseURL: 'http://localhost:3000',
-            data: {
-              name: username,
-              email: email,
-              password: password
-            }
-            })
-
-        .then(function (reponse) {
-                //On traite la suite une fois la réponse obtenue 
-                console.log(reponse);
-                navigation.navigate('LogIn');
-
-                Alert.alert("User is saved");
-                
-        })
-        .catch(function (error) {
-                //On traite ici les erreurs éventuellement survenues
-                console.log(error["data"]);
-                Alert.alert("Error!");
-        });
-        //navigation.navigate('LogIn');
-
-    }*/
 
   const signupHandler = () => {
     const signupData = {

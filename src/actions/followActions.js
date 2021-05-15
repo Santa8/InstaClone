@@ -1,38 +1,23 @@
 import axios from "axios";
 //import store from '../../../Store';
-const jwt = require("jsonwebtoken");
 import deviceStorage from "./deviceStorege";
-
-
-
-
+import { baseURL } from "../constants";
 
 export const listUsers = () => {
-    
-     
-      axios({
-        method: "post",
-        url: "/listUsers",
-        baseURL: "http://localhost:3000",
-      })
-        .then((res) => {
+  axios({
+    method: "post",
+    url: "/listUsers",
+    baseURL: baseURL,
+  })
+    .then((res) => {
+      //console.log(res.data.lista);
 
+      return res.data.lista;
+    })
 
-          //console.log(res.data.lista);
-
-          return res.data.lista
-
-
-        })
-  
-        .catch((err) => {
-          console.log(err.message);
-  
-                  });
-    };
-  
-
-
-
+    .catch((err) => {
+      console.log(err.message);
+    });
+};
 
 // async impure action creator enabled by redux-thunk

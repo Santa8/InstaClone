@@ -1,8 +1,8 @@
 import axios from "axios";
 //import store from '../../../Store';
-const jwt = require("jsonwebtoken");
 import deviceStorage from "./deviceStorege";
-
+import SweetAlert from "react-native-sweet-alert";
+import { Alert } from "react-native";
 // action types
 export const LOGIN_REQUEST = "LOGIN_REQUEST";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
@@ -10,6 +10,8 @@ export const LOGIN_FAILURE = "LOGIN_FAILURE";
 export const SET_AUTH_TOKEN = "SET_AUTH_TOKEN";
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
 export const LOGOUT_USER = "LOGOUT_USER";
+import AsyncStorage from "@react-native-community/async-storage";
+import { baseURL } from "../constants";
 
 // action creators
 export const loginRequest = () => {
@@ -45,20 +47,25 @@ export const setCurrentUser = (userId) => {
   };
 };
 
+export const clearAppData = () => {
+  return async function () {
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      await AsyncStorage.multiRemove(keys);
+    } catch (error) {
+      console.error("Error clearing app data.");
+    }
+  };
+};
+
 export const logout = () => {
   return function (dispatch) {
-    localStorage.removeItem("token");
-    
-    localStorage.removeItem("Id");
-
     // setAuthenticationToken(false);
-    delete axios.defaults.headers.common["Authorization"];
     dispatch(setCurrentUser({}));
 
     dispatch({
       type: LOGOUT_USER,
     });
-    window.location.href = "/";
   };
 };
 
@@ -66,11 +73,11 @@ export const logout = () => {
 export const login = (loginData) => {
   return (dispatch) => {
     dispatch(loginRequest());
-    //const loginUri = 'http://localhost:3000/login';
     axios({
       method: "post",
       url: "/login",
-      baseURL: "http://localhost:3000",
+      baseURL: baseURL,
+
       data: {
         email: loginData.email,
         password: loginData.password,
@@ -82,11 +89,20 @@ export const login = (loginData) => {
 
           console.log(res.data.token);
         } else {
-          swal({
-            title: res.data.message,
-            //text: ,
-            icon: "warning",
-          });
+          console.log("yaa");
+          SweetAlert.showAlertWithOptions(
+            {
+              title: "",
+              subTitle: "",
+              confirmButtonTitle: "OK",
+              confirmButtonColor: "#000",
+              otherButtonTitle: "Cancel",
+              otherButtonColor: "#dedede",
+              style: "success",
+              cancellable: true,
+            },
+            (callback) => console.log("callback")
+          );
           dispatch(loginFailure(res.data.message));
         }
       })

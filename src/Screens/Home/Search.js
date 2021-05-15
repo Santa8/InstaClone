@@ -8,14 +8,17 @@ import {
   Alert,
   StyleSheet,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
 import AuthStyle from "./AuthStyle";
 import { connect } from "react-redux";
 const styles1 = StyleSheet.create({ ...AuthStyle });
 import { SearchBar } from "react-native-elements";
-
-
-import { Icon } from 'native-base'
+import axios from "axios";
+import { Icon } from "native-base";
+import { ForceTouchGestureHandler } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-community/async-storage";
+import { baseURL } from "../../constants";
 
 function Search(props) {
   const [filtredData, setfilteredData] = useState([]);
@@ -27,19 +30,20 @@ function Search(props) {
     return () => {};
   }, []);
 
-
-  
-
   const fetchUsers = () => {
-    const apiURL = "https://jsonplaceholder.typicode.com/posts";
-    fetch(apiURL)
-      .then((response) => response.json())
-      .then((responseJson) => {
-        setfilteredData(responseJson);
-        setmasterData(responseJson);
+    axios({
+      method: "post",
+      url: "/listUsers",
+      baseURL: baseURL,
+    })
+      .then((res) => {
+        //console.log(res.data.lista);
+        setfilteredData(res.data.lista);
+        setmasterData(res.data.lista);
       })
-      .catch((error) => {
-        console.error(error);
+
+      .catch((err) => {
+        console.log(err.message);
       });
   };
 
@@ -47,23 +51,29 @@ function Search(props) {
     setsearch(text);
     if (text) {
       const newData = masterData.filter((item) => {
-        const itemData = item.title
-          ? item.title.toUpperCase()
-          : "".toUpperCase();
+        const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
       setfilteredData(newData);
+    } else {
+      setfilteredData(masterData);
     }
   };
 
   const ItemView = ({ item }) => {
     return (
-      <Text style={styles.itemStyle}>
-        {item.id}
-        {". "}
-        {item.title.toUpperCase()}
-      </Text>
+      <View>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            AsyncStorage.setItem("publicProfileId", item.Id);
+            props.navigation.navigate("ProfilePub");
+          }}
+        >
+          <Text>{item.name}</Text>
+        </TouchableOpacity>
+      </View>
     );
   };
 
@@ -100,17 +110,14 @@ function Search(props) {
         renderItem={ItemView}
       />
     </View>
-    
   );
 }
 
-
-Search ['navigationOptions']  = {
-
+Search["navigationOptions"] = {
   tabBarIcon: ({ tintColor }) => (
-      <Icon name="ios-search" style={{ color: tintColor }} />
-  )
-}
+    <Icon name="ios-search" style={{ color: tintColor }} />
+  ),
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -126,6 +133,11 @@ const styles = StyleSheet.create({
     margin: 5,
     borderColor: "#009688",
     backgroundColor: "white",
+  },
+  button: {
+    alignItems: "center",
+    backgroundColor: "#DDDDDD",
+    padding: 10,
   },
 });
 

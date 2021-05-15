@@ -3,7 +3,7 @@ const asyncHandler = require("express-async-handler");
 const createError = require("http-errors");
 const joi = require("@hapi/joi");
 const jwt = require("jsonwebtoken");
-const { v4 : uuidV4} = require('uuid');
+const { v4: uuidV4 } = require("uuid");
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 const User = require("../models/user.model");
@@ -12,49 +12,36 @@ const { verifyToken } = require("../middleware/verifyToken");
 //=================================================================
 // signup a new user
 
-
-router.post("/follow",async (req, res) => {
-
-
+router.post("/follow", async (req, res) => {
   const id = req.body.Id;
-  const followId= req.body.followId;
-   
-  const nameFollow = await User.findById( followId , 'username');
+  const followId = req.body.followId;
+
+  const nameFollow = await User.findById(followId, "username");
 
   //console.log(nameFollow);
-  const nameUser = await User.findById( id , 'username');
+  const nameUser = await User.findById(id, "username");
 
+  User.findById(id, function (error, user) {
+    user.following.push({ Id: followId, name: nameFollow });
 
-  User.findById(id, function(error,user){
+    user
+      .save()
+      .then((doc) => {
+        res.status(201).json({
+          message: "add Following",
+          results: doc,
+        });
+      })
+      .catch((error) => {
+        res.json(error);
+      });
+  });
 
-    user.following.push({Id: followId , name: nameFollow});
-     
-     
-    user.save()
-     .then(doc =>{
-          res.status(201).json({
+  User.findById(followId, function (error, user) {
+    user.followers.push({ Id: id, name: nameUser });
 
-              message:"add Following",
-              results:doc
-
-
-          }); 
-
-     })
-     .catch(error=>{
-       res.json(error);
-
-     })
-
-  })
-
-  User.findById(followId, function(error,user){
-
-    user.followers.push({Id: id , name: nameUser});
-     
-     
-    user.save()
-     /*.then(doc =>{
+    user.save();
+    /*.then(doc =>{
           res.status(201).json({
 
               message:"add Follower",
@@ -68,76 +55,53 @@ router.post("/follow",async (req, res) => {
        res.json(error);
 
      })*/
+  });
+});
 
-  })
+router.post("/listPosts", async (req, res) => {
+  const id = req.body.Id;
+  console.log(id);
+  const following = await User.findById(id, "following");
 
+  const totalPosts = [];
+  if (following) {
+    for (let index = 0; index < following.following.length; index++) {
+      var posts = await User.findById(following.following[index].Id, "posts");
 
-})
+      console.log("yooow");
+      if (posts) {
+        if (posts.posts.length != 0) {
+          posts.posts.forEach((post) => {
+            totalPosts.push({
+              username: following.following[index].name.username,
+              posts: post.urlpost,
+            });
+          });
+        }
+      }
 
-router.post("/listPosts",async (req, res) => {
+      //totalPosts.push({"username" : following.following[index].name , "posts" : posts })
+    }
+  }
 
-   const id = req.body.Id;
-   const following = await User.findById(id, 'following');
+  console.log(totalPosts);
 
-   const totalPosts = [];
+  return res.send({ totalPosts });
+});
 
+router.post("/listUsers", async (req, res) => {
+  const list = await User.find({}, "username");
 
-   for (let index = 0; index < following.following.length; index++) { 
+  const lista = [];
 
-
-    var posts = await User.findById( following.following[index].Id , 'posts');  
-
-    console.log("yooow");
-     if (  posts.posts.length != 0   ) {
-
-      posts.posts.forEach(post => {
-          
-        totalPosts.push({"username" : following.following[index].name.username , "posts" : post.urlpost }) 
-
-        
-      });
-
-     }
-
-    //totalPosts.push({"username" : following.following[index].name , "posts" : posts }) 
-
-
-   }
-
-     
-      console.log(totalPosts);
-
-
-      return res.send({totalPosts});
-
-
-})
-
-
-
-router.post("/listUsers",async (req, res) => {
-
-
-  const list = await User.find({}, 'username');
-
-   const lista = [];
-
-   list.forEach(user => {
-
-    lista.push({"name" : user.username , "follow" : 1 , "Id" : user._id  })
-     
-   });
-
+  list.forEach((user) => {
+    lista.push({ name: user.username, follow: 1, Id: user._id });
+  });
 
   console.log(lista);
 
-
-  return res.send({lista});
-
-
-})
-
-
+  return res.send({ lista });
+});
 
 router.post("/register", async (req, res) => {
   // Validate data
@@ -221,160 +185,124 @@ router.post(
   })
 );
 
-router.post("/getUserDetails",function(req,res){
-  console.log('dkhaaaal');
-  var id=req.body.userid;
-  var getUserDetails= User.find({_id:id},{'name':1,'username':1,'bio':1,'website':1,'url':1,'posts':1 , 'followers': 1 , 'following' :1});
-  getUserDetails.exec()
-  .then(data=>{
+router.post("/getUserDetails", function (req, res) {
+  console.log("dkhaaaal");
+  var id = req.body.userid;
+  var getUserDetails = User.find(
+    { _id: id },
+    {
+      name: 1,
+      username: 1,
+      bio: 1,
+      website: 1,
+      url: 1,
+      posts: 1,
+      followers: 1,
+      following: 1,
+    }
+  );
+  getUserDetails
+    .exec()
+    .then((data) => {
       res.status(200).json({
-          message:"OK",
-          results:data
+        message: "OK",
+        results: data,
       });
 
       //console.log(data)
-  })
-  .catch(err=>{
-      res.json(err);
-  })
-  
-  
-  });
-
-  router.post("/EditProfile",function(req,res){
-           
-    var id=req.body.userid;
-    var name=req.body.name;
-    var username=req.body.username;
-    var bio=req.body.bio;
-    var website=req.body.website;
-
-    User.findById(id, function(error,user){
-
-      user.name=name;
-      user.username=username;
-      user.bio=bio;
-      user.website=website;
-       
-      user.save()
-       .then(doc =>{
-            res.status(201).json({
-
-                message:"Profile updated succefully",
-                results:doc
-
-
-            }); 
-
-       })
-       .catch(error=>{
-         res.json(error);
-
-       })
-
-
-
-
     })
+    .catch((err) => {
+      res.json(err);
+    });
+});
 
+router.post("/EditProfile", function (req, res) {
+  var id = req.body.userid;
+  var name = req.body.name;
+  var username = req.body.username;
+  var bio = req.body.bio;
+  var website = req.body.website;
 
+  User.findById(id, function (error, user) {
+    user.name = name;
+    user.username = username;
+    user.bio = bio;
+    user.website = website;
 
-
-
-     });
-
+    user
+      .save()
+      .then((doc) => {
+        res.status(201).json({
+          message: "Profile updated succefully",
+          results: doc,
+        });
+      })
+      .catch((error) => {
+        res.json(error);
+      });
+  });
+});
 
 //upload profile photo
 
-router.post("/uploadprofilephoto",function(req,res){
-           
-  var id=req.body.id;
-  var  url=req.body. url;
-  
+router.post("/uploadprofilephoto", function (req, res) {
+  var id = req.body.id;
+  var url = req.body.url;
 
-  User.findById(id, function(error,user){
+  User.findById(id, function (error, user) {
+    user.url = url;
 
-    user.url= url;
-    
-     
-    user.save()
-     .then(doc =>{
-          res.status(201).json({
+    user
+      .save()
+      .then((doc) => {
+        res.status(201).json({
+          message: "POST UPLOADED",
+          results: doc,
+        });
+      })
+      .catch((error) => {
+        res.json(error);
+      });
+  });
+});
 
-              message:"POST UPLOADED",
-              results:doc
+//upload post
 
+router.post("/uploadpost", function (req, res) {
+  var id = req.body.id;
+  var urlpost = req.body.urlpost;
+  var description = req.body.description;
+  var date = req.body.date;
 
-          }); 
+  User.findById(id, function (error, user) {
+    user.posts.push({
+      Id: uuidV4(),
+      urlpost: urlpost,
+      description: description,
+      date: date,
+    });
 
-     })
-     .catch(error=>{
-       res.json(error);
+    user
+      .save()
+      .then((doc) => {
+        res.status(201).json({
+          message: "POST UPLOADED",
+          results: doc,
+        });
+      })
+      .catch((error) => {
+        res.json(error);
+      });
+  });
+});
 
-     })
+router.post("/UpdatePost", function (req, res) {
+  var userid = req.body.userid;
+  var postid = req.body.postid;
+  var description = req.body.description;
 
-
-
-
-  })
-
-
-
-
-
-   });
-
-   //upload post
-
-router.post("/uploadpost",function(req,res){
-           
-  var id=req.body.id;
-  var  urlpost=req.body.urlpost;
-  var  description=req.body.description;
-  var  date=req.body.date;
-  
-
-  User.findById(id, function(error,user){
-
-    user.posts.push({Id:uuidV4(), urlpost:urlpost, description:description, date:date});
-     
-     
-    user.save()
-     .then(doc =>{
-          res.status(201).json({
-
-              message:"POST UPLOADED",
-              results:doc
-
-
-          }); 
-
-     })
-     .catch(error=>{
-       res.json(error);
-
-     })
-
-
-
-
-  })
-
-
-
-
-
-   });
- 
-   router.post("/UpdatePost",function(req,res){
-           
-    var userid=req.body.userid;
-    var postid=req.body.postid;
-    var description=req.body.description;
-    
-    User.findById(userid, function(error,user){
-
-      /*for(let i=0;i< user.posts.length;i++){
+  User.findById(userid, function (error, user) {
+    /*for(let i=0;i< user.posts.length;i++){
 
         if( user.posts[i].Id === postid ){
               user.posts[i].description=description
@@ -383,50 +311,31 @@ router.post("/uploadpost",function(req,res){
         }
         
       }*/
-      console.log(description)
-    
-      user.updateOne({'posts.Id': postid }, 
-      {'$set': { 'posts.$.description':  description   }}
-      
-      )
-      user.save()
-       .then(doc =>{
-            res.json({
+    console.log(description);
 
-                message:"POST UPDATED",
-                results:doc
-
-
-            }); 
-
-       })
-       .catch(error=>{
-         res.json(error);
-
-       })
-      
-
-
-
-    })
-    User.findById(userid, function(error,user){
-      for(let i=0;i< user.posts.length;i++){
-
-        if( user.posts[i].Id === postid ){
-             
-              console.log(user.posts[i])
-        }
-        
+    user.updateOne(
+      { "posts.Id": postid },
+      { $set: { "posts.$.description": description } }
+    );
+    user
+      .save()
+      .then((doc) => {
+        res.json({
+          message: "POST UPDATED",
+          results: doc,
+        });
+      })
+      .catch((error) => {
+        res.json(error);
+      });
+  });
+  User.findById(userid, function (error, user) {
+    for (let i = 0; i < user.posts.length; i++) {
+      if (user.posts[i].Id === postid) {
+        console.log(user.posts[i]);
       }
-     
-    })
-
-
-   
-
-
-
-     });
+    }
+  });
+});
 
 module.exports = router;
-

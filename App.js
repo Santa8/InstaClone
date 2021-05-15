@@ -1,62 +1,58 @@
-import { StatusBar } from 'expo-status-bar';
-import React,{  useEffect }from 'react';
+import { StatusBar } from "expo-status-bar";
+import React, { useEffect } from "react";
 //const mongoose = require('mongoose')
 
-import { ActivityIndicator,StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
-import { Provider } from 'react-redux';
-import { store, persistor } from './store';
-import { PersistGate } from 'redux-persist/integration/react';
-import jwt from "jsonwebtoken";
+import { Provider } from "react-redux";
+import { store, persistor } from "./store";
+import { PersistGate } from "redux-persist/integration/react";
 import axios from "axios";
-import {setCurrentUser,logout} from "./src/actions/loginActions"
+import { setCurrentUser, logout } from "./src/actions/loginActions";
 
-import RootNavigation from './src/navigation/rootNavigation';
+import RootNavigation from "./src/navigation/rootNavigation";
 
-import MainScreen from './src/Screens/MainScreen'
+import MainScreen from "./src/Screens/MainScreen";
 
-
-const initialLoginStatut ={
+const initialLoginStatut = {
   isLoading: true,
   userName: null,
   userToken: null,
-}
-
+};
 
 export default function App() {
-
   const [isLoading, setIsLoading] = React.useState(true);
   const [userToken, setUserToken] = React.useState(null);
 
   const authContext = React.useMemo(() => ({
     LogIn: () => {
-      setUserToken('ababa');
+      setUserToken("ababa");
       setIsLoading(false);
     },
     signUp: () => {
-      setUserToken('ababa');
+      setUserToken("ababa");
       setIsLoading(false);
     },
     signOut: () => {
       setUserToken(null);
       setIsLoading(false);
     },
-    
   }));
 
   useEffect(() => {
     setTimeout(() => {
-      setIsLoading(false);},1000);
-    },[]);
+      setIsLoading(false);
+    }, 1000);
+  }, []);
 
-  if (isLoading){
+  if (isLoading) {
     return (
-      <View style={{flex:1 , justifyContent:'center',alignItems:'center'}}>
-      <ActivityIndicator size="large" /> 
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
       </View>
     );
   }
- /** if(localStorage.jwtToken){
+  /** if(localStorage.jwtToken){
     if(localStorage.jwtToken){
       axios.defaults.headers.common['Authorization']=`Bearer ${localStorage.jwtToken}`;
     }else{
@@ -72,16 +68,11 @@ export default function App() {
     }
    });*/
 
-    
-
-
   return (
     <Provider store={store}>
-       <PersistGate loading={null} persistor={persistor}>
-       <RootNavigation/>
-       </PersistGate>
+      <PersistGate loading={null} persistor={persistor}>
+        <RootNavigation />
+      </PersistGate>
     </Provider>
-    
-
   );
 }
