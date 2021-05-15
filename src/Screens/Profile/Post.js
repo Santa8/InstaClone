@@ -2,7 +2,7 @@ import React from 'react'
 import {Image, Dimensions,Text,Button, StyleSheet, View } from 'react-native'
 import PropTypes from 'prop-types'
 export const ImageProfil = require('./images/imagea.jpeg'); 
-import swal from 'sweetalert';
+
 import axios from'axios'
 
 const styles = StyleSheet.create({
@@ -69,7 +69,7 @@ function ModifyPost (urlpost,description,userid,Id) {
     },
   })
   
-  .then(description => {
+  .then((description) => {
     
     axios({
       method: 'post',
@@ -81,22 +81,70 @@ function ModifyPost (urlpost,description,userid,Id) {
         description:description       
         }
     })
-      
-  })
+    
   .then(res=>{
          
-    //console.log(res.message)
-    //const message=res.message;
-
-    //if(message==='POST UPDATED'){
+    //console.log(res)
+    const message=res.data.message;
+    console.log(message)
+    if(res.data.value){
       
-      swal("Post updated");
+      swal(message);
       
-    //}
+    }
     
 })
 .catch(err=>console.log(err))
+})  
+
+}
+function DeletePost (urlpost,userid,Id) {
+
+  swal({
+    title: "Delete the post?",
+    text: "",
+    icon:urlpost,
+    buttons: true,
+    dangerMode: true,
+  })
+  .then((willDelete) => {
+
+    axios({
+      method: 'post',
+      url: '/DeletePost',
+      baseURL: 'http://localhost:3000',
+      data: { 
+        userid:userid,
+        postid:Id,
+        
+        }
+    })
+    
+  .then(res=>{
+         
+    //console.log(res)
+    const message=res.data.message;
+    console.log(message)
+    if(res.data.value){
       
+      swal(message);
+      
+    }
+    
+})
+.catch(err=>console.log(err))
+
+
+    if (willDelete) {
+      swal("Your post has been deleted!", {
+        icon: "success",
+      });
+    } else {
+      swal("Your post has not been deleted");
+    }
+  });
+
+
 
 }
 const Post = ({
@@ -122,32 +170,25 @@ const Post = ({
           ]}
           source={{uri: urlpost}} />)}
           <View style={styles.wordRow}>
-      <Text style={styles.wordText}>{description}</Text>
-      <Text style={styles.wordText}>{userid}</Text>
-      <Text style={styles.wordText}>{Id}</Text>
-      <Text style={styles.wordText}>{date}</Text>
+          <View>
+          <Text style={styles.wordText}>Description: {description}</Text>
+          <Text style={styles.wordText}>Date de publication :{date}</Text>
+          </View>
+      
+     
       <Button
                 onPress={() => ModifyPost(urlpost,description,userid,Id) }
                    title="Modify post"  
                 />  
+
+<Button
+                onPress={() => DeletePost(urlpost,userid,Id) }
+                   title="Delete post"  
+                />            
     </View>
   </View>
   )
-    /*<View style={[styles.container, containerStyle]}>
-      { urlpost&& (
-        <Image
-          style={[
-            styles.postImage,
-            {
-              width: 500*0.5,
-              height: 500 * (500/ 500)*0.5,
-            },
-          ]}
-          source={{uri: urlpost}}
-        />
-      )}
-    </View>*/
-  
+    
 }
 
 Post.propTypes = {
