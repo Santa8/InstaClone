@@ -18,8 +18,8 @@ router.post("/follow", async (req, res) => {
 
   const nameFollow = await User.findById(followId, "username");
 
-  //console.log(nameFollow);
   const nameUser = await User.findById(id, "username");
+  //console.log(nameFollow);
 
   User.findById(id, function (error, user) {
     user.following.push({ Id: followId, name: nameFollow });

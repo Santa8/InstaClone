@@ -8,10 +8,15 @@ import {
   Alert,
   StyleSheet,
   Text,
+  FlatList,
+  TouchableOpacity,
   View,
 } from "react-native";
+
+import AsyncStorage from "@react-native-community/async-storage";
+//import { Icon } from 'react-native-elements'
 import { uploadpost } from "../../actions/postsActions";
-import { baseURL } from "../../constants";
+import PostComponent from "../Home/PostComponent";
 
 import {
   TabView,
@@ -27,13 +32,13 @@ const styles = StyleSheet.create({ ...profileStyles });
 import { Item, Input } from "native-base";
 import Posts from "./Posts";
 import { connect } from "react-redux";
-import { NavigationContainer } from "@react-navigation/native";
 import axios from "axios";
 import { logout } from "../../actions/loginActions";
-import AsyncStorage from "@react-native-community/async-storage";
+import { baseURL } from "../../constants";
+
 import { Icon } from "native-base";
 
-class Profile extends Component {
+class ProfilePub extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -46,6 +51,7 @@ class Profile extends Component {
       urlpost: "",
       bio: "",
       post: "",
+      ProfilePubId: "",
       posts: [],
       tabs: {
         index: 0,
@@ -63,15 +69,6 @@ class Profile extends Component {
     };
   }
 
-  getIdValue = async () => {
-    var value = await AsyncStorage.getItem("publicProfileId");
-    console.log("zawa");
-    console.log(value);
-
-    this.id = value;
-    return value;
-  };
-
   static navigationOptions = {
     tabBarIcon: ({ tintColor }) => (
       <Icon name="person" style={{ color: tintColor }} />
@@ -85,6 +82,8 @@ class Profile extends Component {
   params: {
     userid: user_id
   }})*/
+    console.log("aaaaaaaaaaa");
+
     axios({
       method: "post",
       url: "/getUserDetails",
@@ -94,6 +93,7 @@ class Profile extends Component {
       },
     })
       .then((res) => {
+        console.log("hooooooooooooh");
         console.log(res);
         this.setState({ name: res.data.results[0].name });
         this.setState({ url: res.data.results[0].url });
@@ -107,6 +107,18 @@ class Profile extends Component {
 
         this.setState({ followers: res.data.results[0].followers });
         this.setState({ following: res.data.results[0].following });
+        var followersnumber = this.state.followers.length;
+        var followingnumber = this.state.following.length;
+        var newroutes = [...this.state.tabs.routes];
+        newroutes[0].count = this.state.posts.length - 1;
+        newroutes[1].count = followingnumber;
+        newroutes[2].count = followersnumber;
+        this.setState({
+          tabs: {
+            ...this.state.tabs,
+            newroutes,
+          },
+        });
       })
       .catch((err) => console.log(err));
   };
@@ -119,59 +131,62 @@ class Profile extends Component {
     this.setState({ tabs: newtabs });
   };
 
-  UploadPost = () => {
-    const Data = {
-      id: this.id,
-      urlpost: this.state.urlpost,
-      description: this.state.description,
-      date: new Date().toISOString(),
-    };
-    // calling signup() dispatch
-
-    this.props.uploadpost(Data);
-  };
-
   onPressPlace = () => {
     console.log("place");
   };
   async componentDidMount() {
     await this.getIdValue();
-
-    console.log(this.id);
     this.fetchUserDetails(this.id);
 
     this.willFocusSubscription = this.props.navigation.addListener(
       "willFocus",
       () => {
-        this.fetchUserDetails(this.id);
+        this.fetchUserDetails(this.props.userDetails);
       }
     );
   }
 
+  getIdValue = async () => {
+    var value = await AsyncStorage.getItem("publicProfileId");
+    console.log("zawa");
+    console.log(value);
+
+    this.id = value;
+    return value;
+  };
+
   componentDidUpdate() {
     if (this.props.isUploaded) {
-      Alert.alert("POST UPLOADED");
+      // Alert.alert("POST UPLOADED");
       this.props.navigation.navigate("Profile");
     }
     if (!this.props.isUploaded && !this.props.isLoading) {
-      Alert.alert(this.props.errMsg);
+      //Alert.alert(this.props.errMsg);
     }
   }
 
   componentWillReceiveProps(newProps) {
     if (newProps.isUploaded !== this.props.isUploaded) {
       console.log("bibi");
-      this.fetchUserDetails(this.id);
+      this.fetchUserDetails(this.props.userDetails);
     }
   }
-
+  clearAppData = async () => {
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      await AsyncStorage.multiRemove(keys);
+    } catch (error) {
+      console.error("Error clearing app data.");
+    }
+  };
   componentWillUnmount() {
     this.willFocusSubscription.remove();
   }
 
-  LogOut = () => {
-    this.props.logout();
-    this.props.navigation.navigate("LogIn");
+  LogOut = async () => {
+    // this.props.logout();
+    //await this.clearAppData();
+    this.props.navigation.navigate("AddPost");
   };
   handleIndexChange = (index) => {
     this.setState({
@@ -219,6 +234,55 @@ class Profile extends Component {
       );
     };
 
+  ItemSeparatorView = () => {
+    return (
+      <View
+        style={{ height: 0.5, width: "100%", backgroundColor: "#c8c8c8" }}
+      />
+    );
+  };
+
+  ItemView = ({ item }) => {
+    console.log("yaas");
+    console.log(item.name);
+    return (
+      <View>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            if (item.Id) {
+              AsyncStorage.setItem("publicProfileId", item.name._id);
+              this.setState({ ProfilePubId: item.name._id });
+              this.props.navigation.navigate("ProfilePub");
+            }
+          }}
+        >
+          <Text>{item.name.username}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  renderPosts = (posts) => {
+    //console.log(this.name);
+    return posts.map((post, index) => {
+      var name = this.state.name;
+      var url = post.urlpost;
+      var caption = post.description;
+      var date = post.date;
+
+      return (
+        <PostComponent
+          imageSource={url}
+          likes="101"
+          username={name}
+          caption={caption}
+          date={date}
+        />
+      );
+    });
+  };
+
   renderScene = ({ route: { key } }) => {
     const { posts } = this.props;
 
@@ -228,15 +292,23 @@ class Profile extends Component {
       case "2":
         return (
           <View>
-            {" "}
-            <ScrollView> {this.following()} </ScrollView>{" "}
+            <FlatList
+              data={this.state.following}
+              keyExtractor={(item, index) => index.toString()}
+              ItemSeparatorComponent={this.ItemSeparatorView}
+              renderItem={this.ItemView}
+            />
           </View>
         );
       case "3":
         return (
           <View>
-            {" "}
-            <ScrollView> {this.followers()} </ScrollView>{" "}
+            <FlatList
+              data={this.state.followers}
+              keyExtractor={(item, index) => index.toString()}
+              ItemSeparatorComponent={this.ItemSeparatorView}
+              renderItem={this.ItemView}
+            />
           </View>
         );
 
@@ -249,7 +321,7 @@ class Profile extends Component {
     return this.state.following.map((user, index) => {
       return (
         <View>
-          <Text> {user.name.username} </Text>{" "}
+          <Text> {user.name.username} </Text>
         </View>
       );
     });
@@ -259,7 +331,7 @@ class Profile extends Component {
     return this.state.followers.map((user, index) => {
       return (
         <View>
-          <Text> {user.name.username} </Text>{" "}
+          <Text> {user.name.username} </Text>
         </View>
       );
     });
@@ -280,33 +352,7 @@ class Profile extends Component {
           </View>
 
           <View style={styles.userRow}>
-            <TextInput
-              style={styles.TextInputurl}
-              style={{
-                height: 30,
-                marginTop: 10,
-                marginBottom: 10,
-                marginRight: 1,
-              }}
-              placeholder="urlpost"
-              onChangeText={(text) => this.setState({ urlpost: text })}
-              value={this.state.urlpost}
-            />
-
-            <TextInput
-              style={styles.TextInputurl}
-              style={{
-                height: 30,
-                marginTop: 10,
-                marginBottom: 10,
-                marginRight: 1,
-              }}
-              placeholder="Description"
-              onChangeText={(text) => this.setState({ description: text })}
-              value={this.state.description}
-            />
-
-            <Button onPress={this.UploadPost} title="upload post" />
+            <Button onPress={this.Upload} title="upload post" />
           </View>
           <View style={styles.userRow}>
             <View style={styles.userNameRow}>
@@ -325,18 +371,23 @@ class Profile extends Component {
   };
 
   renderMansonry2Col = () => {
-    return (
-      <View style={styles.masonryContainer}>
+    if (this.state.posts.length < 2) {
+      return (
         <View>
-          <Posts
-            containerStyle={styles.sceneContainer}
-            posts={this.state.posts}
-            userid={this.state.id}
-          />
+          <Text>AUCUN POST </Text>
         </View>
-      </View>
-    );
+      );
+    } else {
+      return (
+        <View style={styles.masonryContainer}>
+          <View>
+            <View>{this.renderPosts(this.state.posts)}</View>
+          </View>
+        </View>
+      );
+    }
   };
+
   render() {
     return (
       <ScrollView style={styles.scroll}>
@@ -365,6 +416,7 @@ const mapStatetoProps = (state) => {
     isLoading: state.postsReducer.isLoading,
     isUploaded: state.postsReducer.isUploaded,
     errMsg: state.postsReducer.errMsg,
+    ProfilePubId: state.ProfilePubId,
   };
 };
 const mapDispatchToProps = (dispatch) => {
@@ -375,4 +427,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStatetoProps, mapDispatchToProps)(Profile);
+export default connect(mapStatetoProps, mapDispatchToProps)(ProfilePub);

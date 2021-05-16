@@ -22,9 +22,10 @@ export const tokenConfig = () => {
 };
 
 export const isLogedIn = () => {
-  const token = localStorage.getItem("token");
-  console.log(token);
+  return true;
+  //const token = localStorage.getItem("token");
+  /*console.log(token);
   if (token) {
     return true;
-  } else return false;
+  } else return false;*/
 };

@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import PropTypes from "prop-types";
 export const ImageProfil = require("./images/imagea.jpeg");
-import swal from "sweetalert";
 import axios from "axios";
 import { baseURL } from "../../constants";
 
@@ -57,7 +56,7 @@ const styles = StyleSheet.create({
 });
 
 function ModifyPost(urlpost, description, userid, Id) {
-  swal({
+  /*swal({
     title: "Modify Post:",
     text: "Description",
     icon: urlpost,
@@ -88,15 +87,15 @@ function ModifyPost(urlpost, description, userid, Id) {
         const message = res.data.message;
         console.log(message);
         if (res.data.value) {
-          swal(message);
+          //swal(message);
         }
       })
       .catch((err) => console.log(err));
-  });
+  });*/
 }
 
 function DeletePost(urlpost, userid, Id) {
-  swal({
+  /*swal({
     title: "Delete the post?",
     text: "",
     icon: urlpost,
@@ -126,7 +125,7 @@ function DeletePost(urlpost, userid, Id) {
     } else {
       swal("Your post has not been deleted");
     }
-  });
+  });*/
 }
 
 const Post = ({ containerStyle, Id, urlpost, description, date, userid }) => {

@@ -8,13 +8,15 @@ import {
   Alert,
   StyleSheet,
   Text,
+  FlatList,
+  TouchableOpacity,
   View,
 } from "react-native";
 
 import AsyncStorage from "@react-native-community/async-storage";
 //import { Icon } from 'react-native-elements'
 import { uploadpost } from "../../actions/postsActions";
-import swal from "sweetalert";
+import PostComponent from "../Home/PostComponent";
 
 import {
   TabView,
@@ -49,6 +51,7 @@ class Profile extends Component {
       urlpost: "",
       bio: "",
       post: "",
+      ProfilePubId: "",
       posts: [],
       tabs: {
         index: 0,
@@ -79,6 +82,9 @@ class Profile extends Component {
   params: {
     userid: user_id
   }})*/
+    console.log("hooooooooooooh");
+
+    console.log(user_id);
     axios({
       method: "post",
       url: "/getUserDetails",
@@ -88,6 +94,7 @@ class Profile extends Component {
       },
     })
       .then((res) => {
+        console.log("hooooooooooooh");
         console.log(res);
         this.setState({ name: res.data.results[0].name });
         this.setState({ url: res.data.results[0].url });
@@ -125,78 +132,6 @@ class Profile extends Component {
     this.setState({ tabs: newtabs });
   };
 
-  Upload = () => {
-    swal({
-      title: "Upload Post",
-      text: "Url",
-      content: {
-        element: "input",
-        attributes: {
-          value: "Url",
-          type: "Url",
-        },
-      },
-      button: {
-        text: "Upload",
-        closeModal: false,
-      },
-    }).then((Url) => {
-      const url = Url;
-
-      swal({
-        title: "UploadPost:",
-        text: "Description",
-        icon: Url,
-        content: {
-          element: "input",
-          attributes: {
-            value: "",
-            type: "Description",
-          },
-        },
-        button: {
-          text: "Upload",
-          closeModal: false,
-        },
-      }).then((Description) => {
-        const description = Description;
-        axios({
-          method: "post",
-          url: "/uploadpost",
-          baseURL: baseURL,
-          data: {
-            id: this.state.id,
-            urlpost: url,
-            description: description,
-            date: new Date().toISOString(),
-          },
-        })
-          .then((res) => {
-            const message = res.data.message;
-            console.log(message);
-            if (res.data.value) {
-              swal(message);
-            }
-          })
-          .catch((err) => console.log(err));
-      });
-    });
-  };
-
-  /*UploadPost = () => {
-
-  const Data = {
-   id:this.props.userDetails,
-   urlpost: this.state.urlpost,
-   description:this.state.description,
-   date:new Date().toISOString()
-    
-  }
-  // calling signup() dispatch
-  
-  this.props.uploadpost(Data);
-}*/
-
   onPressPlace = () => {
     console.log("place");
   };
@@ -213,11 +148,11 @@ class Profile extends Component {
 
   componentDidUpdate() {
     if (this.props.isUploaded) {
-      Alert.alert("POST UPLOADED");
+      // Alert.alert("POST UPLOADED");
       this.props.navigation.navigate("Profile");
     }
     if (!this.props.isUploaded && !this.props.isLoading) {
-      Alert.alert(this.props.errMsg);
+      //Alert.alert(this.props.errMsg);
     }
   }
 
@@ -240,9 +175,9 @@ class Profile extends Component {
   }
 
   LogOut = async () => {
-    // this.props.logout();
-    //await this.clearAppData();
-    this.props.navigation.navigate("EditPost");
+    this.props.logout();
+    await this.clearAppData();
+    //this.props.navigation.navigate("AddPost");
   };
   handleIndexChange = (index) => {
     this.setState({
@@ -290,6 +225,55 @@ class Profile extends Component {
       );
     };
 
+  ItemSeparatorView = () => {
+    return (
+      <View
+        style={{ height: 0.5, width: "100%", backgroundColor: "#c8c8c8" }}
+      />
+    );
+  };
+
+  ItemView = ({ item }) => {
+    console.log("yaas");
+    console.log(item.name);
+    return (
+      <View>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            if (item.Id) {
+              AsyncStorage.setItem("publicProfileId", item.name._id);
+              this.setState({ ProfilePubId: item.name._id });
+              this.props.navigation.navigate("ProfilePub");
+            }
+          }}
+        >
+          <Text>{item.name.username}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  renderPosts = (posts) => {
+    //console.log(this.name);
+    return posts.map((post, index) => {
+      var name = this.state.name;
+      var url = post.urlpost;
+      var caption = post.description;
+      var date = post.date;
+
+      return (
+        <PostComponent
+          imageSource={url}
+          likes="101"
+          username={name}
+          caption={caption}
+          date={date}
+        />
+      );
+    });
+  };
+
   renderScene = ({ route: { key } }) => {
     const { posts } = this.props;
 
@@ -299,15 +283,23 @@ class Profile extends Component {
       case "2":
         return (
           <View>
-            {" "}
-            <ScrollView> {this.following()} </ScrollView>{" "}
+            <FlatList
+              data={this.state.following}
+              keyExtractor={(item, index) => index.toString()}
+              ItemSeparatorComponent={this.ItemSeparatorView}
+              renderItem={this.ItemView}
+            />
           </View>
         );
       case "3":
         return (
           <View>
-            {" "}
-            <ScrollView> {this.followers()} </ScrollView>{" "}
+            <FlatList
+              data={this.state.followers}
+              keyExtractor={(item, index) => index.toString()}
+              ItemSeparatorComponent={this.ItemSeparatorView}
+              renderItem={this.ItemView}
+            />
           </View>
         );
 
@@ -320,7 +312,7 @@ class Profile extends Component {
     return this.state.following.map((user, index) => {
       return (
         <View>
-          <Text> {user.name.username} </Text>{" "}
+          <Text> {user.name.username} </Text>
         </View>
       );
     });
@@ -330,15 +322,13 @@ class Profile extends Component {
     return this.state.followers.map((user, index) => {
       return (
         <View>
-          <Text> {user.name.username} </Text>{" "}
+          <Text> {user.name.username} </Text>
         </View>
       );
     });
   };
 
   renderContactHeader = () => {
-    //const { avatar, name, bio } = this.props
-
     return (
       <View style={styles.headerContainer}>
         <View style={styles.item}>
@@ -350,25 +340,9 @@ class Profile extends Component {
         <View style={styles.item2}>
           <View style={{ height: 70, marginTop: 10, marginRight: 50 }}>
             <Button title="logout" onPress={this.LogOut} />
-            {/*<Button
-          title="Edit Profile" 
-          onPress={() => this.props.navigation.navigate('EditProfile')} 
-        />*/}
           </View>
 
           <View style={styles.userRow}>
-            {/*<TextInput style={styles.TextInputurl} style={{ height: 30, marginTop: 10 , marginBottom: 10 , marginRight:1}}
-                    placeholder="urlpost"
-                    onChangeText={ text => this.setState({urlpost: text})}
-                    value={this.state.urlpost} 
-                /> 
-
-<TextInput style={styles.TextInputurl} style={{ height: 30, marginTop: 10 , marginBottom: 10 , marginRight:1}}
-                    placeholder="Description"
-                    onChangeText={ text => this.setState({description: text})}
-                    value={this.state.description} 
-                />   */}
-
             <Button onPress={this.Upload} title="upload post" />
           </View>
           <View style={styles.userRow}>
@@ -398,19 +372,8 @@ class Profile extends Component {
       return (
         <View style={styles.masonryContainer}>
           <View>
-            <Posts
-              containerStyle={styles.sceneContainer}
-              // posts={this.state.postsMasonry.leftCol}
-              posts={this.state.posts}
-              userid={this.state.id}
-            />
+            <View>{this.renderPosts(this.state.posts)}</View>
           </View>
-          {/*<View>
-          <Posts
-            containerStyle={styles.sceneContainer}
-            //posts={this.state.postsMasonry.rightCol}
-          />
-        </View>*/}
         </View>
       );
     }
@@ -444,6 +407,7 @@ const mapStatetoProps = (state) => {
     isLoading: state.postsReducer.isLoading,
     isUploaded: state.postsReducer.isUploaded,
     errMsg: state.postsReducer.errMsg,
+    ProfilePubId: state.ProfilePubId,
   };
 };
 const mapDispatchToProps = (dispatch) => {

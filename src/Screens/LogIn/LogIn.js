@@ -8,9 +8,9 @@ import { isLogedIn } from "../../actions/AuthActions";
 import { login } from "../../actions/loginActions";
 
 function LogIn(props) {
-  if (isLogedIn()) {
+  /*if (isLogedIn()) {
     props.navigation.navigate("Home");
-  }
+  }*/
   const [email, putEmail] = useState("");
   const [password, putPassword] = useState("");
 

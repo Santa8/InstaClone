@@ -1,4 +1,4 @@
-import { Dimensions } from 'react-native'
+import { Dimensions } from "react-native";
 
 export default {
   cardContainer: {
@@ -8,20 +8,19 @@ export default {
     flex: 1,
   },
   headerContainer: {
-    
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     marginBottom: 15,
     marginTop: 25,
     flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center'
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
   },
   indicatorTab: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
   scroll: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
   },
   sceneContainer: {
     marginTop: 10,
@@ -31,21 +30,21 @@ export default {
     marginRight: 14,
   },
   item: {
-    width: '30%' // is 50% of container width
+    width: "30%", // is 50% of container width
   },
   item2: {
-    width: '70%' // is 50% of container width
+    width: "70%", // is 50% of container width
   },
   socialRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   tabBar: {
-    backgroundColor: '#EEE',
+    backgroundColor: "#EEE",
   },
   masonryContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    //flexDirection: 'row',
+    //flexWrap: 'wrap',
+    justifyContent: "space-between",
     marginLeft: 0,
     marginRight: 0,
   },
@@ -54,23 +53,23 @@ export default {
     marginBottom: 12,
   },
   tabLabelNumber: {
-    color: 'gray',
+    color: "gray",
     fontSize: 12.5,
-    textAlign: 'center',
+    textAlign: "center",
   },
   tabLabelText: {
-    color: 'black',
+    color: "black",
     fontSize: 22.5,
-    fontWeight: '600',
-    textAlign: 'center',
+    fontWeight: "600",
+    textAlign: "center",
   },
   userBioRow: {
     marginLeft: 2,
     marginRight: 40,
   },
   userBioText: {
-    color: 'gray',
-    fontSize: 12
+    color: "gray",
+    fontSize: 12,
   },
   userImage: {
     borderRadius: 60,
@@ -82,15 +81,31 @@ export default {
     marginBottom: 2,
   },
   userNameText: {
-    color: '#5B5A5A',
+    color: "#5B5A5A",
     fontSize: 14,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
   userRow: {
-    alignItems:'flex-start',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    alignItems: "flex-start",
+    flexDirection: "column",
+    justifyContent: "center",
     marginBottom: 12,
   },
-}
+  itemStyle: {
+    padding: 10,
+  },
+  textInputStyle: {
+    height: 50,
+    borderWidth: 1,
+    paddingLeft: 20,
+    margin: 5,
+    borderColor: "#009688",
+    backgroundColor: "white",
+  },
+  button: {
+    alignItems: "center",
+    backgroundColor: "#DDDDDD",
+    padding: 10,
+  },
+};

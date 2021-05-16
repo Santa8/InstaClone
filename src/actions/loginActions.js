@@ -90,19 +90,7 @@ export const login = (loginData) => {
           console.log(res.data.token);
         } else {
           console.log("yaa");
-          SweetAlert.showAlertWithOptions(
-            {
-              title: "",
-              subTitle: "",
-              confirmButtonTitle: "OK",
-              confirmButtonColor: "#000",
-              otherButtonTitle: "Cancel",
-              otherButtonColor: "#dedede",
-              style: "success",
-              cancellable: true,
-            },
-            (callback) => console.log("callback")
-          );
+          console.log(res.data.message);
           dispatch(loginFailure(res.data.message));
         }
       })
