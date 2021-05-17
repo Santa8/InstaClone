@@ -11,6 +11,7 @@ import {
   Header,
   Image,
   ScrollView,
+  TouchableOpacity
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -38,6 +39,7 @@ class Home extends Component {
       data: [],
       posts: [],
       Id: "",
+      test : 0
     };
   }
 
@@ -48,10 +50,15 @@ class Home extends Component {
   };
 
   listUsers = () => {
+    console.log("users");
+    
     axios({
       method: "post",
       url: "/listUsers",
       baseURL: baseURL,
+      data: {
+        Id: this.Id,
+      },
     })
       .then((res) => {
         //console.log(res.data.lista);
@@ -65,6 +72,7 @@ class Home extends Component {
   };
 
   listPosts = () => {
+    console.log("poosts")
     axios({
       method: "post",
       url: "/listPosts",
@@ -75,6 +83,8 @@ class Home extends Component {
       },
     })
       .then((res) => {
+        
+
         this.setState({ posts: res.data.totalPosts });
       })
 
@@ -100,6 +110,8 @@ class Home extends Component {
     await this.getIdValue();
     this.listUsers();
     this.listPosts();
+    this.render();
+    
   }
 
   componentWillUnmount() {
@@ -112,48 +124,85 @@ class Home extends Component {
     ),
   };
 
-  renderUsers = (users) => {
-    return users.map((user, index) => {
-      return (
-        <View>
-          {/* <Thumbnail
-                      style={{ marginHorizontal: 5, borderColor: 'pink', borderWidth: 2 }}
-                      source={require('./me.jpg')} /> */}
 
+  renderUsers = (users) => {
+    console.log("useers");
+   // console.log(users);
+   
+    return users.map((user, index) => {
+      let followRequest = () => { 
+        axios({
+          method: "post",
+          url: "/follow",
+          baseURL: baseURL,
+          data: { 
+            Id: this.Id,
+    
+            followId : user.Id
+          
+            }
+        })
+          .then((res) => {
+            console.log(res.data.message)
+
+            this.setState({ test : 1})
+            this.listUsers();
+            this.listPosts();
+    
+          })
+    
+          .catch((err) => {
+            console.log(err.message);
+    
+                    });
+      } 
+    
+      let unfollowRequest = () => { 
+        axios({
+          method: "post",
+          url: "/unfollow",
+          baseURL: baseURL,
+          data: { 
+            Id: this.Id,
+            followId : user.Id
+            }
+        })
+          .then((res) => {
+            console.log(res.data.message)
+            
+            this.setState({ test : 1})
+            this.listUsers();
+            this.listPosts();
+    
+    
+          })
+          .catch((err) => {
+            console.log(err.message);
+    
+                    });
+      } 
+
+      let onpress = user.follow ? unfollowRequest : followRequest;
+      let text = user.follow ? "unfollow"  : "follow";
+      return (
+        <View>        
           <Text
             style={{
               marginHorizontal: 5,
-              borderColor: "pink",
+              borderColor: "dark",
               borderWidth: 2,
               fontSize: 20,
             }}
-          >
-            {" "}
-            {user.name}{" "}
+          >   
+            {user.name}
           </Text>
-          <Button
-            title={user.follow ? "unfollow" : "follow"}
-            style={{ marginHorizontal: 5, width: 10, height: 10 }}
-            onPress={() => {
-              axios({
-                method: "post",
-                url: "/follow",
-                baseURL: baseURL,
-
-                data: {
-                  Id: this.Id,
-                  followId: user.Id,
-                },
-              })
-                .then((res) => {
-                  //console.log(res.data.lista);
-                })
-
-                .catch((err) => {
-                  console.log(err.message);
-                });
-            }}
-          />
+         <TouchableOpacity
+                          style={{ marginHorizontal: 5 , width : 90, height : 30 , backgroundColor: "#DDDDDD",}}
+    
+                          onPress ={ onpress } 
+                        >
+                          <Text style ={{fontSize : 20}}> {text} </Text> 
+          </TouchableOpacity>
         </View>
       );
     });
@@ -173,23 +222,6 @@ class Home extends Component {
           userpicurl={userpicurl}
         />
       );
-
-      /* if(havePosts.length !=0){
-
-         
-
-          havePosts.forEach( post => {
-
-            console.log(post.urlpost);
-
-            return (
-              <View>
-              <PostComponent imageSource={post.urlpost} likes="101" username = {name}/> </View>
-            );
-            
-          });
-
-        }*/
     });
   };
 
@@ -238,10 +270,7 @@ class Home extends Component {
             </View>
 
             <View>{this.renderPosts(this.state.posts)}</View>
-
-            {/* <PostComponent imageSource="1" likes="101" />
-                    <PostComponent imageSource="2" likes="201" />
-                    <PostComponent imageSource="3" likes="301" /> */}
+            
           </Content>
         </Container>
       </View>
