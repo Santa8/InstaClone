@@ -5,11 +5,24 @@ import { baseURL } from "../constants";
 export const UPLOAD_REQUEST = "UPLOAD_REQUEST";
 export const UPLOAD_SUCCESS = "UPLOAD_SUCCESS";
 export const UPLOAD_FAILURE = "UPLOAD_FAILURE";
-
+export const EDIT_POST = "EDIT_POST";
+export const MODIFY_POST = "MODIFY_POST";
 // action creators
 export const uploadRequest = () => {
   return {
     type: UPLOAD_REQUEST,
+  };
+};
+export const editPost = (postdata) => {
+  return {
+    type: EDIT_POST,
+    payload: postdata,
+  };
+};
+export const modifyPost = (postdata) => {
+  return {
+    type: MODIFY_POST,
+    payload: postdata,
   };
 };
 export const uploadSuccess = (signupData) => {
@@ -53,32 +66,38 @@ export const uploadprofilephoto = (Data) => {
       });
   };
 };
-export const uploadpost = (Data) => {
+
+export const editpost = (postdata) => {
   return (dispatch) => {
-    dispatch(uploadRequest());
-    //const signupUri = 'http://localhost:3000/register';
+    console.log("hna");
+    console.log(postdata);
+    dispatch(editPost(postdata));
+  };
+};
+
+export const modifypost = (postdata) => {
+  const postdataa = postdata;
+  console.log(postdataa.postid);
+  return (dispatch) => {
+    dispatch(modifyPost(postdataa));
     axios({
       method: "post",
-      url: "/uploadpost",
+      url: "/UpdatePost",
       baseURL: baseURL,
       data: {
-        id: Data.id,
-        urlpost: Data.urlpost,
-        description: Data.description,
-        date: Data.date,
+        userid: postdataa.userid,
+        postid: postdataa.postid,
+        description: postdataa.description,
       },
     })
       .then((res) => {
+        //console.log(res)
         const message = res.data.message;
-        if (message === "POST UPLOADED") {
-          dispatch(uploadSuccess(Data));
-        } else {
-          dispatch(uploadFailure(message));
+
+        if (res.data.value) {
+          console.log(message);
         }
       })
-      .catch((err) => {
-        console.log("postsActions.js, upload Request Error: ", err.message);
-        dispatch(uploadFailure("Fail to Upload"));
-      });
+      .catch((err) => console.log(err));
   };
 };

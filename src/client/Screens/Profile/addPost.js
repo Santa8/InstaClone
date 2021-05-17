@@ -15,7 +15,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import Icon from "react-native-vector-icons/Ionicons";
 import * as ImagePicker from "expo-image-picker";
 
-import { firebaseConfig } from "./fireBaseConfig";
+import { firebaseConfig } from "../../fireBaseConfig";
 import uuid from "uuid";
 
 import {
@@ -27,12 +27,12 @@ import {
   StatusWrapper,
 } from "./addPostStyle";
 
-import * as Firebase from "firebase";
+import firebase from "firebase";
 import { baseURL } from "../../constants";
 
 const AddPost = () => {
-  if (!Firebase.apps.length) {
-    Firebase.initializeApp(firebaseConfig);
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
   }
 
   const [image, setImage] = useState(null);
@@ -123,7 +123,7 @@ const AddPost = () => {
       xhr.send(null);
     });
 
-    const ref = Firebase.storage().ref().child(uuid.v4());
+    const ref = firebase.storage().ref().child(uuid.v4());
     const snapshot = await ref.put(blob);
 
     // We're done with the blob, close and release it

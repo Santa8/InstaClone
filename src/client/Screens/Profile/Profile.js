@@ -12,11 +12,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-
+import { editpost } from "../../actions/postsActions";
 import AsyncStorage from "@react-native-community/async-storage";
 //import { Icon } from 'react-native-elements'
 import { uploadpost } from "../../actions/postsActions";
-import PostComponent from "../Home/PostComponent";
+import PostComponent from "./PostComponent";
 
 import {
   TabView,
@@ -250,7 +250,7 @@ class Profile extends Component {
       var url = post.urlpost;
       var caption = post.description;
       var date = post.date;
-
+      var id = post.Id;
       return (
         <PostComponent
           imageSource={url}
@@ -259,6 +259,10 @@ class Profile extends Component {
           userpicurl={this.state.url}
           caption={caption}
           date={date}
+          Id={id}
+          userid={this.state.id}
+          navigation={this.props.navigation}
+          editpost={this.props.editpost}
         />
       );
     });
@@ -333,7 +337,10 @@ class Profile extends Component {
           </View>
 
           <View style={styles.userRow}>
-            <Button onPress={this.Upload} title="upload post" />
+            <Button
+              onPress={() => this.props.navigation.navigate("EditProfile")}
+              title="Edit Profil"
+            />
           </View>
           <View style={styles.userRow}>
             <View style={styles.userNameRow}>
@@ -405,6 +412,7 @@ const mapDispatchToProps = (dispatch) => {
     // only map needed dispatches here
     logout: () => dispatch(logout()),
     uploadpost: (Data) => dispatch(uploadpost(Data)),
+    editpost: (postdata) => dispatch(editpost(postdata)),
   };
 };
 

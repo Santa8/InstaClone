@@ -24,8 +24,7 @@ import MainScreen from "../Screens/MainScreen";
 import EditProfile from "../Screens/EditProfile/EditProfile";
 import ProfilePub from "../Screens/Profile/profilePub";
 import AddPost from "../Screens/Profile/addPost";
-import EditPost from "../Screens/Profile/editPost";
-
+import EditPost from "../Screens/Profile/EditPost";
 import Search from "../Screens/Home/Search";
 
 const AppNavigator = createBottomTabNavigator(
@@ -42,7 +41,7 @@ const AppNavigator = createBottomTabNavigator(
     Search: {
       screen: Search,
     },
-    EditProfile: {
+    AddPost: {
       screen: AddPost,
     },
   },
@@ -93,8 +92,11 @@ const TestNavigator = createStackNavigator({
   ProfilePub: {
     screen: ProfilePub,
   },
-  AddPost: {
-    screen: AddPost,
+  EditPost: {
+    screen: EditPost,
+  },
+  EditProfile: {
+    screen: EditProfile,
   },
 });
 const AppSwitch = createSwitchNavigator(

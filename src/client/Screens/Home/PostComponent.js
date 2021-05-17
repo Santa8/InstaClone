@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, TouchableOpacity } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 
 import {
@@ -40,6 +40,7 @@ class PostComponent extends Component {
                 uri: this.state.userpicurl,
               }}
             />
+
             <Body>
               <Text
                 style={{
@@ -48,7 +49,6 @@ class PostComponent extends Component {
                   color: "#2a9d8f",
                 }}
               >
-                {" "}
                 {this.props.username}
               </Text>
               <Text note> Mai 10, 2021</Text>
@@ -89,7 +89,6 @@ class PostComponent extends Component {
                 }}
               >
                 {this.props.username}
-                {"  "}
               </Text>
               {this.props.caption}
             </Text>
