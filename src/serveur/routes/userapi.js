@@ -60,20 +60,20 @@ router.post("/follow", async (req, res) => {
 
 router.post("/listPosts", async (req, res) => {
   const id = req.body.Id;
-  console.log(id);
   const following = await User.findById(id, "following");
 
   const totalPosts = [];
   if (following) {
     for (let index = 0; index < following.following.length; index++) {
       var posts = await User.findById(following.following[index].Id, "posts");
+      var url = await User.findById(following.following[index].Id, "url");
 
-      console.log("yooow");
       if (posts) {
         if (posts.posts.length != 0) {
           posts.posts.forEach((post) => {
             totalPosts.push({
               username: following.following[index].name.username,
+              picurl: url.url,
               posts: post.urlpost,
             });
           });
@@ -83,8 +83,6 @@ router.post("/listPosts", async (req, res) => {
       //totalPosts.push({"username" : following.following[index].name , "posts" : posts })
     }
   }
-
-  console.log(totalPosts);
 
   return res.send({ totalPosts });
 });
@@ -97,8 +95,6 @@ router.post("/listUsers", async (req, res) => {
   list.forEach((user) => {
     lista.push({ name: user.username, follow: 1, Id: user._id });
   });
-
-  console.log(lista);
 
   return res.send({ lista });
 });
@@ -128,7 +124,6 @@ router.post("/register", async (req, res) => {
       email: req.body.email,
       password: hashedPassword,
     });
-    console.log(user.id);
 
     user
       .save()
@@ -174,7 +169,6 @@ router.post(
       });
       //res.header('auth-token', authToken).send(authToken);
       if (!authToken) throw Error("Couldnt sign the token");
-      console.log("Login Success");
       return res.send({
         value: true,
         message: "User Found",
@@ -186,7 +180,6 @@ router.post(
 );
 
 router.post("/getUserDetails", function (req, res) {
-  console.log("dkhaaaal");
   var id = req.body.userid;
   var getUserDetails = User.find(
     { _id: id },
