@@ -50,8 +50,6 @@ class Home extends Component {
   };
 
   listUsers = () => {
-    console.log("users");
-
     axios({
       method: "post",
       url: "/listUsers",
@@ -61,8 +59,6 @@ class Home extends Component {
       },
     })
       .then((res) => {
-        //console.log(res.data.lista);
-
         this.setState({ data: res.data.lista });
       })
 
@@ -72,7 +68,6 @@ class Home extends Component {
   };
 
   listPosts = () => {
-    console.log("poosts");
     axios({
       method: "post",
       url: "/listPosts",
@@ -122,9 +117,6 @@ class Home extends Component {
   };
 
   renderUsers = (users) => {
-    console.log("useers");
-    // console.log(users);
-
     return users.map((user, index) => {
       let followRequest = () => {
         axios({
@@ -138,8 +130,6 @@ class Home extends Component {
           },
         })
           .then((res) => {
-            console.log(res.data.message);
-
             this.setState({ test: 1 });
             this.listUsers();
             this.listPosts();
@@ -161,8 +151,6 @@ class Home extends Component {
           },
         })
           .then((res) => {
-            console.log(res.data.message);
-
             this.setState({ test: 1 });
             this.listUsers();
             this.listPosts();

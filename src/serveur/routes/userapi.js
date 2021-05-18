@@ -17,8 +17,6 @@ router.post("/unfollow", async (req, res) => {
   const followId = req.body.followId;
 
   if (id) {
-    console.log("unfollow");
-
     User.updateOne(
       { _id: id },
       { $pull: { following: { Id: followId } } },
@@ -43,7 +41,6 @@ router.post("/getIsFollowing", async (req, res) => {
   const id = req.body.userId;
   const followId = req.body.followId;
   let value = false;
-  console.log(followId);
 
   isFollowing = await User.find(
     { _id: id, "following.Id": followId },
@@ -56,13 +53,11 @@ router.post("/getIsFollowing", async (req, res) => {
     value = true;
   }
   res.send({ value: value });
-  console.log(value);
 });
 
 router.post("/follow", async (req, res) => {
   const id = req.body.Id;
   const followId = req.body.followId;
-  //console.log(id)
   if (id) {
     const nameFollow = await User.findById(followId, "username");
     const FollowDetails = await User.findById(followId, {
@@ -71,13 +66,11 @@ router.post("/follow", async (req, res) => {
       url: 1,
     });
     const nameUser = await User.findById(id, "username");
-    //console.log(nameFollow);
     const alreadyFollowing = await User.find(
       { _id: id, "following.Id": followId },
       "username"
     );
 
-    console.log(alreadyFollowing);
     const namUser = await User.findById(id, { username: 1, name: 1, url: 1 });
     if (!alreadyFollowing.length) {
       User.findById(id, function (error, user) {
@@ -198,6 +191,7 @@ router.post("/listPosts", async (req, res) => {
               username: following.following[index].name.username,
               posts: post.urlpost,
               picurl: url.url,
+              //date:
             });
           });
         }
@@ -226,8 +220,6 @@ router.post("/listUsers", async (req, res) => {
 
     lista.push({ name: list[i].username, follow: follow, Id: list[i]._id });
   }
-
-  console.log(lista);
 
   return res.send({ lista });
 });
@@ -334,8 +326,6 @@ router.post("/getUserDetails", function (req, res) {
         message: "OK",
         results: data,
       });
-
-      //console.log(data)
     })
     .catch((err) => {
       res.json(err);

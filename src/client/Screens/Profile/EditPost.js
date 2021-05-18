@@ -8,23 +8,14 @@ import {
   TextInput,
   StyleSheet,
   Alert,
-  AsyncStorage,
 } from "react-native";
-//import { launchImageLibrary} from 'react-native-image-picker';
-//import {AsyncStorage} from "@react-native-async-storage/async-storage"
-//import {AsyncStorage} from "@react-native-community/async-storage"
-//var ImagePicker = require('react-native-image-picker');
-import EditStyle from "./EditStyle";
-//mport { Item } from 'react-native-paper/lib/typescript/src/components/List/List';
-import { Item, Input } from "native-base";
+
+import EditStyle from "./style/EditStyle";
 import { connect } from "react-redux";
-//export const ImageProfil = require('./imagea.jpeg');
 const styles = StyleSheet.create({ ...EditStyle });
 import axios from "axios";
 import { modifypost } from "../../actions/postsActions";
 import { baseURL } from "../../constants";
-
-import { Icon } from "native-base";
 
 function EditPost(props) {
   const [Description, putDescription] = useState("");
@@ -74,11 +65,9 @@ function EditPost(props) {
       },
     })
       .then((res) => {
-        //console.log(res)
         const message = res.data.message;
 
         if (res.data.value) {
-          console.log(message);
           props.navigation.navigate("Profile");
         }
       })

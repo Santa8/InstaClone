@@ -116,6 +116,7 @@ class PostComponent extends Component {
               >
                 {this.props.username}
               </Text>
+              {"  "}
               {this.props.caption}
             </Text>
           </Body>

@@ -69,15 +69,12 @@ export const uploadprofilephoto = (Data) => {
 
 export const editpost = (postdata) => {
   return (dispatch) => {
-    console.log("hna");
-    console.log(postdata);
     dispatch(editPost(postdata));
   };
 };
 
 export const modifypost = (postdata) => {
   const postdataa = postdata;
-  console.log(postdataa.postid);
   return (dispatch) => {
     dispatch(modifyPost(postdataa));
     axios({
@@ -91,11 +88,9 @@ export const modifypost = (postdata) => {
       },
     })
       .then((res) => {
-        //console.log(res)
         const message = res.data.message;
 
         if (res.data.value) {
-          console.log(message);
         }
       })
       .catch((err) => console.log(err));

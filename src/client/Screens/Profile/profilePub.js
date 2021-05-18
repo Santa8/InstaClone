@@ -26,7 +26,7 @@ import {
 } from "react-native-tab-view";
 import PropTypes from "prop-types";
 import { image } from "./utils";
-import profileStyles from "./ProfileStyle";
+import profileStyles from "./style/ProfileStyle";
 export const ImageProfil = require("./images/photo_cv.jpg");
 const styles = StyleSheet.create({ ...profileStyles });
 import { Item, Input } from "native-base";
@@ -67,7 +67,7 @@ class ProfilePub extends Component {
 
       followers: [],
 
-      isFollowing : false
+      isFollowing: false,
     };
   }
 
@@ -78,26 +78,21 @@ class ProfilePub extends Component {
   };
 
   getIsFollowing = (userId, followId) => {
-
     axios({
       method: "post",
       url: "/getIsFollowing",
       baseURL: baseURL,
       data: {
         userId: userId,
-        followId : followId
+        followId: followId,
       },
-    }).then ((res)=>{
-
-      this.setState({ isFollowing : res.data.value })
-
-    }).catch ((err)=>{
-      console.log(err)
-
-    });
-
-
-
+    })
+      .then((res) => {
+        this.setState({ isFollowing: res.data.value });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   fetchUserDetails = (user_id) => {
@@ -111,11 +106,9 @@ class ProfilePub extends Component {
     })
       .then((res) => {
         this.setState({ name: res.data.results[0].name });
-       
 
         if (res.data.results[0].url) {
           this.setState({ url: res.data.results[0].url });
-          
         }
         this.setState({ username: res.data.results[0].username });
         this.setState({ bio: res.data.results[0].bio });
@@ -158,7 +151,7 @@ class ProfilePub extends Component {
     await this.getIdValue();
     await this.getUserIdValue();
     this.fetchUserDetails(this.id);
-    this.getIsFollowing(this.userId, this.id)
+    this.getIsFollowing(this.userId, this.id);
 
     this.willFocusSubscription = this.props.navigation.addListener(
       "willFocus",
@@ -296,6 +289,7 @@ class ProfilePub extends Component {
       var userpicurl = this.state.url ? this.state.url : false;
       return (
         <PostComponent
+          key={id}
           imageSource={url}
           likes="101"
           username={name}
@@ -328,6 +322,8 @@ class ProfilePub extends Component {
         return (
           <View>
             <FlatList
+              scrollEnabled={false}
+              horizontal
               data={this.state.followers}
               keyExtractor={(item, index) => index.toString()}
               ItemSeparatorComponent={this.ItemSeparatorView}
@@ -361,55 +357,49 @@ class ProfilePub extends Component {
     });
   };
 
-  followRequest = () => { 
+  followRequest = () => {
     axios({
       method: "post",
       url: "/follow",
       baseURL: baseURL,
-      data: { 
+      data: {
         Id: this.userId,
 
-        followId : this.id
-      
-        }
+        followId: this.id,
+      },
     })
       .then((res) => {
-        console.log(res.data.message)
-        this.getIsFollowing(this.userId, this.id)
-
+        this.getIsFollowing(this.userId, this.id);
       })
 
       .catch((err) => {
         console.log(err.message);
-
-                });
-  } 
-  unfollowRequest = () => { 
+      });
+  };
+  unfollowRequest = () => {
     axios({
       method: "post",
       url: "/unfollow",
       baseURL: baseURL,
-      data: { 
+      data: {
         Id: this.userId,
 
-        followId : this.id
-        }
+        followId: this.id,
+      },
     })
       .then((res) => {
-        console.log(res.data.message)
-        this.getIsFollowing(this.userId, this.id)
-
+        this.getIsFollowing(this.userId, this.id);
       })
       .catch((err) => {
         console.log(err.message);
-
-                });
-  } 
+      });
+  };
 
   renderContactHeader = () => {
-
-    let onpress = this.state.isFollowing ? this.unfollowRequest : this.followRequest;
-    let text = this.state.isFollowing ? "unfollow"  : "follow";
+    let onpress = this.state.isFollowing
+      ? this.unfollowRequest
+      : this.followRequest;
+    let text = this.state.isFollowing ? "unfollow" : "follow";
     return (
       <View style={styles.headerContainer}>
         <View style={styles.item}>
@@ -418,26 +408,31 @@ class ProfilePub extends Component {
           </View>
         </View>
 
-          <View style={styles.item2}>
-          <TouchableOpacity style={{ height: 70, marginTop: 10, marginRight: 50 , backgroundColor: "#DDDDDD" }} onPress ={ onpress } >
-            
-          <Text style ={{fontSize : 20}}> {text} </Text>
-
+        <View style={styles.item2}>
+          <TouchableOpacity
+            style={{
+              height: 70,
+              marginTop: 10,
+              marginRight: 50,
+              backgroundColor: "#DDDDDD",
+            }}
+            onPress={onpress}
+          >
+            <Text style={{ fontSize: 20 }}> {text} </Text>
           </TouchableOpacity>
+        </View>
+        <View style={styles.userRow}>
+          <View style={styles.userNameRow}>
+            <Text style={styles.userNameText}>{this.state.name}</Text>
           </View>
-          <View style={styles.userRow}>
-            <View style={styles.userNameRow}>
-              <Text style={styles.userNameText}>{this.state.name}</Text>
-            </View>
-            <View style={styles.userNameRow}>
-              <Text style={styles.userNameText}>@{this.state.username}</Text>
-            </View>
-            <View style={styles.userBioRow}>
-              <Text style={styles.userBioText}>{this.state.bio}</Text>
-            </View>
+          <View style={styles.userNameRow}>
+            <Text style={styles.userNameText}>@{this.state.username}</Text>
+          </View>
+          <View style={styles.userBioRow}>
+            <Text style={styles.userBioText}>{this.state.bio}</Text>
           </View>
         </View>
-     
+      </View>
     );
   };
 

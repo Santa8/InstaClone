@@ -55,78 +55,9 @@ const styles = StyleSheet.create({
   },
 });
 
-function ModifyPost(urlpost, description, userid, Id) {
-  /*swal({
-    title: "Modify Post:",
-    text: "Description",
-    icon: urlpost,
-    content: {
-      element: "input",
-      attributes: {
-        value: description,
-        type: "Description",
-      },
-    },
-    button: {
-      text: "Update",
-      closeModal: false,
-    },
-  }).then((description) => {
-    axios({
-      method: "post",
-      url: "/UpdatePost",
-      baseURL: baseURL,
-      data: {
-        userid: userid,
-        postid: Id,
-        description: description,
-      },
-    })
-      .then((res) => {
-        //console.log(res)
-        const message = res.data.message;
-        console.log(message);
-        if (res.data.value) {
-          //swal(message);
-        }
-      })
-      .catch((err) => console.log(err));
-  });*/
-}
+function ModifyPost(urlpost, description, userid, Id) {}
 
-function DeletePost(urlpost, userid, Id) {
-  /*swal({
-    title: "Delete the post?",
-    text: "",
-    icon: urlpost,
-    buttons: true,
-    dangerMode: true,
-  }).then((willDelete) => {
-    axios({
-      method: "post",
-      url: "/DeletePost",
-      baseURL: baseURL,
-      data: {
-        userid: userid,
-        postid: Id,
-      },
-    })
-      .then((res) => {
-        //console.log(res)
-        const message = res.data.message;
-        console.log(message);
-        if (res.data.value) {
-          swal(message);
-        }
-      })
-      .catch((err) => console.log(err));
-    if (willDelete) {
-      swal("Your post has been deleted!", { icon: "success" });
-    } else {
-      swal("Your post has not been deleted");
-    }
-  });*/
-}
+function DeletePost(urlpost, userid, Id) {}
 
 const Post = ({ containerStyle, Id, urlpost, description, date, userid }) => {
   return (
