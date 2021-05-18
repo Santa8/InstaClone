@@ -98,13 +98,15 @@ class Profile extends Component {
         const reversePosts = res.data.results[0].posts.reverse();
 
         this.setState({ posts: reversePosts });
+       
 
         this.setState({ followers: res.data.results[0].followers });
         this.setState({ following: res.data.results[0].following });
+        console.log(res.data.results[0].posts)
         var followersnumber = this.state.followers.length;
         var followingnumber = this.state.following.length;
         var newroutes = [...this.state.tabs.routes];
-        newroutes[0].count = this.state.posts.length - 1;
+        newroutes[0].count = this.state.posts.length ;
         newroutes[1].count = followingnumber;
         newroutes[2].count = followersnumber;
         this.setState({
@@ -115,7 +117,7 @@ class Profile extends Component {
         });
         this.UpdateFollowing(res.data.results[0].following);
         this.UpdateFollowers(res.data.results[0].followers);
-        console.log(this.state.following);
+        
       })
       .catch((err) => console.log(err));
   };
@@ -134,7 +136,6 @@ class Profile extends Component {
         this.setState({ following: results.following });
 
         if (res.data.value) {
-          console.log(results);
         }
       })
       .catch((err) => console.log(err));
@@ -154,7 +155,6 @@ class Profile extends Component {
         this.setState({ followers: results.followers });
 
         if (res.data.value) {
-          console.log(results);
         }
       })
       .catch((err) => console.log(err));
@@ -192,7 +192,6 @@ class Profile extends Component {
   clearAppData = async () => {
     try {
       const keys = await AsyncStorage.getAllKeys();
-      console.log(keys);
       await AsyncStorage.multiRemove(keys);
     } catch (error) {
       console.error("Error clearing app data.");
@@ -262,7 +261,6 @@ class Profile extends Component {
   };
 
   ItemView = ({ item }) => {
-    console.log(item);
     if (item.name) {
       return (
         <View style={styles.followUser}>
@@ -422,7 +420,7 @@ class Profile extends Component {
   };
 
   renderMansonry2Col = () => {
-    if (this.state.posts.length < 2) {
+    if (this.state.posts.length < 1) {
       return (
         <View>
           <Text>AUCUN POST </Text>

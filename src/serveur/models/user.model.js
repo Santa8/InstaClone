@@ -34,7 +34,7 @@ const userSchema = new Schema({
   },
   posts: {
     type: Array,
-    default: {},
+    default: [],
   },
   website: {
     type: String,

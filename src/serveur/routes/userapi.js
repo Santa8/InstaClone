@@ -17,7 +17,7 @@ router.post("/unfollow", async (req, res) => {
   const followId = req.body.followId;
 
   if (id) {
-    console.log("unfollow");
+   
 
     User.updateOne(
       { _id: id },
@@ -43,7 +43,7 @@ router.post("/getIsFollowing", async (req, res) => {
   const id = req.body.userId;
   const followId = req.body.followId;
   let value = false;
-  console.log(followId);
+  
 
   isFollowing = await User.find(
     { _id: id, "following.Id": followId },
@@ -56,7 +56,7 @@ router.post("/getIsFollowing", async (req, res) => {
     value = true;
   }
   res.send({ value: value });
-  console.log(value);
+  
 });
 
 router.post("/follow", async (req, res) => {
@@ -77,7 +77,7 @@ router.post("/follow", async (req, res) => {
       "username"
     );
 
-    console.log(alreadyFollowing);
+    
     const namUser = await User.findById(id, { username: 1, name: 1, url: 1 });
     if (!alreadyFollowing.length) {
       User.findById(id, function (error, user) {
@@ -135,6 +135,7 @@ router.post("/updatefollowing", async (req, res) => {
           "following.$.nameVrai": FollowDetails.name,
           "following.$.usernameVrai": FollowDetails.username,
           "following.$.url": FollowDetails.url,
+          "following.$.name.$.username" : FollowDetails.username
         },
       },
 
@@ -167,6 +168,7 @@ router.post("/updatefollowers", async (req, res) => {
           "followers.$.nameVrai": FollowDetails.name,
           "followers.$.usernameVrai": FollowDetails.username,
           "followers.$.url": FollowDetails.url,
+          "followers.$.name.$.username" : FollowDetails.username
         },
       },
 
@@ -182,7 +184,7 @@ router.post("/updatefollowers", async (req, res) => {
 
 router.post("/listPosts", async (req, res) => {
   const id = req.body.Id;
-  console.log(id);
+  
   const following = await User.findById(id, "following");
 
   const totalPosts = [];
@@ -227,7 +229,7 @@ router.post("/listUsers", async (req, res) => {
     lista.push({ name: list[i].username, follow: follow, Id: list[i]._id });
   }
 
-  console.log(lista);
+  
 
   return res.send({ lista });
 });
@@ -335,7 +337,6 @@ router.post("/getUserDetails", function (req, res) {
         results: data,
       });
 
-      //console.log(data)
     })
     .catch((err) => {
       res.json(err);
@@ -399,6 +400,7 @@ router.post("/uploadpost", function (req, res) {
   var urlpost = req.body.urlpost;
   var description = req.body.description;
   var date = req.body.date;
+ 
 
   User.findById(id, function (error, user) {
     user.posts.push({
