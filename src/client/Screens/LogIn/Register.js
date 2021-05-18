@@ -1,6 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Button, Text, TextInput, Alert, StyleSheet } from "react-native";
+import {
+  View,
+  Button,
+  TextInput,
+  Text,
+  Alert,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+} from "react-native";
 import { connect } from "react-redux";
+import { LinearGradient } from "expo-linear-gradient";
+import { COLORS, SIZES, FONTS } from "../../constants";
 const axios = require("axios");
 
 import AuthStyle from "./style/AuthStyle";
@@ -47,48 +59,80 @@ function Register(props) {
     props.signup(signupData);
   };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>INPGRAM </Text>
-      <Text style={styles.titleText}>SignUp </Text>
-      <View>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="email"
-          onChangeText={(text) => setEmail(text)}
-          value={email}
-        />
-        <TextInput
-          style={styles.TextInput}
-          placeholder="username"
-          onChangeText={(text) => setUsername(text)}
-          value={username}
-        />
-        <TextInput
-          style={styles.TextInput}
-          placeholder="name"
-          onChangeText={(text) => setName(text)}
-          value={name}
-        />
-        <TextInput
-          style={styles.TextInput}
-          placeholder="password"
-          secureTextEntry={true}
-          onChangeText={(text) => setPassword(text)}
-          value={password}
-        />
-        <Button
-          style={styles.TextInput}
-          onPress={signupHandler}
-          title="Sign Up"
-        />
-        <Button
-          style={styles.TextInput}
-          onPress={() => props.navigation.navigate("LogIn")}
-          title="LogIn"
-        />
+  function renderButton(text, onPress) {
+    return (
+      <View style={{ margin: SIZES.padding * 0.5, alignItems: "center" }}>
+        <TouchableOpacity
+          style={{
+            height: 60,
+            width: 250,
+            backgroundColor: COLORS.black,
+            borderRadius: SIZES.radius / 0.2,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onPress={onPress}
+        >
+          <Text style={{ color: COLORS.white, ...FONTS.h3 }}>{text}</Text>
+        </TouchableOpacity>
       </View>
-    </View>
+    );
+  }
+
+  return (
+    <KeyboardAvoidingView style={{ flex: 1 }}>
+      <LinearGradient
+        colors={[COLORS.primary, COLORS.primary]}
+        style={{ flex: 1, alignItems: "center" }}
+      >
+        <ScrollView>
+          <Text
+            style={{
+              marginTop: 20,
+              marginBottom: 35,
+
+              marginTop: 35,
+              textAlign: "center",
+              color: "#bc6c25",
+              ...FONTS.h1,
+            }}
+          >
+            INPgram
+          </Text>
+          <Text style={styles.titleText}>Sign Up </Text>
+          <View style={{ marginBottom: 20 }}>
+            <TextInput
+              style={styles.TextInput}
+              placeholder="email"
+              onChangeText={(text) => setEmail(text)}
+              value={email}
+            />
+            <TextInput
+              style={styles.TextInput}
+              placeholder="username"
+              onChangeText={(text) => setUsername(text)}
+              value={username}
+            />
+            <TextInput
+              style={styles.TextInput}
+              placeholder="name"
+              onChangeText={(text) => setName(text)}
+              value={name}
+            />
+            <TextInput
+              style={styles.TextInput}
+              placeholder="password"
+              secureTextEntry={true}
+              onChangeText={(text) => setPassword(text)}
+              value={password}
+            />
+          </View>
+
+          {renderButton("LogIn", () => props.navigation.navigate("LogIn"))}
+          {renderButton("SignUp", signupHandler)}
+        </ScrollView>
+      </LinearGradient>
+    </KeyboardAvoidingView>
   );
 }
 

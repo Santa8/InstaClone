@@ -17,6 +17,8 @@ import AsyncStorage from "@react-native-community/async-storage";
 //import { Icon } from 'react-native-elements'
 import { uploadpost } from "../../actions/postsActions";
 import PostComponent from "./PostComponent";
+import { LinearGradient } from "expo-linear-gradient";
+import { COLORS, SIZES, FONTS } from "../../constants";
 
 import {
   TabView,
@@ -100,7 +102,6 @@ class Profile extends Component {
 
         this.setState({ followers: res.data.results[0].followers });
         this.setState({ following: res.data.results[0].following });
-        console.log(res.data.results[0].posts);
         var followersnumber = this.state.followers.length;
         var followingnumber = this.state.following.length;
         var newroutes = [...this.state.tabs.routes];
@@ -325,8 +326,6 @@ class Profile extends Component {
         return (
           <View>
             <FlatList
-              scrollEnabled={false}
-              horizontal
               data={this.state.following}
               keyExtractor={(item, index) => index.toString()}
               ItemSeparatorComponent={this.ItemSeparatorView}
@@ -338,8 +337,6 @@ class Profile extends Component {
         return (
           <View>
             <FlatList
-              scrollEnabled={false}
-              horizontal
               data={this.state.followers}
               keyExtractor={(item, index) => index.toString()}
               ItemSeparatorComponent={this.ItemSeparatorView}
@@ -441,21 +438,23 @@ class Profile extends Component {
 
   render() {
     return (
-      <ScrollView style={styles.scroll}>
-        <View style={[styles.container, this.props.containerStyle]}>
-          <View style={styles.cardContainer}>
-            {this.renderContactHeader()}
+      <LinearGradient colors={[COLORS.primary, COLORS.primary]}>
+        <ScrollView style={styles.scroll}>
+          <View style={[styles.container, this.props.containerStyle]}>
+            <View style={styles.cardContainer}>
+              {this.renderContactHeader()}
 
-            <TabView
-              style={[styles.tabContainer, this.props.tabContainerStyle]}
-              navigationState={this.state.tabs}
-              renderScene={this.renderScene}
-              renderTabBar={this.renderTabBar}
-              onIndexChange={this.handleIndexChange}
-            />
+              <TabView
+                style={[styles.tabContainer, this.props.tabContainerStyle]}
+                navigationState={this.state.tabs}
+                renderScene={this.renderScene}
+                renderTabBar={this.renderTabBar}
+                onIndexChange={this.handleIndexChange}
+              />
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </LinearGradient>
     );
   }
 }

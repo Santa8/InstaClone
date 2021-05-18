@@ -14,6 +14,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { connect } from "react-redux";
+import { LinearGradient } from "expo-linear-gradient";
+import { COLORS, SIZES, FONTS } from "../../constants";
 
 import axios from "axios";
 
@@ -220,32 +222,31 @@ class Home extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1, height: 100, backgroundColor: "white" }}>
-        <Image
-          source={instalogo}
-          style={{
-            width: 120,
-            height: 35,
-            marginLeft: 20,
-            tintColor: "black",
-            marginTop: 35,
-            marginBottom: 10,
-          }}
-        ></Image>
-        <Image
-          source={dm}
-          style={{
-            width: 25,
-            height: 25,
-            marginRight: 20,
-            alignSelf: "flex-end",
-            tintColor: "black",
-            marginTop: -40,
-          }}
-        ></Image>
-
-        <Container style={styles.container}>
-          <Content>
+      <LinearGradient colors={[COLORS.primary, COLORS.primary]}>
+        <View>
+          <Image
+            source={instalogo}
+            style={{
+              width: 120,
+              height: 35,
+              marginLeft: 20,
+              tintColor: "black",
+              marginTop: 35,
+              marginBottom: 10,
+            }}
+          ></Image>
+          <Image
+            source={dm}
+            style={{
+              width: 25,
+              height: 25,
+              marginRight: 20,
+              alignSelf: "flex-end",
+              tintColor: "black",
+              marginTop: -40,
+            }}
+          ></Image>
+          <View>
             <View style={{ height: 100 }}>
               <View style={{ flex: 3 }}>
                 <ScrollView
@@ -254,18 +255,20 @@ class Home extends Component {
                   contentContainerStyle={{
                     alignItems: "center",
                     paddingStart: 5,
-                    paddingEnd: 5,
                   }}
                 >
                   {this.renderUsers(this.state.data)}
                 </ScrollView>
               </View>
             </View>
-
-            <View>{this.renderPosts(this.state.posts)}</View>
-          </Content>
-        </Container>
-      </View>
+            <View style={{ marginBottom: 600 }}>
+              <ScrollView>
+                <View>{this.renderPosts(this.state.posts)}</View>
+              </ScrollView>
+            </View>
+          </View>
+        </View>
+      </LinearGradient>
     );
   }
 }

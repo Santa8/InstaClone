@@ -1,11 +1,23 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Button, TextInput, Text, Alert, StyleSheet } from "react-native";
+import {
+  View,
+  Button,
+  TextInput,
+  Text,
+  Alert,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+} from "react-native";
 const axios = require("axios");
 import { connect } from "react-redux";
 import AuthStyle from "./style/AuthStyle";
 const styles = StyleSheet.create({ ...AuthStyle });
 import { isLogedIn } from "../../actions/AuthActions";
 import { login } from "../../actions/loginActions";
+import { LinearGradient } from "expo-linear-gradient";
+import { COLORS, SIZES, FONTS } from "../../constants";
 
 function LogIn(props) {
   /*if (isLogedIn()) {
@@ -27,7 +39,7 @@ function LogIn(props) {
       if (props.isAuth) {
         props.navigation.navigate("Home");
       } else if (!props.isAuth && !props.isLoading) {
-        Alert.alert(props.errMsg);
+        //Alert.alert(props.errMsg);
       }
     } else {
       didMountRef.current = true;
@@ -44,34 +56,72 @@ function LogIn(props) {
     props.login(loginData);
   };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>INPGRAM </Text>
-      <Text style={styles.titleText}>Login</Text>
-      <TextInput
-        style={styles.TextInput}
-        placeholder="Email"
-        id="email"
-        onChangeText={(text) => putEmail(text)}
-      />
-      <TextInput
-        style={styles.TextInput}
-        id="password"
-        placeholder="Password"
-        secureTextEntry={true}
-        onChangeText={(text) => putPassword(text)}
-      />
+  function renderButton(text, onPress) {
+    return (
+      <View style={{ margin: SIZES.padding * 0.5, alignItems: "center" }}>
+        <TouchableOpacity
+          style={{
+            height: 60,
+            width: 250,
+            backgroundColor: COLORS.black,
+            borderRadius: SIZES.radius / 0.2,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onPress={onPress}
+        >
+          <Text style={{ color: COLORS.white, ...FONTS.h3 }}>{text}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
-      <Button onPress={loginHandler} title="Log In" />
-      <Button
-        onPress={() => props.navigation.navigate("Register")}
-        title="Sign Up"
-      />
-      <Button
-        onPress={() => props.navigation.navigate("Home")}
-        title="Passage"
-      />
-    </View>
+  return (
+    <KeyboardAvoidingView style={{ flex: 1 }}>
+      <LinearGradient
+        colors={[COLORS.primary, COLORS.primary]}
+        style={{ flex: 1, alignItems: "center" }}
+      >
+        <ScrollView>
+          <View>
+            <Text
+              style={{
+                marginTop: 20,
+                marginBottom: 35,
+
+                marginTop: 35,
+                textAlign: "center",
+                color: "#bc6c25",
+                ...FONTS.h1,
+              }}
+            >
+              INPgram
+            </Text>
+            <Text style={styles.titleText}>Login</Text>
+            <View style={{ marginBottom: 20 }}>
+              <TextInput
+                style={styles.TextInput}
+                placeholder="Email"
+                id="email"
+                onChangeText={(text) => putEmail(text)}
+              />
+              <TextInput
+                style={styles.TextInput}
+                id="password"
+                placeholder="Password"
+                secureTextEntry={true}
+                onChangeText={(text) => putPassword(text)}
+              />
+            </View>
+            {renderButton("LogIn", loginHandler)}
+            {renderButton("SignUp", () =>
+              props.navigation.navigate("Register")
+            )}
+            {renderButton("Passage", () => props.navigation.navigate("Home"))}
+          </View>
+        </ScrollView>
+      </LinearGradient>
+    </KeyboardAvoidingView>
   );
 }
 

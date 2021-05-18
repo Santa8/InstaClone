@@ -322,8 +322,6 @@ class ProfilePub extends Component {
         return (
           <View>
             <FlatList
-              scrollEnabled={false}
-              horizontal
               data={this.state.followers}
               keyExtractor={(item, index) => index.toString()}
               ItemSeparatorComponent={this.ItemSeparatorView}
