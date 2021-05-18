@@ -15,66 +15,169 @@ const { verifyToken } = require("../middleware/verifyToken");
 router.post("/unfollow", async (req, res) => {
   const id = req.body.Id;
   const followId = req.body.followId;
-  console.log("unfollow");
 
-  User.updateOne(
-    { _id: id },
-    { $pull: { following: { Id: followId } } },
-    { safe: true, multi: true },
-    function (err, obj) {}
+  if (id) {
+    console.log("unfollow");
+
+    User.updateOne(
+      { _id: id },
+      { $pull: { following: { Id: followId } } },
+      { safe: true, multi: true },
+      function (err, obj) {}
+    );
+    User.updateOne(
+      { _id: followId },
+      { $pull: { followers: { Id: id } } },
+      { safe: true, multi: true },
+      function (err, obj) {
+        res.send({
+          value: true,
+          message: "Follower deleted",
+        });
+      }
+    );
+  }
+});
+
+router.post("/getIsFollowing", async (req, res) => {
+  const id = req.body.userId;
+  const followId = req.body.followId;
+  let value = false;
+  console.log(followId);
+
+  isFollowing = await User.find(
+    { _id: id, "following.Id": followId },
+    "username"
   );
-  User.updateOne(
-    { _id: followId },
-    { $pull: { followers: { Id: id } } },
-    { safe: true, multi: true },
-    function (err, obj) {
-      res.send({
-        value: true,
-        message: "Follower deleted",
-      });
-    }
-  );
+
+  if (!isFollowing.length) {
+    value = false;
+  } else {
+    value = true;
+  }
+  res.send({ value: value });
+  console.log(value);
 });
 
 router.post("/follow", async (req, res) => {
   const id = req.body.Id;
   const followId = req.body.followId;
   //console.log(id)
+  if (id) {
+    const nameFollow = await User.findById(followId, "username");
+    const FollowDetails = await User.findById(followId, {
+      username: 1,
+      name: 1,
+      url: 1,
+    });
+    const nameUser = await User.findById(id, "username");
+    //console.log(nameFollow);
+    const alreadyFollowing = await User.find(
+      { _id: id, "following.Id": followId },
+      "username"
+    );
 
-  const nameFollow = await User.findById(followId, "username");
-
-  const nameUser = await User.findById(id, "username");
-  //console.log(nameFollow);
-  const alreadyFollowing = await User.find(
-    { _id: id, "following.Id": followId },
-    "username"
-  );
-
-  console.log(alreadyFollowing);
-
-  if (!alreadyFollowing.length) {
-    // console.log("salam")
-    User.findById(id, function (error, user) {
-      user.following.push({ Id: followId, name: nameFollow });
-
-      user
-        .save()
-        .then((doc) => {
-          res.send({ value: true, message: "succes" });
-        })
-        .catch((error) => {
-          res.json(error);
+    console.log(alreadyFollowing);
+    const namUser = await User.findById(id, { username: 1, name: 1, url: 1 });
+    if (!alreadyFollowing.length) {
+      User.findById(id, function (error, user) {
+        user.following.push({
+          Id: followId,
+          name: nameFollow,
+          nameVrai: FollowDetails.name,
+          usernameVrai: FollowDetails.username,
+          url: FollowDetails.url,
         });
-    });
 
-    User.findById(followId, function (error, user) {
-      user.followers.push({ Id: id, name: nameUser });
+        user
+          .save()
+          .then((doc) => {
+            res.send({ value: true, message: "succes" });
+          })
+          .catch((error) => {
+            res.json(error);
+          });
+      });
 
-      user.save();
-    });
-  } else {
-    res.send({ value: false, message: "already following" });
+      User.findById(followId, function (error, user) {
+        user.followers.push({
+          Id: id,
+          name: nameUser,
+          nameVrai: namUser.name,
+          usernameVrai: namUser.username,
+          url: namUser.url,
+        });
+
+        user.save();
+      });
+    } else {
+      res.send({ value: false, message: "already following" });
+    }
   }
+});
+
+router.post("/updatefollowing", async (req, res) => {
+  var following = req.body.following;
+  var userid = req.body.userid;
+
+  for (let i = 0; i < following.length; i++) {
+    var followingid = following[i].Id;
+
+    const FollowDetails = await User.findById(followingid, {
+      username: 1,
+      name: 1,
+      url: 1,
+    });
+    User.updateOne(
+      { _id: userid, "following.Id": followingid },
+      {
+        $set: {
+          "following.$.nameVrai": FollowDetails.name,
+          "following.$.usernameVrai": FollowDetails.username,
+          "following.$.url": FollowDetails.url,
+        },
+      },
+
+      function (err, doc) {}
+    );
+  }
+  const Following = await User.findById(userid, "following");
+  res.status(200).json({
+    value: true,
+    results: Following,
+  });
+});
+
+router.post("/updatefollowers", async (req, res) => {
+  var followers = req.body.followers;
+  var userid = req.body.userid;
+
+  for (let i = 0; i < followers.length; i++) {
+    var followersid = followers[i].Id;
+
+    const FollowDetails = await User.findById(followersid, {
+      username: 1,
+      name: 1,
+      url: 1,
+    });
+    User.updateOne(
+      { _id: userid, "followers.Id": followersid },
+      {
+        $set: {
+          "followers.$.nameVrai": FollowDetails.name,
+          "followers.$.usernameVrai": FollowDetails.username,
+          "followers.$.url": FollowDetails.url,
+        },
+      },
+
+      function (err, doc) {}
+    );
+  }
+  const Followers = await User.findById(userid, "followers");
+  res.status(200).json({
+    value: true,
+    results: Followers,
+  });
 });
 
 router.post("/listPosts", async (req, res) => {

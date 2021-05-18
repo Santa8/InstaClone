@@ -86,6 +86,12 @@ export default {
     fontWeight: "bold",
     textAlign: "center",
   },
+  itemUser: {
+    width: '30%' // is 50% of container width
+  },
+  itemUser2: {
+    width: '50%' // is 50% of container width
+  },
   userRow: {
     alignItems: "flex-start",
     flexDirection: "column",
@@ -108,4 +114,47 @@ export default {
     backgroundColor: "#DDDDDD",
     padding: 10,
   },
+  userImage: {
+    borderRadius: 70,
+    height: 100,
+    marginBottom: 10,
+    width: 100,
+  },
+  followUser:{
+    backgroundColor: '#FFF',
+    marginBottom: 15,
+    marginTop: 25,
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center'
+
+  },
+  followImage: {
+    borderRadius: 40,
+    height: 80,
+    marginBottom: 10,
+    width: 80,
+  },
+
+  userNameRow: {
+    marginBottom: 2,
+  },
+  userNameText: {
+    color: '#5B5A5A',
+    fontSize: 14,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  userRow: {
+    alignItems:'flex-start',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  nameSize: {
+    fontSize: 18,
+    fontWeight: 'bold',
+
+  }
 };
