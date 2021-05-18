@@ -194,7 +194,7 @@ class Home extends Component {
               fontSize: 20,
             }}
           >   
-            {user.name}
+            {user.name} 
           </Text>
          <TouchableOpacity
                           style={{ marginHorizontal: 5 , width : 90, height : 30 , backgroundColor: "#DDDDDD",}}

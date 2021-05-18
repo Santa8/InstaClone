@@ -16,6 +16,8 @@ const { verifyToken } = require("../middleware/verifyToken");
 router.post("/unfollow", async (req, res) => {
   const id = req.body.Id;
   const followId = req.body.followId;
+
+  if (id ){
   console.log("unfollow")
   
   User.updateOne(
@@ -37,15 +39,37 @@ router.post("/unfollow", async (req, res) => {
       });
     }
   );
+  }
 
 
   
 });
 
+router.post("/getIsFollowing", async (req, res) => {
+  const id = req.body.userId;
+  const followId = req.body.followId;
+  let value = false;
+  console.log(followId)
+
+  isFollowing = await User.find({ _id : id  , "following.Id" : followId } , "username" ) ;
+
+  if(!isFollowing.length){
+       value = false;
+  }
+  else {
+    value =true;
+  }
+  res.send({value:value});
+  console.log(value)
+
+
+})
+
 router.post("/follow", async (req, res) => {
   const id = req.body.Id;
   const followId = req.body.followId;
   //console.log(id)
+  if (id){
 
   const nameFollow = await User.findById(followId, "username");
 
@@ -56,8 +80,7 @@ router.post("/follow", async (req, res) => {
    console.log(alreadyFollowing);
 
  if (!alreadyFollowing.length) {
-   
-  // console.log("salam")
+
   User.findById(id, function (error, user) {
     user.following.push({ Id: followId, name: nameFollow });
 
@@ -82,6 +105,7 @@ router.post("/follow", async (req, res) => {
 
     res.send({value : false, message : "already following"})
    }
+  }
 });
 
 router.post("/listPosts", async (req, res) => {

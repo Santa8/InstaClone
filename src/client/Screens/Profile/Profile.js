@@ -169,7 +169,7 @@ class Profile extends Component {
   LogOut = async () => {
     this.props.logout();
     await this.clearAppData();
-    //this.props.navigation.navigate("AddPost");
+    this.props.navigation.navigate("LogIn");
   };
   handleIndexChange = (index) => {
     this.setState({
@@ -226,6 +226,8 @@ class Profile extends Component {
   };
 
   ItemView = ({ item }) => {
+    console.log(item);
+    if (item.name) {
     return (
       <View>
         <TouchableOpacity
@@ -242,6 +244,10 @@ class Profile extends Component {
         </TouchableOpacity>
       </View>
     );
+        }
+        else {
+          return (<View></View>)
+        }
   };
 
   renderPosts = (posts) => {

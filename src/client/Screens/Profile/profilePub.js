@@ -56,9 +56,9 @@ class ProfilePub extends Component {
       tabs: {
         index: 0,
         routes: [
-          { key: "1", title: "Posts", count: "5" },
-          { key: "2", title: "following", count: "192 M" },
-          { key: "3", title: "followers", count: "83" },
+          { key: "1", title: "Posts", count: "0" },
+          { key: "2", title: "following", count: "0" },
+          { key: "3", title: "followers", count: "0" },
         ],
       },
       postsMasonry: {},
@@ -66,6 +66,8 @@ class ProfilePub extends Component {
       following: [],
 
       followers: [],
+
+      isFollowing : false
     };
   }
 
@@ -73,6 +75,29 @@ class ProfilePub extends Component {
     tabBarIcon: ({ tintColor }) => (
       <Icon name="person" style={{ color: tintColor }} />
     ),
+  };
+
+  getIsFollowing = (userId, followId) => {
+
+    axios({
+      method: "post",
+      url: "/getIsFollowing",
+      baseURL: baseURL,
+      data: {
+        userId: userId,
+        followId : followId
+      },
+    }).then ((res)=>{
+
+      this.setState({ isFollowing : res.data.value })
+
+    }).catch ((err)=>{
+      console.log(err)
+
+    });
+
+
+
   };
 
   fetchUserDetails = (user_id) => {
@@ -86,11 +111,11 @@ class ProfilePub extends Component {
     })
       .then((res) => {
         this.setState({ name: res.data.results[0].name });
-        console.log("hhahsa111122");
+       
 
         if (res.data.results[0].url) {
           this.setState({ url: res.data.results[0].url });
-          console.log("hhahsa22");
+          
         }
         this.setState({ username: res.data.results[0].username });
         this.setState({ bio: res.data.results[0].bio });
@@ -131,7 +156,9 @@ class ProfilePub extends Component {
   };
   async componentDidMount() {
     await this.getIdValue();
+    await this.getUserIdValue();
     this.fetchUserDetails(this.id);
+    this.getIsFollowing(this.userId, this.id)
 
     this.willFocusSubscription = this.props.navigation.addListener(
       "willFocus",
@@ -145,6 +172,13 @@ class ProfilePub extends Component {
     var value = await AsyncStorage.getItem("publicProfileId");
 
     this.id = value;
+    return value;
+  };
+
+  getUserIdValue = async () => {
+    var value = await AsyncStorage.getItem("Id");
+
+    this.userId = value;
     return value;
   };
 
@@ -175,11 +209,11 @@ class ProfilePub extends Component {
     this.willFocusSubscription.remove();
   }
 
-  LogOut = async () => {
+  /*LogOut = async () => {
     // this.props.logout();
     //await this.clearAppData();
     this.props.navigation.navigate("AddPost");
-  };
+  };*/
   handleIndexChange = (index) => {
     this.setState({
       tabs: {
@@ -327,7 +361,55 @@ class ProfilePub extends Component {
     });
   };
 
+  followRequest = () => { 
+    axios({
+      method: "post",
+      url: "/follow",
+      baseURL: baseURL,
+      data: { 
+        Id: this.userId,
+
+        followId : this.id
+      
+        }
+    })
+      .then((res) => {
+        console.log(res.data.message)
+        this.getIsFollowing(this.userId, this.id)
+
+      })
+
+      .catch((err) => {
+        console.log(err.message);
+
+                });
+  } 
+  unfollowRequest = () => { 
+    axios({
+      method: "post",
+      url: "/unfollow",
+      baseURL: baseURL,
+      data: { 
+        Id: this.userId,
+
+        followId : this.id
+        }
+    })
+      .then((res) => {
+        console.log(res.data.message)
+        this.getIsFollowing(this.userId, this.id)
+
+      })
+      .catch((err) => {
+        console.log(err.message);
+
+                });
+  } 
+
   renderContactHeader = () => {
+
+    let onpress = this.state.isFollowing ? this.unfollowRequest : this.followRequest;
+    let text = this.state.isFollowing ? "unfollow"  : "follow";
     return (
       <View style={styles.headerContainer}>
         <View style={styles.item}>
@@ -336,13 +418,12 @@ class ProfilePub extends Component {
           </View>
         </View>
 
-        <View style={styles.item2}>
-          <View style={{ height: 70, marginTop: 10, marginRight: 50 }}>
-            <Button title="logout" onPress={this.LogOut} />
-          </View>
+          <View style={styles.item2}>
+          <TouchableOpacity style={{ height: 70, marginTop: 10, marginRight: 50 , backgroundColor: "#DDDDDD" }} onPress ={ onpress } >
+            
+          <Text style ={{fontSize : 20}}> {text} </Text>
 
-          <View style={styles.userRow}>
-            <Button onPress={this.Upload} title="upload post" />
+          </TouchableOpacity>
           </View>
           <View style={styles.userRow}>
             <View style={styles.userNameRow}>
@@ -356,7 +437,7 @@ class ProfilePub extends Component {
             </View>
           </View>
         </View>
-      </View>
+     
     );
   };
 
