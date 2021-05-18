@@ -23,6 +23,12 @@ export const AddImage = styled.Image`
   margin-bottom: 10px;
 `;
 
+export const AddImageProfile = styled.Image`
+  width: 60%;
+  height: 35%;
+  margin-bottom: 10px;
+`;
+
 export const StatusWrapper = styled.View`
   justify-content: center;
   align-items: center;

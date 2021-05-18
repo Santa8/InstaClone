@@ -48,8 +48,8 @@ export const uploadprofilephoto = (Data) => {
       url: "/uploadprofilephoto",
       baseURL: baseURL,
       data: {
-        id: Data.id,
-        url: Data.url,
+        id: Data.userid,
+        url: Data.urlpost,
       },
     })
       .then((res) => {

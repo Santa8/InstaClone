@@ -12,7 +12,7 @@ import { setCurrentUser, logout } from "./actions/loginActions";
 
 import RootNavigation from "./navigation/rootNavigation";
 
-import MainScreen from "./Screens/MainScreen";
+
 
 const initialLoginStatut = {
   isLoading: true,

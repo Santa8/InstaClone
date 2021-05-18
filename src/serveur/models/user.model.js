@@ -22,9 +22,8 @@ const userSchema = new Schema({
   url: {
     type: String,
     trim: true,
-    //required: true,
-    //maxlength: [5000, "User name too long"],
-    //minlength: [3, "Fist name too short"]
+    default : "https://i.pinimg.com/280x280_RS/b8/49/79/b849797ed8b78c6d2d8ab6db464d61fe.jpg"
+   
   },
   bio: {
     type: String,

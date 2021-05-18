@@ -11,10 +11,6 @@ import { signup } from "../../actions/signupActions";
 import { isLogedIn } from "../../actions/AuthActions";
 
 function Register(props) {
-  /* if (isLogedIn()) {
-    props.navigation.navigate("Home");
-  }*/
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");

@@ -12,54 +12,74 @@ const { verifyToken } = require("../middleware/verifyToken");
 //=================================================================
 // signup a new user
 
+router.post("/unfollow", async (req, res) => {
+  const id = req.body.Id;
+  const followId = req.body.followId;
+  console.log("unfollow");
+
+  User.updateOne(
+    { _id: id },
+    { $pull: { following: { Id: followId } } },
+    { safe: true, multi: true },
+    function (err, obj) {}
+  );
+  User.updateOne(
+    { _id: followId },
+    { $pull: { followers: { Id: id } } },
+    { safe: true, multi: true },
+    function (err, obj) {
+      res.send({
+        value: true,
+        message: "Follower deleted",
+      });
+    }
+  );
+});
+
 router.post("/follow", async (req, res) => {
   const id = req.body.Id;
   const followId = req.body.followId;
+  //console.log(id)
 
   const nameFollow = await User.findById(followId, "username");
 
   const nameUser = await User.findById(id, "username");
   //console.log(nameFollow);
+  const alreadyFollowing = await User.find(
+    { _id: id, "following.Id": followId },
+    "username"
+  );
 
-  User.findById(id, function (error, user) {
-    user.following.push({ Id: followId, name: nameFollow });
+  console.log(alreadyFollowing);
 
-    user
-      .save()
-      .then((doc) => {
-        res.status(201).json({
-          message: "add Following",
-          results: doc,
+  if (!alreadyFollowing.length) {
+    // console.log("salam")
+    User.findById(id, function (error, user) {
+      user.following.push({ Id: followId, name: nameFollow });
+
+      user
+        .save()
+        .then((doc) => {
+          res.send({ value: true, message: "succes" });
+        })
+        .catch((error) => {
+          res.json(error);
         });
-      })
-      .catch((error) => {
-        res.json(error);
-      });
-  });
+    });
 
-  User.findById(followId, function (error, user) {
-    user.followers.push({ Id: id, name: nameUser });
+    User.findById(followId, function (error, user) {
+      user.followers.push({ Id: id, name: nameUser });
 
-    user.save();
-    /*.then(doc =>{
-          res.status(201).json({
-
-              message:"add Follower",
-              results:doc
-
-
-          }); 
-
-     })
-     .catch(error=>{
-       res.json(error);
-
-     })*/
-  });
+      user.save();
+    });
+  } else {
+    res.send({ value: false, message: "already following" });
+  }
 });
 
 router.post("/listPosts", async (req, res) => {
   const id = req.body.Id;
+  console.log(id);
   const following = await User.findById(id, "following");
 
   const totalPosts = [];
@@ -73,28 +93,38 @@ router.post("/listPosts", async (req, res) => {
           posts.posts.forEach((post) => {
             totalPosts.push({
               username: following.following[index].name.username,
-              picurl: url.url,
               posts: post.urlpost,
+              picurl: url.url,
             });
           });
         }
       }
-
-      //totalPosts.push({"username" : following.following[index].name , "posts" : posts })
     }
   }
-
   return res.send({ totalPosts });
 });
 
 router.post("/listUsers", async (req, res) => {
-  const list = await User.find({}, "username");
+  const list = await User.find({ _id: { $ne: req.body.Id } }, "username");
 
   const lista = [];
 
-  list.forEach((user) => {
-    lista.push({ name: user.username, follow: 1, Id: user._id });
-  });
+  for (let i = 0; i < list.length; i++) {
+    let follow;
+    isFollowing = await User.find(
+      { _id: req.body.Id, "following.name._id": list[i]._id },
+      "username"
+    );
+    if (!isFollowing.length) {
+      follow = 0;
+    } else {
+      follow = 1;
+    }
+
+    lista.push({ name: list[i].username, follow: follow, Id: list[i]._id });
+  }
+
+  console.log(lista);
 
   return res.send({ lista });
 });

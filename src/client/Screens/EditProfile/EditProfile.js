@@ -136,67 +136,7 @@ class EditProfile extends Component {
     this.willFocusSubscription.remove();
   }
 
-  ChangePhoto = () => {
-    /*const options ={
-      noData: true,
-    };
-
-  launchImageLibrary(options,response => {
-
-      console.log("response",response);
-      if(response.uri){
-        this.setState({photo:response});
-      }
-    })*/
-  };
-  /*ChangePhoto = () => {
-  const options = {
-    title: 'Select Avatar',
-    customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
-    storageOptions: {
-      skipBackup: true,
-      path: 'images',
-    },
-  };
-
-launchCamera(options, (response) => { // Use launchImageLibrary to open image gallery
-      console.log('Response = ', response);
-    
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      } else {
-        const source = { uri: response.uri };
-        this.setState({photo:response.uri});
-        // You can also display the image using data:
-        // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-    
-        console.log(source)
-      }
-  }
-    )} */
-  /* setName = (value) => {
-    AsyncStorage.setItem('name',value);
-    this.setState({'name':value});
-  }
-
-  setUsername = (value) =>{
-     AsyncStorage.setItem('username',value);
-    this.setState({'username':value});
-  }
-
-  setWebsite = (value) =>{
-     AsyncStorage.setItem('website',value);
-    this.setState({'website':value});
-  }
-
-  setBio = (value) =>{
-      AsyncStorage.setItem('bio',value);
-    this.setState({'bio':value});
-  }*/
+  ChangePhoto = () => {};
 
   render() {
     return (

@@ -157,6 +157,7 @@ class Profile extends Component {
   clearAppData = async () => {
     try {
       const keys = await AsyncStorage.getAllKeys();
+      console.log(keys);
       await AsyncStorage.multiRemove(keys);
     } catch (error) {
       console.error("Error clearing app data.");
@@ -169,7 +170,7 @@ class Profile extends Component {
   LogOut = async () => {
     this.props.logout();
     await this.clearAppData();
-    //this.props.navigation.navigate("AddPost");
+    this.props.navigation.navigate("LogIn");
   };
   handleIndexChange = (index) => {
     this.setState({
@@ -226,22 +227,26 @@ class Profile extends Component {
   };
 
   ItemView = ({ item }) => {
-    return (
-      <View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            if (item.Id) {
-              AsyncStorage.setItem("publicProfileId", item.name._id);
-              this.setState({ ProfilePubId: item.name._id });
-              this.props.navigation.navigate("ProfilePub");
-            }
-          }}
-        >
-          <Text>{item.name.username}</Text>
-        </TouchableOpacity>
-      </View>
-    );
+    if (item) {
+      return (
+        <View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              if (item.Id) {
+                AsyncStorage.setItem("publicProfileId", item.name._id);
+                this.setState({ ProfilePubId: item.name._id });
+                this.props.navigation.navigate("ProfilePub");
+              }
+            }}
+          >
+            <Text>{item.name.username}</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    } else {
+      return <View></View>;
+    }
   };
 
   renderPosts = (posts) => {
@@ -322,6 +327,17 @@ class Profile extends Component {
     });
   };
 
+  EditPic = () => {
+    const postdata = {
+      urlpost: this.state.url,
+      description: "",
+      userid: this.state.id,
+      Id: "",
+    };
+
+    this.props.editpost(postdata);
+    this.props.navigation.navigate("EditPic");
+  };
   renderContactHeader = () => {
     return (
       <View style={styles.headerContainer}>
@@ -341,6 +357,7 @@ class Profile extends Component {
               onPress={() => this.props.navigation.navigate("EditProfile")}
               title="Edit Profil"
             />
+            <Button onPress={() => this.EditPic()} title="Edit pdp" />
           </View>
           <View style={styles.userRow}>
             <View style={styles.userNameRow}>
