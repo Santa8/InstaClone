@@ -56,9 +56,9 @@ class Profile extends Component {
       tabs: {
         index: 0,
         routes: [
-          { key: "1", title: "Posts", count: "5" },
-          { key: "2", title: "following", count: "192 M" },
-          { key: "3", title: "followers", count: "83" },
+          { key: "1", title: "Posts", count: "0" },
+          { key: "2", title: "following", count: "0" },
+          { key: "3", title: "followers", count: "0" },
         ],
       },
       postsMasonry: {},
@@ -112,18 +112,63 @@ class Profile extends Component {
             ...this.state.tabs,
             newroutes,
           },
+          
         });
+        this.UpdateFollowing(res.data.results[0].following);
+           this.UpdateFollowers(res.data.results[0].followers);
+           console.log(this.state.following);
       })
       .catch((err) => console.log(err));
   };
-  ModifyNumber = (tabs) => {
-    var newtabs = [...tabs];
+  UpdateFollowing = (following) => {
+    axios({
+      method: "post",
+      url: "/updatefollowing",
+      baseURL: baseURL,
+      data: {
+        userid:this.state.id,
+        following:following
+      },
+    })
+      .then((res) => {
+        const results = res.data.results;
+        this.setState({following:results.following});
+        
+        if (res.data.value) {
+          console.log(results)
+          
+        }
+      })
+      .catch((err) => console.log(err));
+  
+      
+      
+    };
+    UpdateFollowers = (followers) => {
+      axios({
+        method: "post",
+        url: "/updatefollowers",
+        baseURL: baseURL,
+        data: {
+          userid:this.state.id,
+          followers:followers
+        },
+      })
+        .then((res) => {
+          const results = res.data.results;
+          this.setState({followers:results.followers});
+          
+          if (res.data.value) {
+            console.log(results)
+            
+          }
+        })
+        .catch((err) => console.log(err));
+    
+        
+        
+      };
 
-    var newroutes = [...newtabs.routes];
-    var newroute = [...newroutes[0]];
-    newroute.count = reversePosts.length;
-    this.setState({ tabs: newtabs });
-  };
 
   onPressPlace = () => {
     console.log("place");
@@ -229,7 +274,14 @@ class Profile extends Component {
     console.log(item);
     if (item.name) {
     return (
-      <View>
+      <View  style={styles.followUser}> 
+      <View style={styles.itemUser} >
+          <View style={styles.userRow}>
+              <Image style={styles.followImage} source={{ uri: item.url }} />  
+          </View>
+      </View>
+    <View style={styles.itemUser2}>
+        <View style={styles.userRow}>
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
@@ -240,9 +292,15 @@ class Profile extends Component {
             }
           }}
         >
-          <Text>{item.name.username}</Text>
+          <Text>{item.nameVrai}</Text>
         </TouchableOpacity>
-      </View>
+        <Text>{item.usernameVrai}</Text>
+         </View>
+     </View>
+   
+
+ </View>
+      
     );
         }
         else {

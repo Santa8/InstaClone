@@ -72,17 +72,17 @@ router.post("/follow", async (req, res) => {
   if (id){
 
   const nameFollow = await User.findById(followId, "username");
-
+  const FollowDetails = await User.findById(followId, {"username":1,"name":1,"url":1});
   const nameUser = await User.findById(id, "username");
   //console.log(nameFollow);
    const alreadyFollowing =  await User.find( { _id : id , "following.Id" : followId } , "username" );
    
    console.log(alreadyFollowing);
-
+   const namUser = await User.findById(id, {"username":1,"name":1,"url":1});
  if (!alreadyFollowing.length) {
 
   User.findById(id, function (error, user) {
-    user.following.push({ Id: followId, name: nameFollow });
+    user.following.push({ Id: followId, name: nameFollow,nameVrai:FollowDetails.name,usernameVrai:FollowDetails.username,url:FollowDetails.url });
 
     user.save()
       .then((doc) => {
@@ -92,9 +92,9 @@ router.post("/follow", async (req, res) => {
         res.json(error);
       });
   });
-
+  
   User.findById(followId, function (error, user) {
-    user.followers.push({ Id: id, name: nameUser });
+    user.followers.push({ Id: id, name: nameUser,nameVrai:namUser.name,usernameVrai:namUser.username,url:namUser.url });
 
     user.save();
   });
@@ -107,6 +107,64 @@ router.post("/follow", async (req, res) => {
    }
   }
 });
+
+router.post("/updatefollowing", async (req, res) => {
+  var following = req.body.following;
+  var userid = req.body.userid;
+  
+   for(let i=0;i<following.length;i++) {
+     
+    
+     var followingid=following[i].Id;
+     
+const FollowDetails = await User.findById(followingid, {"username":1,"name":1,"url":1});
+  User.updateOne(
+    { "_id":userid ,"following.Id": followingid },
+    { $set: { "following.$.nameVrai": FollowDetails.name ,  "following.$.usernameVrai": FollowDetails.username , "following.$.url": FollowDetails.url  } },
+
+    function (err, doc) {
+      
+    }
+  );
+
+   }
+   const Following = await User.findById(userid, "following");
+   res.status(200).json({
+    value: true,
+    results:Following,
+  });
+
+});
+
+router.post("/updatefollowers", async (req, res) => {
+  var followers = req.body.followers;
+  var userid = req.body.userid;
+  
+   for(let i=0;i<followers.length;i++) {
+     
+    
+     var followersid=followers[i].Id;
+     
+const FollowDetails = await User.findById(followersid, {"username":1,"name":1,"url":1});
+  User.updateOne(
+    { "_id":userid ,"followers.Id": followersid },
+    { $set: { "followers.$.nameVrai": FollowDetails.name ,  "followers.$.usernameVrai": FollowDetails.username , "followers.$.url": FollowDetails.url  } },
+
+    function (err, doc) {
+      
+    }
+  );
+
+   }
+   const Followers = await User.findById(userid, "followers");
+   res.status(200).json({
+    value: true,
+    results:Followers,
+  });
+
+});
+
+
 
 router.post("/listPosts", async (req, res) => {
   const id = req.body.Id;
