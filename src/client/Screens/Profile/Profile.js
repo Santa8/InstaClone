@@ -102,7 +102,7 @@ class Profile extends Component {
 
         this.setState({ followers: res.data.results[0].followers });
         this.setState({ following: res.data.results[0].following });
-        console.log(res.data.results[0].posts)
+        
         var followersnumber = this.state.followers.length;
         var followingnumber = this.state.following.length;
         var newroutes = [...this.state.tabs.routes];
@@ -176,8 +176,8 @@ class Profile extends Component {
 
   componentDidUpdate() {
     if (this.props.isUploaded) {
-      // Alert.alert("POST UPLOADED");
-      this.props.navigation.navigate("Profile");
+      this.fetchUserDetails(this.props.userDetails);
+      //this.props.navigation.navigate("Profile");
     }
     if (!this.props.isUploaded && !this.props.isLoading) {
       //Alert.alert(this.props.errMsg);
@@ -293,7 +293,7 @@ class Profile extends Component {
     }
   };
 
-  renderPosts = (posts) => {
+  renderPosts = (posts , urlpic) => {
     return posts.map((post, index) => {
       var name = this.state.name;
       var url = post.urlpost;
@@ -305,7 +305,7 @@ class Profile extends Component {
           imageSource={url}
           likes="101"
           username={name}
-          userpicurl={this.state.url}
+          userpicurl={urlpic}
           caption={caption}
           date={date}
           Id={id}
@@ -430,7 +430,7 @@ class Profile extends Component {
       return (
         <View style={styles.masonryContainer}>
           <View>
-            <View>{this.renderPosts(this.state.posts)}</View>
+            <View>{this.renderPosts(this.state.posts, this.state.url)}</View>
           </View>
         </View>
       );

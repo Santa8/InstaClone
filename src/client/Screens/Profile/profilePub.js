@@ -50,7 +50,6 @@ class ProfilePub extends Component {
       username: "",
       urlpost: "",
       bio: "",
-      post: "",
       ProfilePubId: "",
       posts: [],
       tabs: {
@@ -120,7 +119,7 @@ class ProfilePub extends Component {
         this.setState({ username: res.data.results[0].username });
         this.setState({ bio: res.data.results[0].bio });
 
-        this.setState({ post: res.data.results[0].posts[0].urlpost });
+       
 
         const reversePosts = res.data.results[0].posts.reverse();
 
@@ -376,6 +375,7 @@ class ProfilePub extends Component {
       .then((res) => {
         console.log(res.data.message)
         this.getIsFollowing(this.userId, this.id)
+        this.fetchUserDetails(this.id)
 
       })
 
@@ -398,6 +398,7 @@ class ProfilePub extends Component {
       .then((res) => {
         console.log(res.data.message)
         this.getIsFollowing(this.userId, this.id)
+        this.fetchUserDetails(this.id)
 
       })
       .catch((err) => {

@@ -114,14 +114,16 @@ const EditPic = (props) => {
       .then((res) => {
         const message = res.data.message;
         if (message === "POST UPLOADED") {
-          dispatch(uploadSuccess(Data));
+          //dispatch(uploadSuccess(Data));
+          Alert.alert("Image uploaded!");
         } else {
-          dispatch(uploadFailure(message));
+         // dispatch(uploadFailure(message));
+         Alert.alert("Image is not uploaded!");
         }
       })
       .catch((err) => {
         console.log("postsActions.js, upload Request Error: ", err.message);
-        dispatch(uploadFailure("Fail to Upload"));
+        //dispatch(uploadFailure("Fail to Upload"));
       });
   };
 
@@ -151,7 +153,7 @@ const EditPic = (props) => {
     setUploading(false);
     setImage(null);
 
-    Alert.alert("Image uploaded!");
+    //Alert.alert("Image uploaded!");
     return await snapshot.ref.getDownloadURL();
   }
 
@@ -213,7 +215,7 @@ const mapStatetoProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     // only map needed dispatches here
-    modifypost: (data) => dispatch(modifypost(data)),
+    //modifypost: (data) => dispatch(modifypost(data)),
   };
 };
 

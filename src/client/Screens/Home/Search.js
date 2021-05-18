@@ -9,23 +9,35 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Image
 } from "react-native";
 import AuthStyle from "./style/AuthStyle";
 import { connect } from "react-redux";
-const styles1 = StyleSheet.create({ ...AuthStyle });
+
 import { SearchBar } from "react-native-elements";
 import axios from "axios";
 import { Icon } from "native-base";
 import { ForceTouchGestureHandler } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-community/async-storage";
 import { baseURL } from "../../constants";
+import { SearchStyle } from "./SearchStyle"
+
+const styles = StyleSheet.create({ ...SearchStyle });
+
 
 function Search(props) {
   const [filtredData, setfilteredData] = useState([]);
   const [masterData, setmasterData] = useState([]);
   const [search, setsearch] = useState("");
 
-  useEffect(() => {
+  const [Id, setId] = useState("");
+
+  useEffect(  () => {
+    (async () => {
+      var value = await AsyncStorage.getItem("Id");
+      setId(value);
+    })();
+
     fetchUsers();
     return () => {};
   }, []);
@@ -59,20 +71,46 @@ function Search(props) {
       setfilteredData(masterData);
     }
   };
+  const getIdValue = async () => {
+    var value = await AsyncStorage.getItem("Id");
+    setId(value);
+    return value;
+  };
 
   const ItemView = ({ item }) => {
     return (
-      <View>
-        <TouchableOpacity
-          style={styles.button}
+      <View style={styl.followUser}>
+          <View style={styl.itemUser}>
+            <View style={styl.userRow}>
+              <Image style={styl.followImage} source={{ uri: item.url }} />
+            </View>
+          </View>
+          <View style={styl.itemUser2}>
+            <View style={styl.userRow}>
+            <TouchableOpacity
+          style={styl.button}
           onPress={() => {
+          
+            if (  item.Id === Id ) {
+              props.navigation.navigate("Profile");
+            }
+            else {
+              console.log("toudaaaa")
             AsyncStorage.setItem("publicProfileId", item.Id);
+
             props.navigation.navigate("ProfilePub");
+            }
+            
           }}
         >
           <Text>{item.name}</Text>
         </TouchableOpacity>
-      </View>
+              
+              <Text>{item.usernameVrai}</Text>
+            </View>
+          </View>
+        </View>
+      
     );
   };
 
@@ -118,9 +156,19 @@ Search["navigationOptions"] = {
   ),
 };
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "white",
+const styl = StyleSheet.create({
+
+  itemUser: {
+    width: '30%' // is 50% of container width
+  },
+  itemUser2: {
+    width: '50%' // is 50% of container width
+  },
+  userRow: {
+    alignItems: "flex-start",
+    flexDirection: "column",
+    justifyContent: "center",
+    marginBottom: 12,
   },
   itemStyle: {
     padding: 10,
@@ -138,6 +186,50 @@ const styles = StyleSheet.create({
     backgroundColor: "#DDDDDD",
     padding: 10,
   },
+  userImage: {
+    borderRadius: 70,
+    height: 100,
+    marginBottom: 10,
+    width: 100,
+  },
+  followUser:{
+    backgroundColor: '#FFF',
+    marginBottom: 15,
+    marginTop: 25,
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center'
+
+  },
+  followImage: {
+    borderRadius: 40,
+    height: 80,
+    marginBottom: 10,
+    width: 80,
+  },
+
+  userNameRow: {
+    marginBottom: 2,
+  },
+  userNameText: {
+    color: '#5B5A5A',
+    fontSize: 14,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  userRow: {
+    alignItems:'flex-start',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  nameSize: {
+    fontSize: 18,
+    fontWeight: 'bold',
+
+  }
+  
 });
 
 const mapStateToProps = (state) => {

@@ -210,7 +210,7 @@ router.post("/listPosts", async (req, res) => {
 });
 
 router.post("/listUsers", async (req, res) => {
-  const list = await User.find({ _id: { $ne: req.body.Id } }, "username");
+  const list = await User.find({ _id: { $ne: req.body.Id } },{"username" : 1 , "name" : 1 , "url" : 1 } );
 
   const lista = [];
 
@@ -226,7 +226,7 @@ router.post("/listUsers", async (req, res) => {
       follow = 1;
     }
 
-    lista.push({ name: list[i].username, follow: follow, Id: list[i]._id });
+    lista.push({ name: list[i].username, follow: follow, Id: list[i]._id , nameVrai :list[i].name , usernameVrai :list[i].username , url : list[i].url  });
   }
 
   

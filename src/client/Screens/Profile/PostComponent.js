@@ -33,6 +33,7 @@ class PostComponent extends Component {
     navigation.navigate("EditPost");
   }
   check = () => {
+    console.log('dkhalll')
     if (this.props.userpicurl) {
       this.setState({ userpicurl: this.props.userpicurl });
     }
@@ -47,7 +48,7 @@ class PostComponent extends Component {
           <Left>
             <Thumbnail
               source={{
-                uri: this.state.userpicurl,
+                uri: this.props.userpicurl,
               }}
             />
 
