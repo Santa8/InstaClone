@@ -124,7 +124,7 @@ class ProfilePub extends Component {
         var followersnumber = this.state.followers.length;
         var followingnumber = this.state.following.length;
         var newroutes = [...this.state.tabs.routes];
-        newroutes[0].count = this.state.posts.length - 1;
+        newroutes[0].count = this.state.posts.length;
         newroutes[1].count = followingnumber;
         newroutes[2].count = followersnumber;
         this.setState({
@@ -136,13 +136,7 @@ class ProfilePub extends Component {
       })
       .catch((err) => console.log(err));
   };
-  ModifyNumber = (tabs) => {
-    var newtabs = [...tabs];
-    var newroutes = [...newtabs.routes];
-    var newroute = [...newroutes[0]];
-    newroute.count = reversePosts.length;
-    this.setState({ tabs: newtabs });
-  };
+  
 
   onPressPlace = () => {
     console.log("place");
@@ -202,11 +196,6 @@ class ProfilePub extends Component {
     this.willFocusSubscription.remove();
   }
 
-  /*LogOut = async () => {
-    // this.props.logout();
-    //await this.clearAppData();
-    this.props.navigation.navigate("AddPost");
-  };*/
   handleIndexChange = (index) => {
     this.setState({
       tabs: {
@@ -262,21 +251,32 @@ class ProfilePub extends Component {
   };
 
   ItemView = ({ item }) => {
+
     return (
-      <View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            if (item.Id) {
-              AsyncStorage.setItem("publicProfileId", item.name._id);
-              this.setState({ ProfilePubId: item.name._id });
-              this.props.navigation.navigate("ProfilePub");
-            }
-          }}
-        >
-          <Text>{item.name.username}</Text>
-        </TouchableOpacity>
+      <View style={styles.followUser}>
+      <View style={styles.itemUser}>
+        <View style={styles.userRow}>
+          <Image style={styles.followImage} source={{ uri: item.url }} />
+        </View>
       </View>
+      <View style={styles.itemUser2}>
+        <View style={styles.userRow}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              if (item.Id) {
+                AsyncStorage.setItem("publicProfileId", item.name._id);
+                this.setState({ ProfilePubId: item.name._id });
+                this.props.navigation.navigate("ProfilePub");
+              }
+            }}
+          >
+            <Text>{item.nameVrai}</Text>
+          </TouchableOpacity>
+          <Text>{item.usernameVrai}</Text>
+        </View>
+      </View>
+    </View>
     );
   };
 
@@ -437,7 +437,7 @@ class ProfilePub extends Component {
   };
 
   renderMansonry2Col = () => {
-    if (this.state.posts.length < 2) {
+    if (this.state.posts.length < 1) {
       return (
         <View>
           <Text>AUCUN POST </Text>

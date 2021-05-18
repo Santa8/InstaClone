@@ -128,6 +128,7 @@ router.post("/updatefollowing", async (req, res) => {
           "following.$.nameVrai": FollowDetails.name,
           "following.$.usernameVrai": FollowDetails.username,
           "following.$.url": FollowDetails.url,
+          "following.$.name.$.username": FollowDetails.username,
         },
       },
 
@@ -160,6 +161,7 @@ router.post("/updatefollowers", async (req, res) => {
           "followers.$.nameVrai": FollowDetails.name,
           "followers.$.usernameVrai": FollowDetails.username,
           "followers.$.url": FollowDetails.url,
+          "followers.$.name.$.username": FollowDetails.username,
         },
       },
 
@@ -175,7 +177,7 @@ router.post("/updatefollowers", async (req, res) => {
 
 router.post("/listPosts", async (req, res) => {
   const id = req.body.Id;
-  console.log(id);
+
   const following = await User.findById(id, "following");
 
   const totalPosts = [];

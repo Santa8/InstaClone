@@ -101,6 +101,7 @@ class Profile extends Component {
 
         this.setState({ followers: res.data.results[0].followers });
         this.setState({ following: res.data.results[0].following });
+        console.log(res.data.results[0].posts);
         var followersnumber = this.state.followers.length;
         var followingnumber = this.state.following.length;
         var newroutes = [...this.state.tabs.routes];
@@ -131,6 +132,9 @@ class Profile extends Component {
       .then((res) => {
         const results = res.data.results;
         this.setState({ following: results.following });
+
+        if (res.data.value) {
+        }
       })
       .catch((err) => console.log(err));
   };
