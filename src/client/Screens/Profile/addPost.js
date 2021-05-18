@@ -13,6 +13,8 @@ import ActionButton from "react-native-action-button";
 import AsyncStorage from "@react-native-community/async-storage";
 
 import Icon from "react-native-vector-icons/Ionicons";
+import * as icon from "native-base";
+
 import * as ImagePicker from "expo-image-picker";
 
 import { firebaseConfig } from "../../fireBaseConfig";
@@ -186,6 +188,13 @@ const AddPost = () => {
 
 export default AddPost;
 
+AddPost["navigationOptions"] = {
+  tabBarIcon: ({ tintColor }) => (
+    //<Icon name="pluscircle" />
+
+    <icon.Icon name="ios-add" style={{ color: tintColor }} />
+  ),
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -193,7 +193,7 @@ router.post("/listPosts", async (req, res) => {
               username: following.following[index].name.username,
               posts: post.urlpost,
               picurl: url.url,
-              //date:
+              date: post.date,
             });
           });
         }

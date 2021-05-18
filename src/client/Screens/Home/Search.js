@@ -19,6 +19,7 @@ import { Icon } from "native-base";
 import { ForceTouchGestureHandler } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-community/async-storage";
 import { baseURL } from "../../constants";
+import * as icon from "native-base";
 
 function Search(props) {
   const [filtredData, setfilteredData] = useState([]);
@@ -114,12 +115,13 @@ function Search(props) {
 
 Search["navigationOptions"] = {
   tabBarIcon: ({ tintColor }) => (
-    <Icon name="ios-search" style={{ color: tintColor }} />
+    <icon.Icon name="ios-search" style={{ color: tintColor }} />
   ),
 };
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 40,
     backgroundColor: "white",
   },
   itemStyle: {

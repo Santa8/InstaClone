@@ -189,12 +189,22 @@ class Home extends Component {
       );
     });
   };
+  parseDate(input) {
+    var parts = input.match(/(\d+)/g);
+    // new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
+    return new Date(parts[0], parts[1] - 1, parts[2]); // months are 0-based
+  }
 
   renderPosts = (posts) => {
-    return posts.map((post, index) => {
+    const sortedposts = posts.sort(
+      (a, b) => Date.parse(b.date) - Date.parse(a.date)
+    );
+
+    return sortedposts.map((post, index) => {
       var name = post.username;
       var url = post.posts;
       var userpicurl = post.picurl;
+      var date = post.date;
 
       return (
         <PostComponent
@@ -202,6 +212,7 @@ class Home extends Component {
           likes="101"
           username={name}
           userpicurl={userpicurl}
+          date={date}
         />
       );
     });
@@ -217,7 +228,7 @@ class Home extends Component {
             height: 35,
             marginLeft: 20,
             tintColor: "black",
-            marginTop: 10,
+            marginTop: 35,
             marginBottom: 10,
           }}
         ></Image>

@@ -51,7 +51,10 @@ class PostComponent extends Component {
               >
                 {this.props.username}
               </Text>
-              <Text note> Mai 10, 2021</Text>
+              <Text style={{ color: "#ffcdb2" }}>
+                {" "}
+                {this.props.date.substring(0, 10)}
+              </Text>
             </Body>
           </Left>
         </CardItem>

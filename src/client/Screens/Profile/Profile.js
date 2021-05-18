@@ -96,7 +96,6 @@ class Profile extends Component {
         this.setState({ post: res.data.results[0].posts[0].urlpost });
 
         const reversePosts = res.data.results[0].posts.reverse();
-        reversePosts.pop();
         this.setState({ posts: reversePosts });
 
         this.setState({ followers: res.data.results[0].followers });

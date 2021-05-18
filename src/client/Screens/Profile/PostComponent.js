@@ -47,7 +47,7 @@ class PostComponent extends Component {
           <Left>
             <Thumbnail
               source={{
-                uri: this.state.userpicurl,
+                uri: this.props.userpicurl,
               }}
             />
 

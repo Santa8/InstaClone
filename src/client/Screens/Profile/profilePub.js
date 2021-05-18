@@ -136,7 +136,6 @@ class ProfilePub extends Component {
       })
       .catch((err) => console.log(err));
   };
-  
 
   onPressPlace = () => {
     console.log("place");
@@ -251,32 +250,31 @@ class ProfilePub extends Component {
   };
 
   ItemView = ({ item }) => {
-
     return (
       <View style={styles.followUser}>
-      <View style={styles.itemUser}>
-        <View style={styles.userRow}>
-          <Image style={styles.followImage} source={{ uri: item.url }} />
+        <View style={styles.itemUser}>
+          <View style={styles.userRow}>
+            <Image style={styles.followImage} source={{ uri: item.url }} />
+          </View>
+        </View>
+        <View style={styles.itemUser2}>
+          <View style={styles.userRow}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                if (item.Id) {
+                  AsyncStorage.setItem("publicProfileId", item.name._id);
+                  this.setState({ ProfilePubId: item.name._id });
+                  this.props.navigation.navigate("ProfilePub");
+                }
+              }}
+            >
+              <Text>{item.nameVrai}</Text>
+            </TouchableOpacity>
+            <Text>{item.usernameVrai}</Text>
+          </View>
         </View>
       </View>
-      <View style={styles.itemUser2}>
-        <View style={styles.userRow}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              if (item.Id) {
-                AsyncStorage.setItem("publicProfileId", item.name._id);
-                this.setState({ ProfilePubId: item.name._id });
-                this.props.navigation.navigate("ProfilePub");
-              }
-            }}
-          >
-            <Text>{item.nameVrai}</Text>
-          </TouchableOpacity>
-          <Text>{item.usernameVrai}</Text>
-        </View>
-      </View>
-    </View>
     );
   };
 
@@ -287,6 +285,8 @@ class ProfilePub extends Component {
       var caption = post.description;
       var date = post.date;
       var userpicurl = this.state.url ? this.state.url : false;
+      var id = post.Id;
+
       return (
         <PostComponent
           key={id}
