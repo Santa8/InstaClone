@@ -13,6 +13,8 @@ import ActionButton from "react-native-action-button";
 import AsyncStorage from "@react-native-community/async-storage";
 
 import Icon from "react-native-vector-icons/Ionicons";
+import * as icon from "native-base";
+
 import * as ImagePicker from "expo-image-picker";
 
 import { firebaseConfig } from "../../fireBaseConfig";
@@ -25,10 +27,11 @@ import {
   SubmitBtn,
   SubmitBtnText,
   StatusWrapper,
-} from "./addPostStyle";
+} from "./style/addPostStyle";
 
 import firebase from "firebase";
 import { baseURL } from "../../constants";
+import { set } from "react-native-reanimated";
 
 const AddPost = () => {
   if (!firebase.apps.length) {
@@ -84,26 +87,32 @@ const AddPost = () => {
   };
 
   const submitPost = async () => {
-    const imageUrl = await uploadImageAsync();
+    if (image != null) {
+      const imageUrl = await uploadImageAsync();
 
-    axios({
-      method: "post",
-      url: "/uploadpost",
-      baseURL: baseURL,
-      data: {
-        id: userId,
-        urlpost: imageUrl,
-        description: caption,
-        date: new Date().toISOString(),
-      },
-    })
-      .then((res) => {
-        const message = res.data.message;
-        if (res.data.value) {
-          Alert.alert(message);
-        }
+      axios({
+        method: "post",
+        url: "/uploadpost",
+        baseURL: baseURL,
+        data: {
+          id: userId,
+          urlpost: imageUrl,
+          description: caption,
+          date: new Date().toISOString(),
+        },
       })
-      .catch((err) => console.log(err));
+        .then((res) => {
+          const message = res.data.message;
+          if (res.data.value) {
+            Alert.alert(message);
+          }
+        })
+        .catch((err) => console.log(err));
+      setImage(null);
+      setCaption(null);
+      props.navigation.navigate("Profile");
+    }
+    Alert.alert("Choose Image");
   };
 
   async function uploadImageAsync() {
@@ -132,7 +141,6 @@ const AddPost = () => {
     setUploading(false);
     setImage(null);
 
-    Alert.alert("Image uploaded!");
     return await snapshot.ref.getDownloadURL();
   }
 
@@ -150,7 +158,7 @@ const AddPost = () => {
         />
         {uploading ? (
           <StatusWrapper>
-            <Text>{transferred} % Completed!</Text>
+            <Text>{transferred} Completed!</Text>
           </StatusWrapper>
         ) : (
           <SubmitBtn onPress={submitPost}>
@@ -180,6 +188,13 @@ const AddPost = () => {
 
 export default AddPost;
 
+AddPost["navigationOptions"] = {
+  tabBarIcon: ({ tintColor }) => (
+    //<Icon name="pluscircle" />
+
+    <icon.Icon name="ios-add" style={{ color: tintColor }} />
+  ),
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,

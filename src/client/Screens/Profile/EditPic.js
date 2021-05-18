@@ -1,17 +1,7 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
-import {
-  View,
-  Text,
-  Platform,
-  StyleSheet,
-  Alert,
-  Image,
-  ActivityIndicator,
-} from "react-native";
-import EditStyle from "./EditStyle";
-import { Item, Input } from "native-base";
+import { View, Text, Platform, StyleSheet, Alert } from "react-native";
 import { connect } from "react-redux";
 import ActionButton from "react-native-action-button";
 import AsyncStorage from "@react-native-community/async-storage";
@@ -30,7 +20,7 @@ import {
   SubmitBtn,
   SubmitBtnText,
   StatusWrapper,
-} from "./addPostStyle";
+} from "./style/addPostStyle";
 
 import firebase from "firebase";
 import { baseURL } from "../../constants";

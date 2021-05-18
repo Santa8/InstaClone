@@ -50,8 +50,6 @@ class Home extends Component {
   };
 
   listUsers = () => {
-    console.log("users");
-
     axios({
       method: "post",
       url: "/listUsers",
@@ -61,8 +59,6 @@ class Home extends Component {
       },
     })
       .then((res) => {
-        //console.log(res.data.lista);
-
         this.setState({ data: res.data.lista });
       })
 
@@ -72,7 +68,6 @@ class Home extends Component {
   };
 
   listPosts = () => {
-    console.log("poosts");
     axios({
       method: "post",
       url: "/listPosts",
@@ -122,9 +117,6 @@ class Home extends Component {
   };
 
   renderUsers = (users) => {
-    console.log("useers");
-    // console.log(users);
-
     return users.map((user, index) => {
       let followRequest = () => {
         axios({
@@ -138,8 +130,6 @@ class Home extends Component {
           },
         })
           .then((res) => {
-            console.log(res.data.message);
-
             this.setState({ test: 1 });
             this.listUsers();
             this.listPosts();
@@ -161,8 +151,6 @@ class Home extends Component {
           },
         })
           .then((res) => {
-            console.log(res.data.message);
-
             this.setState({ test: 1 });
             this.listUsers();
             this.listPosts();
@@ -175,13 +163,16 @@ class Home extends Component {
       let onpress = user.follow ? unfollowRequest : followRequest;
       let text = user.follow ? "unfollow" : "follow";
       return (
-        <View>
+        <View style = {{  alignItems : "center"}}>
+          <Thumbnail
+              source={{
+                uri: user.url
+              }}
+            />
           <Text
             style={{
               marginHorizontal: 5,
-              borderColor: "dark",
-              borderWidth: 2,
-              fontSize: 20,
+              fontSize: 15,
             }}
           >
             {user.name}
@@ -201,19 +192,30 @@ class Home extends Component {
       );
     });
   };
+  parseDate(input) {
+    var parts = input.match(/(\d+)/g);
+    // new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
+    return new Date(parts[0], parts[1] - 1, parts[2]); // months are 0-based
+  }
 
   renderPosts = (posts) => {
-    return posts.map((post, index) => {
+    const sortedposts = posts.sort(
+      (a, b) => Date.parse(b.date) - Date.parse(a.date)
+    );
+
+    return sortedposts.map((post, index) => {
       var name = post.username;
       var url = post.posts;
       var userpicurl = post.picurl;
+      var date = post.date;
 
       return (
         <PostComponent
           imageSource={url}
-          likes="101"
+          likes={posts.likes}
           username={name}
           userpicurl={userpicurl}
+          date={date}
         />
       );
     });
@@ -229,7 +231,7 @@ class Home extends Component {
             height: 35,
             marginLeft: 20,
             tintColor: "black",
-            marginTop: 10,
+            marginTop: 35,
             marginBottom: 10,
           }}
         ></Image>

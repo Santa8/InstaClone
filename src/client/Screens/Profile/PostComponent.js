@@ -1,6 +1,8 @@
 import React, { Component, TouchableOpacity } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 
+import { baseURL } from "../../constants";
+
 import {
   Card,
   CardItem,
@@ -11,6 +13,7 @@ import {
   Button,
   Icon,
 } from "native-base";
+import axios from "axios";
 
 class PostComponent extends Component {
   constructor(props) {
@@ -33,12 +36,13 @@ class PostComponent extends Component {
     navigation.navigate("EditPost");
   }
   check = () => {
-    console.log('dkhalll')
+   
     if (this.props.userpicurl) {
       this.setState({ userpicurl: this.props.userpicurl });
     }
   };
   componentDidMount() {
+   
     this.check();
   }
   render() {
@@ -56,8 +60,8 @@ class PostComponent extends Component {
               <Text
                 style={{
                   fontWeight: "bold",
-                  fontSize: 17,
-                  color: "#2a9d8f",
+                  fontSize: 15,
+                  color: "#001219",
                 }}
               >
                 {this.props.username}
@@ -66,7 +70,8 @@ class PostComponent extends Component {
             </Body>
           </Left>
           <Right>
-            <Button
+            
+              <Icon
               onPress={() =>
                 this.EditPost(
                   this.props.imageSource,
@@ -77,9 +82,9 @@ class PostComponent extends Component {
                   this.props.editpost
                 )
               }
-            >
-              <Text>Edit</Text>
-            </Button>
+              
+              name="ios-pencil" style={{ color: "#001219"}} />
+
           </Right>
         </CardItem>
         <CardItem cardBody>
@@ -90,9 +95,32 @@ class PostComponent extends Component {
         </CardItem>
         <CardItem style={{ height: 45 }}>
           <Left>
-            <Button transparent>
-              <Icon name="ios-heart-outline" style={{ color: "black" }} />
-            </Button>
+              <Icon
+               onPress={() =>{
+                axios({
+                  method: "post",
+                  url: "/like",
+                  baseURL: baseURL,
+                  data: {
+                    Id: this.props.Id,
+  
+                  },
+                })
+                .then((res) => {
+                  const message = res.data.message;
+          
+                  if (res.data.value) {
+                    console.log(message)
+                  }
+                })
+                .catch((err) => console.log(err));
+              }
+
+              } 
+              name="ios-heart-outline" style={{ color: "black" }} />
+               
+                
+           
             <Button transparent>
               <Icon name="ios-chatbubbles-outline" style={{ color: "black" }} />
             </Button>
@@ -117,6 +145,7 @@ class PostComponent extends Component {
               >
                 {this.props.username}
               </Text>
+            
               {this.props.caption}
             </Text>
           </Body>

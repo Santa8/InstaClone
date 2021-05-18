@@ -12,13 +12,32 @@ const { verifyToken } = require("../middleware/verifyToken");
 //=================================================================
 // signup a new user
 
+
+router.post("/like", async function (req, res) {
+  
+  var postid = req.body.Id;
+  
+
+  User.updateOne(
+    { "posts.Id": postid },
+    { $inc: { "posts.$.likes" : 1 } },
+
+    function (err, doc) {
+      res.send({
+        value: true,
+        message: "add like",
+      });
+    }
+  );
+
+  
+});
+
 router.post("/unfollow", async (req, res) => {
   const id = req.body.Id;
   const followId = req.body.followId;
 
   if (id) {
-   
-
     User.updateOne(
       { _id: id },
       { $pull: { following: { Id: followId } } },
@@ -43,7 +62,6 @@ router.post("/getIsFollowing", async (req, res) => {
   const id = req.body.userId;
   const followId = req.body.followId;
   let value = false;
-  
 
   isFollowing = await User.find(
     { _id: id, "following.Id": followId },
@@ -56,13 +74,11 @@ router.post("/getIsFollowing", async (req, res) => {
     value = true;
   }
   res.send({ value: value });
-  
 });
 
 router.post("/follow", async (req, res) => {
   const id = req.body.Id;
   const followId = req.body.followId;
-  //console.log(id)
   if (id) {
     const nameFollow = await User.findById(followId, "username");
     const FollowDetails = await User.findById(followId, {
@@ -71,13 +87,11 @@ router.post("/follow", async (req, res) => {
       url: 1,
     });
     const nameUser = await User.findById(id, "username");
-    //console.log(nameFollow);
     const alreadyFollowing = await User.find(
       { _id: id, "following.Id": followId },
       "username"
     );
 
-    
     const namUser = await User.findById(id, { username: 1, name: 1, url: 1 });
     if (!alreadyFollowing.length) {
       User.findById(id, function (error, user) {
@@ -135,7 +149,7 @@ router.post("/updatefollowing", async (req, res) => {
           "following.$.nameVrai": FollowDetails.name,
           "following.$.usernameVrai": FollowDetails.username,
           "following.$.url": FollowDetails.url,
-          "following.$.name.$.username" : FollowDetails.username
+          "following.$.name.$.username": FollowDetails.username,
         },
       },
 
@@ -168,7 +182,7 @@ router.post("/updatefollowers", async (req, res) => {
           "followers.$.nameVrai": FollowDetails.name,
           "followers.$.usernameVrai": FollowDetails.username,
           "followers.$.url": FollowDetails.url,
-          "followers.$.name.$.username" : FollowDetails.username
+          "followers.$.name.$.username": FollowDetails.username,
         },
       },
 
@@ -184,7 +198,7 @@ router.post("/updatefollowers", async (req, res) => {
 
 router.post("/listPosts", async (req, res) => {
   const id = req.body.Id;
-  
+
   const following = await User.findById(id, "following");
 
   const totalPosts = [];
@@ -200,6 +214,7 @@ router.post("/listPosts", async (req, res) => {
               username: following.following[index].name.username,
               posts: post.urlpost,
               picurl: url.url,
+              date: post.date,
             });
           });
         }
@@ -228,8 +243,6 @@ router.post("/listUsers", async (req, res) => {
 
     lista.push({ name: list[i].username, follow: follow, Id: list[i]._id , nameVrai :list[i].name , usernameVrai :list[i].username , url : list[i].url  });
   }
-
-  
 
   return res.send({ lista });
 });
@@ -336,7 +349,6 @@ router.post("/getUserDetails", function (req, res) {
         message: "OK",
         results: data,
       });
-
     })
     .catch((err) => {
       res.json(err);
@@ -400,13 +412,13 @@ router.post("/uploadpost", function (req, res) {
   var urlpost = req.body.urlpost;
   var description = req.body.description;
   var date = req.body.date;
- 
 
   User.findById(id, function (error, user) {
     user.posts.push({
       Id: uuidV4(),
       urlpost: urlpost,
       description: description,
+      likes : 0,
       date: date,
     });
 

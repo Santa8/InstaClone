@@ -26,7 +26,7 @@ import {
 } from "react-native-tab-view";
 import PropTypes from "prop-types";
 import { image } from "./utils";
-import profileStyles from "./ProfileStyle";
+import profileStyles from "./style/ProfileStyle";
 export const ImageProfil = require("./images/photo_cv.jpg");
 const styles = StyleSheet.create({ ...profileStyles });
 import { Item, Input } from "native-base";
@@ -96,17 +96,15 @@ class Profile extends Component {
         this.setState({ post: res.data.results[0].posts[0].urlpost });
 
         const reversePosts = res.data.results[0].posts.reverse();
-
         this.setState({ posts: reversePosts });
-       
-
+  
         this.setState({ followers: res.data.results[0].followers });
         this.setState({ following: res.data.results[0].following });
         
         var followersnumber = this.state.followers.length;
         var followingnumber = this.state.following.length;
         var newroutes = [...this.state.tabs.routes];
-        newroutes[0].count = this.state.posts.length ;
+        newroutes[0].count = this.state.posts.length;
         newroutes[1].count = followingnumber;
         newroutes[2].count = followersnumber;
         this.setState({
@@ -117,7 +115,6 @@ class Profile extends Component {
         });
         this.UpdateFollowing(res.data.results[0].following);
         this.UpdateFollowers(res.data.results[0].followers);
-        
       })
       .catch((err) => console.log(err));
   };
@@ -295,6 +292,7 @@ class Profile extends Component {
 
   renderPosts = (posts , urlpic) => {
     return posts.map((post, index) => {
+      console.log(post.likes)
       var name = this.state.name;
       var url = post.urlpost;
       var caption = post.description;
@@ -302,8 +300,9 @@ class Profile extends Component {
       var id = post.Id;
       return (
         <PostComponent
+          key={id}
           imageSource={url}
-          likes="101"
+          likes={post.likes}
           username={name}
           userpicurl={urlpic}
           caption={caption}
