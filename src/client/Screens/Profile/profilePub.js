@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { COLORS, SIZES, FONTS } from "../../constants";
 
 import AsyncStorage from "@react-native-community/async-storage";
 //import { Icon } from 'react-native-elements'
@@ -50,7 +51,6 @@ class ProfilePub extends Component {
       username: "",
       urlpost: "",
       bio: "",
-      post: "",
       ProfilePubId: "",
       posts: [],
       tabs: {
@@ -112,8 +112,6 @@ class ProfilePub extends Component {
         }
         this.setState({ username: res.data.results[0].username });
         this.setState({ bio: res.data.results[0].bio });
-
-        this.setState({ post: res.data.results[0].posts[0].urlpost });
 
         const reversePosts = res.data.results[0].posts.reverse();
 
@@ -367,7 +365,9 @@ class ProfilePub extends Component {
       },
     })
       .then((res) => {
+        console.log(res.data.message);
         this.getIsFollowing(this.userId, this.id);
+        this.fetchUserDetails(this.id);
       })
 
       .catch((err) => {
@@ -386,48 +386,64 @@ class ProfilePub extends Component {
       },
     })
       .then((res) => {
+        console.log(res.data.message);
         this.getIsFollowing(this.userId, this.id);
+        this.fetchUserDetails(this.id);
       })
       .catch((err) => {
         console.log(err.message);
       });
   };
 
+  renderButton(text, color, onPress) {
+    return (
+      <View style={{ margin: SIZES.padding * 0.5, alignItems: "center" }}>
+        <TouchableOpacity
+          style={{
+            height: 30,
+            width: 80,
+            backgroundColor: color,
+            borderRadius: SIZES.radius / 0.2,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onPress={onPress}
+        >
+          <Text style={{ color: COLORS.white, ...FONTS.h3 }}>{text}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   renderContactHeader = () => {
-    let onpress = this.state.isFollowing
-      ? this.unfollowRequest
-      : this.followRequest;
-    let text = this.state.isFollowing ? "unfollow" : "follow";
     return (
       <View style={styles.headerContainer}>
-        <View style={styles.item}>
-          <View style={styles.userRow}>
+        <View>
+          <View style={{ marginLeft: 30, marginBottom: 20, marginTop: 20 }}>
             <Image style={styles.userImage} source={{ uri: this.state.url }} />
           </View>
         </View>
 
-        <View style={styles.item2}>
-          <TouchableOpacity
-            style={{
-              height: 70,
-              marginTop: 10,
-              marginRight: 50,
-              backgroundColor: "#DDDDDD",
-            }}
-            onPress={onpress}
-          >
-            <Text style={{ fontSize: 20 }}> {text} </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.userRow}>
-          <View style={styles.userNameRow}>
-            <Text style={styles.userNameText}>{this.state.name}</Text>
-          </View>
-          <View style={styles.userNameRow}>
-            <Text style={styles.userNameText}>@{this.state.username}</Text>
-          </View>
-          <View style={styles.userBioRow}>
-            <Text style={styles.userBioText}>{this.state.bio}</Text>
+        <View>
+          <View style={{ marginBottom: 5, marginLeft: 10 }}>
+            <View>
+              <Text
+                style={{
+                  fontSize: 20,
+                  marginBottom: 5,
+                  marginRight: 95,
+                  fontWeight: "bold",
+                }}
+              >
+                {this.state.name}
+              </Text>
+            </View>
+            <View style={{ marginBottom: 5 }}>
+              <Text>@{this.state.username}</Text>
+            </View>
+            <View style={{ marginBottom: 5 }}>
+              <Text>{this.state.bio}</Text>
+            </View>
           </View>
         </View>
       </View>

@@ -165,27 +165,32 @@ class Home extends Component {
       let onpress = user.follow ? unfollowRequest : followRequest;
       let text = user.follow ? "unfollow" : "follow";
       return (
-        <View>
+        <View style={{ alignItems: "center", marginLeft: 10 }}>
+          <Thumbnail
+            source={{
+              uri: user.url,
+            }}
+          />
           <Text
             style={{
               marginHorizontal: 5,
-              borderColor: "dark",
-              borderWidth: 2,
-              fontSize: 20,
+              fontSize: 15,
             }}
           >
             {user.name}
           </Text>
           <TouchableOpacity
             style={{
-              marginHorizontal: 5,
-              width: 90,
               height: 30,
-              backgroundColor: "#DDDDDD",
+              width: 80,
+              backgroundColor: "#048ba8",
+              borderRadius: SIZES.radius / 0.2,
+              alignItems: "center",
+              justifyContent: "center",
             }}
             onPress={onpress}
           >
-            <Text style={{ fontSize: 20 }}> {text} </Text>
+            <Text style={{ color: COLORS.white, ...FONTS.h3 }}>{text}</Text>
           </TouchableOpacity>
         </View>
       );
@@ -207,14 +212,15 @@ class Home extends Component {
       var url = post.posts;
       var userpicurl = post.picurl;
       var date = post.date;
-
+      var caption = post.caption;
       return (
         <PostComponent
           imageSource={url}
-          likes="101"
+          likes={posts.likes}
           username={name}
           userpicurl={userpicurl}
           date={date}
+          caption={caption}
         />
       );
     });
@@ -222,32 +228,33 @@ class Home extends Component {
 
   render() {
     return (
-      <LinearGradient colors={[COLORS.primary, COLORS.primary]}>
-        <View>
-          <Image
-            source={instalogo}
-            style={{
-              width: 120,
-              height: 35,
-              marginLeft: 20,
-              tintColor: "black",
-              marginTop: 35,
-              marginBottom: 10,
-            }}
-          ></Image>
-          <Image
-            source={dm}
-            style={{
-              width: 25,
-              height: 25,
-              marginRight: 20,
-              alignSelf: "flex-end",
-              tintColor: "black",
-              marginTop: -40,
-            }}
-          ></Image>
-          <View>
-            <View style={{ height: 100 }}>
+      <View style={{ flex: 1, height: 200, backgroundColor: COLORS.primary }}>
+        <Image
+          source={instalogo}
+          style={{
+            width: 120,
+            height: 35,
+            marginLeft: 20,
+            tintColor: "black",
+            marginTop: 35,
+            marginBottom: 10,
+          }}
+        ></Image>
+        <Image
+          source={dm}
+          style={{
+            width: 25,
+            height: 25,
+            marginRight: 20,
+            alignSelf: "flex-end",
+            tintColor: "black",
+            marginTop: -40,
+          }}
+        ></Image>
+
+        <Container style={styles.container}>
+          <Content>
+            <View style={{ height: 115, backgroundColor: COLORS.primary }}>
               <View style={{ flex: 3 }}>
                 <ScrollView
                   horizontal={true}
@@ -255,20 +262,18 @@ class Home extends Component {
                   contentContainerStyle={{
                     alignItems: "center",
                     paddingStart: 5,
+                    paddingEnd: 5,
                   }}
                 >
                   {this.renderUsers(this.state.data)}
                 </ScrollView>
               </View>
             </View>
-            <View style={{ marginBottom: 600 }}>
-              <ScrollView>
-                <View>{this.renderPosts(this.state.posts)}</View>
-              </ScrollView>
-            </View>
-          </View>
-        </View>
-      </LinearGradient>
+
+            <View>{this.renderPosts(this.state.posts)}</View>
+          </Content>
+        </Container>
+      </View>
     );
   }
 }

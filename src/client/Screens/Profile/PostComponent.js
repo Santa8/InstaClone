@@ -1,6 +1,8 @@
 import React, { Component, TouchableOpacity } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 
+import { baseURL } from "../../constants";
+
 import {
   Card,
   CardItem,
@@ -11,6 +13,7 @@ import {
   Button,
   Icon,
 } from "native-base";
+import axios from "axios";
 
 class PostComponent extends Component {
   constructor(props) {
@@ -55,8 +58,8 @@ class PostComponent extends Component {
               <Text
                 style={{
                   fontWeight: "bold",
-                  fontSize: 17,
-                  color: "#2a9d8f",
+                  fontSize: 15,
+                  color: "#001219",
                 }}
               >
                 {this.props.username}
@@ -65,7 +68,7 @@ class PostComponent extends Component {
             </Body>
           </Left>
           <Right>
-            <Button
+            <Icon
               onPress={() =>
                 this.EditPost(
                   this.props.imageSource,
@@ -76,22 +79,42 @@ class PostComponent extends Component {
                   this.props.editpost
                 )
               }
-            >
-              <Text>Edit</Text>
-            </Button>
+              name="ios-pencil"
+              style={{ color: "#001219" }}
+            />
           </Right>
         </CardItem>
         <CardItem cardBody>
           <Image
             source={{ uri: this.props.imageSource }}
-            style={{ height: 200, width: 100, flex: 1 }}
+            style={{ height: 400, width: 400, flex: 1 }}
           />
         </CardItem>
         <CardItem style={{ height: 45 }}>
           <Left>
-            <Button transparent>
-              <Icon name="ios-heart-outline" style={{ color: "black" }} />
-            </Button>
+            <Icon
+              onPress={() => {
+                axios({
+                  method: "post",
+                  url: "/like",
+                  baseURL: baseURL,
+                  data: {
+                    Id: this.props.Id,
+                  },
+                })
+                  .then((res) => {
+                    const message = res.data.message;
+
+                    if (res.data.value) {
+                      console.log(message);
+                    }
+                  })
+                  .catch((err) => console.log(err));
+              }}
+              name="ios-heart-outline"
+              style={{ color: "black" }}
+            />
+
             <Button transparent>
               <Icon name="ios-chatbubbles-outline" style={{ color: "black" }} />
             </Button>

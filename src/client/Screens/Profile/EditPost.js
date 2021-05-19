@@ -75,7 +75,7 @@ function EditPost(props) {
   };
 
   return (
-    <View style={styles.headerContainer}>
+    <View style={{ marginTop: 100 }}>
       <View style={styles.userRow}>
         <Image
           style={styles.userImage}
@@ -95,9 +95,10 @@ function EditPost(props) {
             />
           </View>
         </View>
-
-        <Button title="Modify Post" onPress={ModifyPost} />
-        <Button title="Delete Post" onPress={DeletePost} />
+        <View style={{ marginTop: 120 }}>
+          <Button title="Modify Post" onPress={ModifyPost} />
+          <Button title="Delete Post" onPress={DeletePost} />
+        </View>
       </View>
     </View>
   );

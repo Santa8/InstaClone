@@ -12,6 +12,22 @@ const { verifyToken } = require("../middleware/verifyToken");
 //=================================================================
 // signup a new user
 
+router.post("/like", async function (req, res) {
+  var postid = req.body.Id;
+
+  User.updateOne(
+    { "posts.Id": postid },
+    { $inc: { "posts.$.likes": 1 } },
+
+    function (err, doc) {
+      res.send({
+        value: true,
+        message: "add like",
+      });
+    }
+  );
+});
+
 router.post("/unfollow", async (req, res) => {
   const id = req.body.Id;
   const followId = req.body.followId;
@@ -194,6 +210,7 @@ router.post("/listPosts", async (req, res) => {
               posts: post.urlpost,
               picurl: url.url,
               date: post.date,
+              caption: post.description,
             });
           });
         }
@@ -204,7 +221,10 @@ router.post("/listPosts", async (req, res) => {
 });
 
 router.post("/listUsers", async (req, res) => {
-  const list = await User.find({ _id: { $ne: req.body.Id } }, "username");
+  const list = await User.find(
+    { _id: { $ne: req.body.Id } },
+    { username: 1, name: 1, url: 1 }
+  );
 
   const lista = [];
 
@@ -220,7 +240,14 @@ router.post("/listUsers", async (req, res) => {
       follow = 1;
     }
 
-    lista.push({ name: list[i].username, follow: follow, Id: list[i]._id });
+    lista.push({
+      name: list[i].username,
+      follow: follow,
+      Id: list[i]._id,
+      nameVrai: list[i].name,
+      usernameVrai: list[i].username,
+      url: list[i].url,
+    });
   }
 
   return res.send({ lista });
@@ -397,6 +424,7 @@ router.post("/uploadpost", function (req, res) {
       Id: uuidV4(),
       urlpost: urlpost,
       description: description,
+      likes: 0,
       date: date,
     });
 

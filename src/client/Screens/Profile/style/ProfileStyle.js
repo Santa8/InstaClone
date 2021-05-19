@@ -1,4 +1,5 @@
 import { Dimensions } from "react-native";
+import { COLORS, SIZES, FONTS } from "../../../constants";
 
 export default {
   cardContainer: {
@@ -8,9 +9,8 @@ export default {
     flex: 1,
   },
   headerContainer: {
-    backgroundColor: "#FFF",
-    marginBottom: 15,
-    marginTop: 25,
+    backgroundColor: COLORS.primary,
+
     flex: 1,
     flexDirection: "row",
     flexWrap: "wrap",
@@ -33,7 +33,7 @@ export default {
     width: "30%", // is 50% of container width
   },
   item2: {
-    width: "70%", // is 50% of container width
+    right: 0, // is 50% of container width
   },
   socialRow: {
     flexDirection: "row",
@@ -73,9 +73,10 @@ export default {
   },
   userImage: {
     borderRadius: 60,
-    height: 90,
+    height: 100,
     marginBottom: 10,
-    width: 90,
+    marginLeft: 20,
+    width: 100,
   },
   userNameRow: {
     marginBottom: 2,
@@ -87,16 +88,13 @@ export default {
     textAlign: "center",
   },
   itemUser: {
-    width: '30%' // is 50% of container width
+    width: "30%", // is 50% of container width
   },
-  itemUser2: {
-    width: '50%' // is 50% of container width
-  },
+  itemUser2: {},
   userRow: {
-    alignItems: "flex-start",
-    flexDirection: "column",
-    justifyContent: "center",
-    marginBottom: 12,
+    //  flexDirection: "column",
+    justifyContent: "Left",
+    marginBottom: 50,
   },
   itemStyle: {
     padding: 10,
@@ -120,15 +118,14 @@ export default {
     marginBottom: 10,
     width: 100,
   },
-  followUser:{
-    backgroundColor: '#FFF',
+  followUser: {
+    backgroundColor: "#FFF",
     marginBottom: 15,
     marginTop: 25,
     flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center'
-
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
   },
   followImage: {
     borderRadius: 40,
@@ -141,20 +138,18 @@ export default {
     marginBottom: 2,
   },
   userNameText: {
-    color: '#5B5A5A',
+    color: "#5B5A5A",
     fontSize: 14,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
   userRow: {
-    alignItems:'flex-start',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    //alignItems: "left",
+    //flexDirection: "column",
     marginBottom: 12,
   },
   nameSize: {
     fontSize: 18,
-    fontWeight: 'bold',
-
-  }
+    fontWeight: "bold",
+  },
 };

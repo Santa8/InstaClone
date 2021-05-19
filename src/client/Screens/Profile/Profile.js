@@ -31,7 +31,7 @@ import { image } from "./utils";
 import profileStyles from "./style/ProfileStyle";
 export const ImageProfil = require("./images/photo_cv.jpg");
 const styles = StyleSheet.create({ ...profileStyles });
-import { Item, Input } from "native-base";
+import { Item, Input, Right } from "native-base";
 import Posts from "./Posts";
 import { connect } from "react-redux";
 import axios from "axios";
@@ -102,6 +102,7 @@ class Profile extends Component {
 
         this.setState({ followers: res.data.results[0].followers });
         this.setState({ following: res.data.results[0].following });
+
         var followersnumber = this.state.followers.length;
         var followingnumber = this.state.following.length;
         var newroutes = [...this.state.tabs.routes];
@@ -174,8 +175,8 @@ class Profile extends Component {
 
   componentDidUpdate() {
     if (this.props.isUploaded) {
-      // Alert.alert("POST UPLOADED");
-      this.props.navigation.navigate("Profile");
+      this.fetchUserDetails(this.props.userDetails);
+      //this.props.navigation.navigate("Profile");
     }
     if (!this.props.isUploaded && !this.props.isLoading) {
       //Alert.alert(this.props.errMsg);
@@ -212,6 +213,26 @@ class Profile extends Component {
       },
     });
   };
+
+  renderButton(text, color, onPress) {
+    return (
+      <View style={{ margin: SIZES.padding * 0.5, alignItems: "center" }}>
+        <TouchableOpacity
+          style={{
+            height: 30,
+            width: 80,
+            backgroundColor: color,
+            borderRadius: SIZES.radius / 0.2,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onPress={onPress}
+        >
+          <Text style={{ color: COLORS.white, ...FONTS.h3 }}>{text}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   renderTabBar = (props) => {
     return (
@@ -291,8 +312,9 @@ class Profile extends Component {
     }
   };
 
-  renderPosts = (posts) => {
+  renderPosts = (posts, urlpic) => {
     return posts.map((post, index) => {
+      console.log(post.likes);
       var name = this.state.name;
       var url = post.urlpost;
       var caption = post.description;
@@ -302,9 +324,9 @@ class Profile extends Component {
         <PostComponent
           key={id}
           imageSource={url}
-          likes="101"
+          likes={post.likes}
           username={name}
-          userpicurl={this.state.url}
+          userpicurl={urlpic}
           caption={caption}
           date={date}
           Id={id}
@@ -384,33 +406,40 @@ class Profile extends Component {
   renderContactHeader = () => {
     return (
       <View style={styles.headerContainer}>
-        <View style={styles.item}>
-          <View style={styles.userRow}>
+        <View>
+          <View style={{ marginLeft: 30 }}>
             <Image style={styles.userImage} source={{ uri: this.state.url }} />
           </View>
         </View>
 
-        <View style={styles.item2}>
-          <View style={{ height: 70, marginTop: 10, marginRight: 50 }}>
-            <Button title="logout" onPress={this.LogOut} />
-          </View>
+        <View>
+          <View style={{ marginLeft: 130, marginTop: 60 }}>
+            {this.renderButton("logout", "#d62839", () => this.LogOut())}
 
-          <View style={styles.userRow}>
-            <Button
-              onPress={() => this.props.navigation.navigate("EditProfile")}
-              title="Edit Profil"
-            />
-            <Button onPress={() => this.EditPic()} title="Edit pdp" />
+            {this.renderButton("Edit Profil", "#4ba3c3", () =>
+              this.props.navigation.navigate("EditProfile")
+            )}
+
+            {this.renderButton("Edit pdp", "#4ba3c3", () => this.EditPic())}
           </View>
-          <View style={styles.userRow}>
-            <View style={styles.userNameRow}>
-              <Text style={styles.userNameText}>{this.state.name}</Text>
+          <View style={{ marginBottom: 5 }}>
+            <View>
+              <Text
+                style={{
+                  fontSize: 20,
+                  marginBottom: 5,
+                  marginRight: 95,
+                  fontWeight: "bold",
+                }}
+              >
+                {this.state.name}
+              </Text>
             </View>
-            <View style={styles.userNameRow}>
-              <Text style={styles.userNameText}>@{this.state.username}</Text>
+            <View style={{ marginBottom: 5 }}>
+              <Text>@{this.state.username}</Text>
             </View>
-            <View style={styles.userBioRow}>
-              <Text style={styles.userBioText}>{this.state.bio}</Text>
+            <View style={{ marginBottom: 5 }}>
+              <Text>{this.state.bio}</Text>
             </View>
           </View>
         </View>
@@ -429,7 +458,7 @@ class Profile extends Component {
       return (
         <View style={styles.masonryContainer}>
           <View>
-            <View>{this.renderPosts(this.state.posts)}</View>
+            <View>{this.renderPosts(this.state.posts, this.state.url)}</View>
           </View>
         </View>
       );

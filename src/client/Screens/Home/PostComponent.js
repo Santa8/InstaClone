@@ -61,7 +61,7 @@ class PostComponent extends Component {
         <CardItem cardBody>
           <Image
             source={{ uri: this.props.imageSource }}
-            style={{ height: 200, width: 100, flex: 1 }}
+            style={{ height: 300, width: 300, flex: 1 }}
           />
         </CardItem>
         <CardItem style={{ height: 45 }}>
@@ -93,6 +93,8 @@ class PostComponent extends Component {
               >
                 {this.props.username}
               </Text>
+              {"  "}
+
               {this.props.caption}
             </Text>
           </Body>
