@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import AuthStyle from "./style/AuthStyle";
 import { connect } from "react-redux";
+import { COLORS, SIZES, FONTS } from "../../constants";
 
 import { SearchBar } from "react-native-elements";
 import axios from "axios";
@@ -21,6 +22,7 @@ import { ForceTouchGestureHandler } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-community/async-storage";
 import { baseURL } from "../../constants";
 import { SearchStyle } from "./SearchStyle";
+import Searchh from "react-native-search-box";
 
 const styles = StyleSheet.create({ ...SearchStyle });
 
@@ -86,23 +88,32 @@ function Search(props) {
         </View>
         <View style={styl.itemUser2}>
           <View style={styl.userRow}>
-            <TouchableOpacity
-              style={styl.button}
-              onPress={() => {
-                if (item.Id === Id) {
-                  props.navigation.navigate("Profile");
-                } else {
-                  console.log("toudaaaa");
-                  AsyncStorage.setItem("publicProfileId", item.Id);
+            <View style={{ margin: SIZES.padding * 0.5, alignItems: "center" }}>
+              <TouchableOpacity
+                style={{
+                  height: 35,
+                  width: 100,
+                  backgroundColor: "#023047",
+                  borderRadius: SIZES.radius / 0.2,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onPress={() => {
+                  if (item.Id === Id) {
+                    props.navigation.navigate("Profile");
+                  } else {
+                    console.log("toudaaaa");
+                    AsyncStorage.setItem("publicProfileId", item.Id);
 
-                  props.navigation.navigate("ProfilePub");
-                }
-              }}
-            >
-              <Text>{item.name}</Text>
-            </TouchableOpacity>
-
-            <Text>{item.usernameVrai}</Text>
+                    props.navigation.navigate("ProfilePub");
+                  }
+                }}
+              >
+                <Text style={{ color: COLORS.white, ...FONTS.h3 }}>
+                  {item.usernameVrai}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </View>
@@ -118,25 +129,14 @@ function Search(props) {
   };
 
   return (
-    <View style={styles.container}>
-      <SearchBar
+    <View style={{ backgroundColor: "#6b705c", flex: 1, marginTop: 35 }}>
+      <Searchh
         onChangeText={(text) => searchFilter(text)}
-        placeholder="Type username here..."
-        placeholderTextColor="#edf6f9"
         cancelButtonTitle="Cancel"
-        onCancel={() => console.log(onCancel())}
         value={search}
-        inputContainerStyle={{ backgroundColor: "#bde0fe" }}
-        leftIconContainerStyle={{ backgroundColor: "#bde0fe" }}
-        inputStyle={{ backgroundColor: "#bde0fe" }}
-        containerStyle={{
-          marginTop: 26,
-          backgroundColor: "#a2d2ff",
-          borderWidth: 1,
-          borderRadius: 5,
-        }}
       />
       <FlatList
+        style={{ backgroundColor: "#fffceb" }}
         data={filtredData}
         keyExtractor={(item, index) => index.toString()}
         ItemSeparatorComponent={ItemSeparatorView}
@@ -174,7 +174,7 @@ const styl = StyleSheet.create({
     paddingLeft: 20,
     margin: 5,
     borderColor: "#009688",
-    backgroundColor: "white",
+    backgroundColor: "#fffceb",
   },
   button: {
     alignItems: "center",
@@ -188,7 +188,7 @@ const styl = StyleSheet.create({
     width: 100,
   },
   followUser: {
-    backgroundColor: "#FFF",
+    backgroundColor: "#fffceb",
     marginBottom: 15,
     marginTop: 25,
     flex: 1,
@@ -197,6 +197,7 @@ const styl = StyleSheet.create({
     alignItems: "center",
   },
   followImage: {
+    marginLeft: 8,
     borderRadius: 40,
     height: 80,
     marginBottom: 10,

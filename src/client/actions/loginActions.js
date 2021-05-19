@@ -92,9 +92,9 @@ export const login = (loginData) => {
       })
 
       .catch((err) => {
-        console.log(err.message);
+        console.log(err.response.data.message);
 
-        dispatch(loginFailure("User Not Found!"));
+        dispatch(loginFailure(err.response.data.message));
         //console.log("loginAction.js, Request Error: ", err.message);
       });
   };

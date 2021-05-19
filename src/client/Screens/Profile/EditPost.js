@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 
 import EditStyle from "./style/EditStyle";
 import { connect } from "react-redux";
@@ -54,7 +55,7 @@ function EditPost(props) {
     props.modifypost(data);
   };
 
-  const DeletePost = () => {
+  const DeletePost = async () => {
     axios({
       method: "post",
       url: "/DeletePost",
@@ -62,6 +63,9 @@ function EditPost(props) {
       data: {
         userid: props.postdata.userid,
         postid: props.postdata.Id,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {

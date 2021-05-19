@@ -1,9 +1,8 @@
 import { Dimensions } from "react-native";
 
 export default {
-
-     container: {
-    backgroundColor: "white",
+  container: {
+    backgroundColor: "#fffceb",
   },
   itemStyle: {
     padding: 10,
@@ -21,5 +20,4 @@ export default {
     backgroundColor: "#DDDDDD",
     padding: 10,
   },
-  
 };

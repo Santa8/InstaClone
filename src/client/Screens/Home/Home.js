@@ -21,7 +21,7 @@ import axios from "axios";
 
 import { Container, Content, Icon, Thumbnail } from "native-base";
 
-import instalogo from "../../assets/image/insta.png";
+import inplogo from "../../assets/image/logo1.png";
 
 import dm from "../../assets/image/dm.png";
 
@@ -202,6 +202,29 @@ class Home extends Component {
     return new Date(parts[0], parts[1] - 1, parts[2]); // months are 0-based
   }
 
+  renderLogo() {
+    return (
+      <View
+        style={{
+          marginTop: SIZES.padding * 2,
+          height: 100,
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: 30,
+        }}
+      >
+        <Image
+          source={inplogo}
+          resizeMode="contain"
+          style={{
+            width: "60%",
+            width: "20%",
+          }}
+        />
+      </View>
+    );
+  }
+
   renderPosts = (posts) => {
     const sortedposts = posts.sort(
       (a, b) => Date.parse(b.date) - Date.parse(a.date)
@@ -228,19 +251,38 @@ class Home extends Component {
       );
     });
   };
+  ItemSeparatorView = () => {
+    return (
+      <View
+        style={{
+          height: 0.5,
+          width: "100%",
+          backgroundColor: "#c8c8c8",
+          marginBottom: 0,
+        }}
+      />
+    );
+  };
 
   render() {
     return (
-      <View style={{ flex: 1, height: 200, backgroundColor: COLORS.primary }}>
+      <View
+        style={{
+          flex: 1,
+          height: 200,
+          marginBottom: 0,
+          backgroundColor: COLORS.primary,
+        }}
+      >
         <Image
-          source={instalogo}
+          source={inplogo}
           style={{
-            width: 120,
-            height: 35,
-            marginLeft: 20,
-            tintColor: "black",
-            marginTop: 35,
-            marginBottom: 10,
+            width: 170,
+            height: 55,
+            marginLeft: 10,
+            //tintColor: "black",
+            marginTop: 40,
+            marginBottom: 0,
           }}
         ></Image>
         <Image
@@ -254,10 +296,16 @@ class Home extends Component {
             marginTop: -40,
           }}
         ></Image>
-
         <Container style={styles.container}>
+          {this.ItemSeparatorView()}
+
           <Content>
-            <View style={{ height: 115, backgroundColor: COLORS.primary }}>
+            <View
+              style={{
+                height: 110,
+                backgroundColor: COLORS.primary,
+              }}
+            >
               <View style={{ flex: 3 }}>
                 <ScrollView
                   horizontal={true}

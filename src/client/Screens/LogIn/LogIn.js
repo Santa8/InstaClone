@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
+  Image,
   View,
   Button,
   TextInput,
@@ -18,7 +19,7 @@ import { isLogedIn } from "../../actions/AuthActions";
 import { login } from "../../actions/loginActions";
 import { LinearGradient } from "expo-linear-gradient";
 import { COLORS, SIZES, FONTS } from "../../constants";
-import { COLORS, SIZES, FONTS, images } from "../../constants";
+import insta from "../../assets/image/insta.png";
 
 function LogIn(props) {
   /*if (isLogedIn()) {
@@ -40,7 +41,7 @@ function LogIn(props) {
       if (props.isAuth) {
         props.navigation.navigate("Home");
       } else if (!props.isAuth && !props.isLoading) {
-        //Alert.alert(props.errMsg);
+        Alert.alert(props.errMsg);
       }
     } else {
       didMountRef.current = true;
@@ -65,10 +66,11 @@ function LogIn(props) {
           height: 100,
           alignItems: "center",
           justifyContent: "center",
+          marginBottom: 30,
         }}
       >
         <Image
-          source={images.logo}
+          source={insta}
           resizeMode="contain"
           style={{
             width: "60%",
@@ -106,19 +108,8 @@ function LogIn(props) {
       >
         <ScrollView>
           <View>
-            <Text
-              style={{
-                marginTop: 20,
-                marginBottom: 35,
+            {renderLogo()}
 
-                marginTop: 35,
-                textAlign: "center",
-                color: "#bc6c25",
-                ...FONTS.h1,
-              }}
-            >
-              INPgram
-            </Text>
             <Text style={styles.titleText}>Login</Text>
             <View style={{ marginBottom: 20 }}>
               <TextInput

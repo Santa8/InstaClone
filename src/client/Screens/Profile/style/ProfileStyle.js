@@ -128,6 +128,7 @@ export default {
     alignItems: "center",
   },
   followImage: {
+    marginLeft: 15,
     borderRadius: 40,
     height: 80,
     marginBottom: 10,

@@ -349,7 +349,9 @@ router.post(
     // Validate data
     const { error } = loginValidation(req.body);
     if (error) {
-      return res.send({ value: false, message: error.details[0].message });
+      return res
+        .status(400)
+        .send({ value: false, message: error.details[0].message });
     }
 
     // check email
@@ -510,7 +512,7 @@ router.post("/UpdatePost", function (req, res) {
   );
 });
 
-router.post("/DeletePost", function (req, res) {
+router.post("/DeletePost", verifyToken, function (req, res) {
   var userid = req.body.userid;
   var postid = req.body.postid;
 

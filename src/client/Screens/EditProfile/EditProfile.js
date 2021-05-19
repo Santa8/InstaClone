@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import { COLORS, SIZES, FONTS } from "../../constants";
 
 import {
+  KeyboardAvoidingView,
   View,
   Text,
   Image,
@@ -8,6 +10,8 @@ import {
   TextInput,
   StyleSheet,
   Alert,
+  TouchableOpacity,
+  ScrollView,
 } from "react-native";
 
 import EditStyle from "./EditStyle";
@@ -116,89 +120,92 @@ class EditProfile extends Component {
       }
     );
   }
-  /*componentWillMount() {
-  this.fetchUserDetails(this.props.userDetails);
-  this.willFocusSubscription = this.props.navigation.addListener(
-    'willFocus',
-    () => {
-      this.fetchUserDetails(this.props.userDetails);
-    }
-  );
-} */
+
   componentWillUnmount() {
     this.willFocusSubscription.remove();
+  }
+
+  renderButton(text, onPress) {
+    return (
+      <View style={{ margin: SIZES.padding * 0.5, alignItems: "center" }}>
+        <TouchableOpacity
+          style={{
+            height: 60,
+            width: 200,
+            backgroundColor: COLORS.black,
+            borderRadius: SIZES.radius / 0.2,
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: 200,
+            marginTop: 50,
+          }}
+          onPress={onPress}
+        >
+          <Text style={{ color: COLORS.white, ...FONTS.h3 }}>{text}</Text>
+        </TouchableOpacity>
+      </View>
+    );
   }
 
   ChangePhoto = () => {};
 
   render() {
     return (
-      <View style={styles.headerContainer}>
-        <View style={styles.userRow}>
-          <Image style={styles.userImage} source={{ uri: this.state.url }} />
-          <View style={styles.changephoto}>
-            <TextInput
-              style={styles.TextInput}
-              placeholder="urlprofile"
-              onChangeText={(text) => this.setState({ url: text })}
-              value={this.state.url}
-            />
-
-            <Button onPress={this.UploadProfilePhoto} title="upload url" />
-          </View>
-
-          <View style={styles.container}>
-            <View style={styles.item1}>
-              <Text>Name</Text>
-            </View>
-            <View regular style={styles.item2}>
-              <TextInput
-                style={styles.TextInput}
-                value={this.state.name}
-                onChangeText={(text) => this.setState({ name: text })}
-                autoCapitalize="none"
+      <KeyboardAvoidingView>
+        <ScrollView>
+          <View style={styles.headerContainer}>
+            <View style={styles.userRow}>
+              <Image
+                style={styles.userImage}
+                source={{ uri: this.state.url }}
               />
-            </View>
+              <View style={styles.changephoto}></View>
 
-            <View style={styles.item1}>
-              <Text>Username</Text>
-            </View>
-            <View regular style={styles.item2}>
-              <TextInput
-                style={styles.TextInput}
-                value={this.state.username}
-                onChangeText={(text) => this.setState({ username: text })}
-                autoCapitalize="none"
-              />
-            </View>
+              <View style={styles.container}>
+                <View style={styles.item1}>
+                  <Text style={{ fontSize: 20, fontWeight: "bold" }}>Name</Text>
+                </View>
+                <View regular style={styles.item2}>
+                  <TextInput
+                    style={styles.TextInput}
+                    value={this.state.name}
+                    onChangeText={(text) => this.setState({ name: text })}
+                    autoCapitalize="none"
+                  />
+                </View>
 
-            <View style={styles.item1}>
-              <Text>Website</Text>
-            </View>
-            <View regular style={styles.item2}>
-              <TextInput
-                style={styles.TextInput}
-                value={this.state.website}
-                onChangeText={(text) => this.setState({ website: text })}
-                autoCapitalize="none"
-              />
-            </View>
-            <View style={styles.item1}>
-              <Text>Bio</Text>
-            </View>
-            <View regular style={styles.item2}>
-              <TextInput
-                style={styles.TextBioInput}
-                value={this.state.bio}
-                onChangeText={(text) => this.setState({ bio: text })}
-                autoCapitalize="none"
-              />
+                <View style={styles.item1}>
+                  <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                    Username
+                  </Text>
+                </View>
+                <View regular style={styles.item2}>
+                  <TextInput
+                    style={styles.TextInput}
+                    value={this.state.username}
+                    onChangeText={(text) => this.setState({ username: text })}
+                    autoCapitalize="none"
+                  />
+                </View>
+
+                <View style={styles.item1}>
+                  <Text style={{ fontSize: 20, fontWeight: "bold" }}>Bio</Text>
+                </View>
+                <View regular style={styles.item2}>
+                  <TextInput
+                    style={styles.TextInput}
+                    value={this.state.bio}
+                    onChangeText={(text) => this.setState({ bio: text })}
+                    autoCapitalize="none"
+                  />
+                </View>
+              </View>
+
+              {this.renderButton("Save", this.saveEditProfile)}
             </View>
           </View>
-
-          <Button title="Save" onPress={this.saveEditProfile} />
-        </View>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     );
   }
 }

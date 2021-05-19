@@ -278,36 +278,45 @@ class Profile extends Component {
   };
 
   ItemView = ({ item }) => {
-    if (item.name) {
-      return (
-        <View style={styles.followUser}>
-          <View style={styles.itemUser}>
-            <View style={styles.userRow}>
-              <Image style={styles.followImage} source={{ uri: item.url }} />
-            </View>
+    return (
+      <View style={styles.followUser}>
+        <View style={styles.itemUser}>
+          <View style={styles.userRow}>
+            <Image style={styles.followImage} source={{ uri: item.url }} />
           </View>
-          <View style={styles.itemUser2}>
-            <View style={styles.userRow}>
+        </View>
+        <View style={styles.itemUser2}>
+          <View style={styles.userRow}>
+            <View style={{ margin: SIZES.padding * 0.5, alignItems: "center" }}>
               <TouchableOpacity
-                style={styles.button}
+                style={{
+                  height: 35,
+                  width: 100,
+                  backgroundColor: "#023047",
+                  borderRadius: SIZES.radius / 0.2,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
                 onPress={() => {
-                  if (item.Id) {
-                    AsyncStorage.setItem("publicProfileId", item.name._id);
-                    this.setState({ ProfilePubId: item.name._id });
-                    this.props.navigation.navigate("ProfilePub");
+                  if (item.Id === Id) {
+                    props.navigation.navigate("Profile");
+                  } else {
+                    console.log("toudaaaa");
+                    AsyncStorage.setItem("publicProfileId", item.Id);
+
+                    props.navigation.navigate("ProfilePub");
                   }
                 }}
               >
-                <Text>{item.nameVrai}</Text>
+                <Text style={{ color: COLORS.white, ...FONTS.h3 }}>
+                  {item.usernameVrai}
+                </Text>
               </TouchableOpacity>
-              <Text>{item.usernameVrai}</Text>
             </View>
           </View>
         </View>
-      );
-    } else {
-      return <View></View>;
-    }
+      </View>
+    );
   };
 
   renderPosts = (posts, urlpic) => {

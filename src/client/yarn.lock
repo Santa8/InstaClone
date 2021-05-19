@@ -7622,6 +7622,13 @@
   "resolved" "https://registry.npmjs.org/react-native-screens/-/react-native-screens-3.1.0.tgz"
   "version" "3.1.0"
 
+"react-native-search-box@^0.0.20":
+  "integrity" "sha512-ynyqX2wXynzgzt9wshBm6aE+/1EDOzCv49QcyGzoIsed3pgirzW4ealHLjFEkFos3Eb7RP5PriUGnjhyH1plLQ=="
+  "resolved" "https://registry.npmjs.org/react-native-search-box/-/react-native-search-box-0.0.20.tgz"
+  "version" "0.0.20"
+  dependencies:
+    "prop-types" "^15.5.10"
+
 "react-native-status-bar-height@^2.5.0":
   "integrity" "sha512-z3SGLF0mHT+OlJDq7B7h/jXPjWcdBT3V14Le5L2PjntjjWM3+EJzq2BcXDwV+v67KFNJic5pgA26cCmseYek6w=="
   "resolved" "https://registry.npmjs.org/react-native-status-bar-height/-/react-native-status-bar-height-2.6.0.tgz"
