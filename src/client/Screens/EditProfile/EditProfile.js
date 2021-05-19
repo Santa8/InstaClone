@@ -8,17 +8,10 @@ import {
   TextInput,
   StyleSheet,
   Alert,
-  AsyncStorage,
 } from "react-native";
-//import { launchImageLibrary} from 'react-native-image-picker';
-//import {AsyncStorage} from "@react-native-async-storage/async-storage"
-//import {AsyncStorage} from "@react-native-community/async-storage"
-//var ImagePicker = require('react-native-image-picker');
+
 import EditStyle from "./EditStyle";
-//mport { Item } from 'react-native-paper/lib/typescript/src/components/List/List';
-import { Item, Input } from "native-base";
 import { connect } from "react-redux";
-export const ImageProfil = require("./imagea.jpeg");
 const styles = StyleSheet.create({ ...EditStyle });
 import axios from "axios";
 import { uploadprofilephoto } from "../../actions/postsActions";
