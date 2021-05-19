@@ -104,6 +104,15 @@ class PostComponent extends Component {
     editpost(postdata);
     navigation.navigate("EditPost");
   }
+
+  DisplayLikes( postid,displaylikes, navigation) {
+    const data = {
+       postid: postid,
+    };
+   
+    displaylikes(data);
+    navigation.navigate("LikesPage");
+  }
   check = () => {
     if (this.props.userpicurl) {
       this.setState({ userpicurl: this.props.userpicurl });
@@ -146,6 +155,16 @@ class PostComponent extends Component {
               </Text>
             </Body>
           </Left>
+          <Button
+        onPress={() =>
+                this.DisplayLikes(                 
+                  this.props.Id,
+                  this.props.displaylikes,
+                  this.props.navigation                
+                )
+              }>
+                <Text>LIKES</Text>
+        </Button>
           <Right>
             <Icon
               onPress={() =>
@@ -189,6 +208,7 @@ class PostComponent extends Component {
         <CardItem style={{ height: 20 }}>
           <Text>{this.state.likes} </Text>
         </CardItem>
+        
         <CardItem>
           <Body>
             <Text>

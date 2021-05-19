@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import { LinearGradient } from "expo-linear-gradient";
+
 import { COLORS, SIZES, FONTS } from "../../constants";
 
 import axios from "axios";
@@ -24,12 +25,23 @@ import { Container, Content, Icon, Thumbnail } from "native-base";
 import inplogo from "../../assets/image/logo1.png";
 
 import dm from "../../assets/image/dm.png";
+import { displaylikes } from "../../actions/postsActions";
 
 import PostComponent from "./PostComponent";
 
 import { isLogedIn } from "../../actions/AuthActions";
 
 import { baseURL } from "../../constants";
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+    marginTop: 15,
+  },
+});
+
 
 class Home extends Component {
   list = [];
@@ -247,6 +259,8 @@ class Home extends Component {
           caption={caption}
           Id={post.Id}
           userid={this.Id}
+          navigation={this.props.navigation}
+          displaylikes={this.props.displaylikes}
         />
       );
     });
@@ -329,12 +343,20 @@ class Home extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    marginTop: 15,
-  },
-});
 
-export default Home;
+
+const mapStatetoProps = (state) => {
+  return {
+    
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+  
+    displaylikes: (data) => dispatch(displaylikes(data)),
+  };
+};
+
+export default connect(mapStatetoProps,mapDispatchToProps)(Home);
+
+

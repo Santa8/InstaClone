@@ -79,6 +79,15 @@ class PostComponent extends Component {
     })
     .catch((err) => console.log(err));
   }
+  DisplayLikes( postid,displaylikes, navigation) {
+    const data = {
+       postid: postid,
+    };
+   
+    displaylikes(data);
+    navigation.navigate("LikesPage");
+  }
+  
   getIsLiking = () => {
     axios({
       method: "post",
@@ -139,7 +148,19 @@ class PostComponent extends Component {
               </Text>
             </Body>
           </Left>
+
         </CardItem>
+        <Button
+        onPress={() =>
+                this.DisplayLikes(                 
+                  this.props.Id,
+                  this.props.displaylikes,
+                  this.props.navigation                
+                )
+              }>
+                <Text>LIKES</Text>
+        </Button>
+
         <CardItem cardBody>
           <Image
             source={{ uri: this.props.imageSource }}

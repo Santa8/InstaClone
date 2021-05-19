@@ -4,6 +4,7 @@ import {
   UPLOAD_FAILURE,
   EDIT_POST,
   MODIFY_POST,
+  DISPLAY_LIKES
 } from "../actions/postsActions";
 
 // init state for signup
@@ -14,6 +15,7 @@ const initState = {
   Data: {},
   errMsg: "",
   postdata: {},
+  likesdata: {},
 };
 
 // the sign up reducer
@@ -48,6 +50,11 @@ const postsReducer = (state = initState, action) => {
         isUploaded: false,
         Data: {},
         errMsg: action.payload,
+      };
+      case DISPLAY_LIKES:
+      return {
+        likesdata: action.payload,
+        errMsg: "",
       };
     default:
       return state;
