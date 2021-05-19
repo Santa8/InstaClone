@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 import { editpost } from "../../actions/postsActions";
+import { displaylikes } from "../../actions/postsActions";
 import AsyncStorage from "@react-native-community/async-storage";
 //import { Icon } from 'react-native-elements'
 import { uploadpost } from "../../actions/postsActions";
@@ -323,6 +324,7 @@ class Profile extends Component {
           key={id}
           imageSource={url}
           likes={post.likes.length}
+          likeslist={post.likes}
           username={name}
           userpicurl={urlpic}
           caption={caption}
@@ -331,6 +333,7 @@ class Profile extends Component {
           userid={this.state.id}
           navigation={this.props.navigation}
           editpost={this.props.editpost}
+          displaylikes={this.props.displaylikes}
         />
       );
     });
@@ -465,7 +468,7 @@ class Profile extends Component {
 
   render() {
     return (
-      <LinearGradient colors={[COLORS.primary, COLORS.primary]}>
+    //  <LinearGradient colors={[COLORS.primary, COLORS.primary]}>
         <ScrollView style={styles.scroll}>
           <View style={[styles.container, this.props.containerStyle]}>
             <View style={styles.cardContainer}>
@@ -481,7 +484,7 @@ class Profile extends Component {
             </View>
           </View>
         </ScrollView>
-      </LinearGradient>
+     // </LinearGradient>
     );
   }
 }
@@ -502,6 +505,7 @@ const mapDispatchToProps = (dispatch) => {
     logout: () => dispatch(logout()),
     uploadpost: (Data) => dispatch(uploadpost(Data)),
     editpost: (postdata) => dispatch(editpost(postdata)),
+    displaylikes: (data) => dispatch(displaylikes(data)),
   };
 };
 

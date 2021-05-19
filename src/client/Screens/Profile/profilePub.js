@@ -289,8 +289,10 @@ class ProfilePub extends Component {
         <PostComponent
           key={id}
           imageSource={url}
-          likes="101"
+          likes={post.likes.length}
           username={name}
+          userid={this.userId}
+          Id={id}
           userpicurl={this.state.url}
           caption={caption}
           date={date}

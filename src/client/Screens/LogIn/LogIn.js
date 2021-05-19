@@ -39,7 +39,7 @@ function LogIn(props) {
       if (props.isAuth) {
         props.navigation.navigate("Home");
       } else if (!props.isAuth && !props.isLoading) {
-        //Alert.alert(props.errMsg);
+        Alert.alert(props.errMsg);
       }
     } else {
       didMountRef.current = true;

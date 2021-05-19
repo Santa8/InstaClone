@@ -7,6 +7,7 @@ export const UPLOAD_SUCCESS = "UPLOAD_SUCCESS";
 export const UPLOAD_FAILURE = "UPLOAD_FAILURE";
 export const EDIT_POST = "EDIT_POST";
 export const MODIFY_POST = "MODIFY_POST";
+export const DISPLAY_LIKES = "DISPLAY_LIKES";
 // action creators
 export const uploadRequest = () => {
   return {
@@ -35,6 +36,12 @@ export const uploadFailure = (errMsg) => {
   return {
     type: UPLOAD_FAILURE,
     payload: errMsg,
+  };
+};
+export const displayLikes = (data) => {
+  return {
+    type: DISPLAY_LIKES,
+    payload: data,
   };
 };
 
@@ -71,6 +78,31 @@ export const editpost = (postdata) => {
   return (dispatch) => {
     dispatch(editPost(postdata));
   };
+};
+export const displaylikes = (ddata) => {
+  return (dispatch) => {
+    console.log(ddata)
+    axios({
+      method: "post",
+      url: "/getlikesname",
+      baseURL: baseURL,
+      data: {
+        postid:ddata.postid,
+        
+      },
+    })
+      .then((res) => {
+        const likes = res.data.likes;
+        console.log('hnnnna')
+        console.log(likes)
+        if (res.data.value) {
+          dispatch(displayLikes(likes));
+        }
+        
+  })
+  .catch((err) => console.log(err));
+
+};
 };
 
 export const modifypost = (postdata) => {

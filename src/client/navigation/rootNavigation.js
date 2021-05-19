@@ -24,6 +24,7 @@ import EditProfile from "../Screens/EditProfile/EditProfile";
 import ProfilePub from "../Screens/Profile/profilePub";
 import AddPost from "../Screens/Profile/addPost";
 import EditPost from "../Screens/Profile/EditPost";
+import LikesPage from "../Screens/Profile/LikesPage";
 import EditPic from "../Screens/Profile/EditPic";
 import Search from "../Screens/Home/Search";
 
@@ -100,6 +101,9 @@ const TestNavigator = createStackNavigator({
   },
   EditProfile: {
     screen: EditProfile,
+  },
+  LikesPage: {
+    screen: LikesPage,
   },
 });
 const AppSwitch = createSwitchNavigator(
