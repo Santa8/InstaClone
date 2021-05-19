@@ -213,14 +213,17 @@ class Home extends Component {
       var userpicurl = post.picurl;
       var date = post.date;
       var caption = post.caption;
+      console.log(post);
       return (
         <PostComponent
           imageSource={url}
-          likes={posts.likes}
+          likes={post.likes.length}
           username={name}
           userpicurl={userpicurl}
           date={date}
           caption={caption}
+          Id={post.Id}
+          userid={this.Id}
         />
       );
     });

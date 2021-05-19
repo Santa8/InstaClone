@@ -52,7 +52,6 @@ class Profile extends Component {
       username: "",
       urlpost: "",
       bio: "",
-      post: "",
       ProfilePubId: "",
       posts: [],
       tabs: {
@@ -95,7 +94,6 @@ class Profile extends Component {
 
         this.setState({ username: res.data.results[0].username });
         this.setState({ bio: res.data.results[0].bio });
-        this.setState({ post: res.data.results[0].posts[0].urlpost });
 
         const reversePosts = res.data.results[0].posts.reverse();
         this.setState({ posts: reversePosts });
@@ -324,7 +322,7 @@ class Profile extends Component {
         <PostComponent
           key={id}
           imageSource={url}
-          likes={post.likes}
+          likes={post.likes.length}
           username={name}
           userpicurl={urlpic}
           caption={caption}
