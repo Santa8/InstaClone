@@ -212,10 +212,12 @@ class Home extends Component {
       return (
         <PostComponent
           imageSource={url}
-          likes={posts.likes}
+          likes={post.likes.length}
           username={name}
           userpicurl={userpicurl}
           date={date}
+          Id={post.Id}
+          userid={this.Id}
         />
       );
     });

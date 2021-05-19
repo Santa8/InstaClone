@@ -12,25 +12,79 @@ const { verifyToken } = require("../middleware/verifyToken");
 //=================================================================
 // signup a new user
 
+router.post("/getIsLiking", async (req, res) => {
+  const userid = req.body.userid;
+  const postid = req.body.Id;
+  let value = false;
+
+  isLiking = await User.find(
+    { "posts.Id" : postid , "posts.likes.userid": userid } , "username" 
+  );
+
+  console.log(isLiking)
+
+  if (!isLiking.length) {
+    value = false;
+  } else {
+    value = true;
+  }
+  res.send({ value: value });
+});
+
 
 router.post("/like", async function (req, res) {
   
   var postid = req.body.Id;
-  
+  var userid = req.body.userid;
+  isLiking = await User.find(
+    { "posts.Id" : postid , "posts.likes.userid": userid } , "username" 
+  );
+  if(!isLiking.length){
 
   User.updateOne(
     { "posts.Id": postid },
-    { $inc: { "posts.$.likes" : 1 } },
+    { $push: { "posts.$.likes": {userid:userid} } },
 
     function (err, doc) {
       res.send({
         value: true,
-        message: "add like",
+        message: "POST LIKED",
+        
+      });
+    }
+  );
+  }
+  else {
+    res.send({
+      value: false,
+      message: "already liked",
+      
+    });
+
+  }
+
+
+});
+
+router.post("/unlike", async function (req, res) {
+  
+  var postid = req.body.Id;
+  var userid = req.body.userid;
+
+  User.updateOne(
+    { "posts.Id": postid },
+    { $pull: { "posts.$.likes" : { userid:userid } } },
+    { safe: true, multi: true },
+
+    function (err, doc) {
+      res.send({
+        value: true,
+        message: "POST UNLIKED",
       });
     }
   );
 
-  
+
 });
 
 router.post("/unfollow", async (req, res) => {
@@ -215,6 +269,8 @@ router.post("/listPosts", async (req, res) => {
               posts: post.urlpost,
               picurl: url.url,
               date: post.date,
+              likes : post.likes,
+              Id : post.Id
             });
           });
         }
@@ -418,7 +474,7 @@ router.post("/uploadpost", function (req, res) {
       Id: uuidV4(),
       urlpost: urlpost,
       description: description,
-      likes : 0,
+      likes : [],
       date: date,
     });
 

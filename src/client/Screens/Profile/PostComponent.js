@@ -22,7 +22,83 @@ class PostComponent extends Component {
     this.state = {
       userpicurl:
         "https://i.pinimg.com/280x280_RS/b8/49/79/b849797ed8b78c6d2d8ab6db464d61fe.jpg",
+
+      isLiking : false,
+
+      likes : this.props.likes
     };
+      
+  }
+
+   like = ()=> {
+    axios({
+      method: "post",
+      url: "/like",
+      baseURL: baseURL,
+      data: {
+        Id: this.props.Id,
+        userid : this.props.userid
+
+      },
+    })
+    .then((res) => {
+      const message = res.data.message;
+
+      if (res.data.value) {
+        console.log(message)
+        this.getIsLiking()
+        var old = this.state.likes;
+        var neww = old +1 ;
+        this.setState({likes : neww })
+      }
+    })
+    .catch((err) => console.log(err));
+  }
+
+  unlike = () => {
+    axios({
+      method: "post",
+      url: "/unlike",
+      baseURL: baseURL,
+      data: {
+        Id: this.props.Id,
+        userid : this.props.userid
+
+      },
+    })
+    .then((res) => {
+      const message = res.data.message;
+
+      if (res.data.value) {
+        console.log(message)
+        this.getIsLiking()
+        var old = this.state.likes;
+        var neww = old -1 ;
+       this.setState({likes : neww })
+
+      }
+    })
+    .catch((err) => console.log(err));
+  }
+  getIsLiking = () => {
+    axios({
+      method: "post",
+      url: "/getIsLiking",
+      baseURL: baseURL,
+      data: {
+        Id: this.props.Id,
+        userid : this.props.userid
+
+      },
+    })
+    .then((res) => {
+      const message = res.data.message;
+
+      this.setState({isLiking : res.data.value })
+    })
+    .catch((err) => console.log(err));
+
+
   }
   EditPost(urlpost, description, userid, Id, navigation, editpost) {
     const postdata = {
@@ -42,10 +118,15 @@ class PostComponent extends Component {
     }
   };
   componentDidMount() {
-   
+    
     this.check();
+    this.getIsLiking();
+    this.setState({likes : this.props.likes})
   }
   render() {
+      let onpress = this.state.isLiking ? this.unlike : this.like;
+      let typebutton = this.state.isLiking ? "ios-heart-circle-sharp" : "ios-heart-outline";
+
     return (
       <Card>
         <CardItem>
@@ -66,7 +147,10 @@ class PostComponent extends Component {
               >
                 {this.props.username}
               </Text>
-              <Text note> Mai 10, 2021</Text>
+              <Text style={{ color: "#ffcdb2" }}>
+                {" "}
+                {this.props.date.substring(0, 10)}
+              </Text>
             </Body>
           </Left>
           <Right>
@@ -96,28 +180,8 @@ class PostComponent extends Component {
         <CardItem style={{ height: 45 }}>
           <Left>
               <Icon
-               onPress={() =>{
-                axios({
-                  method: "post",
-                  url: "/like",
-                  baseURL: baseURL,
-                  data: {
-                    Id: this.props.Id,
-  
-                  },
-                })
-                .then((res) => {
-                  const message = res.data.message;
-          
-                  if (res.data.value) {
-                    console.log(message)
-                  }
-                })
-                .catch((err) => console.log(err));
-              }
-
-              } 
-              name="ios-heart-outline" style={{ color: "black" }} />
+               onPress={ onpress } 
+              name={typebutton}  style={{ color: "black" }} />
                
                 
            
@@ -131,7 +195,7 @@ class PostComponent extends Component {
         </CardItem>
 
         <CardItem style={{ height: 20 }}>
-          <Text>{this.props.likes} </Text>
+          <Text>{this.state.likes} </Text>
         </CardItem>
         <CardItem>
           <Body>
