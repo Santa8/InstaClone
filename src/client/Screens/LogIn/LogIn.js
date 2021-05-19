@@ -18,6 +18,7 @@ import { isLogedIn } from "../../actions/AuthActions";
 import { login } from "../../actions/loginActions";
 import { LinearGradient } from "expo-linear-gradient";
 import { COLORS, SIZES, FONTS } from "../../constants";
+import { COLORS, SIZES, FONTS, images } from "../../constants";
 
 function LogIn(props) {
   /*if (isLogedIn()) {
@@ -55,6 +56,27 @@ function LogIn(props) {
     // calling login() dispatch function
     props.login(loginData);
   };
+
+  function renderLogo() {
+    return (
+      <View
+        style={{
+          marginTop: SIZES.padding * 2,
+          height: 100,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Image
+          source={images.logo}
+          resizeMode="contain"
+          style={{
+            width: "60%",
+          }}
+        />
+      </View>
+    );
+  }
 
   function renderButton(text, onPress) {
     return (
