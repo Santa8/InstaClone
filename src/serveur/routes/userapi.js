@@ -135,7 +135,7 @@ router.post("/follow", verifyToken, async (req, res) => {
     );
 
     const namUser = await User.findById(id, { username: 1, name: 1, url: 1 });
-    if (!alreadyFollowing.length) {
+    if (!alreadyFollowing.length && FollowDetails) {
       User.findById(id, function (error, user) {
         user.following.push({
           Id: followId,

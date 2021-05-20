@@ -48,7 +48,7 @@ class PostComponent extends Component {
 
         if (res.data.value) {
           this.getIsLiking();
-          var old = this.state.likes;
+          var old = this.props.likess;
           var neww = old + 1;
           this.setState({ likes: neww });
         }
@@ -75,8 +75,10 @@ class PostComponent extends Component {
         if (res.data.value) {
           this.getIsLiking();
           var old = this.state.likes;
-          var neww = old - 1;
-          this.setState({ likes: neww });
+          if (!(old == 0)) {
+            var neww = old - 1;
+            this.setState({ likes: neww });
+          }
         }
       })
       .catch((err) => console.log(err));
@@ -132,7 +134,7 @@ class PostComponent extends Component {
           <Left>
             <Thumbnail
               source={{
-                uri: this.state.userpicurl,
+                uri: this.props.userpicurl,
               }}
             />
 
@@ -168,7 +170,7 @@ class PostComponent extends Component {
               style={{ color: color }}
             />
 
-            <Text> {this.state.likes} </Text>
+            <Text> {this.props.likes} </Text>
 
             <Icon
               name="list"
