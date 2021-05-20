@@ -77,13 +77,16 @@ class Profile extends Component {
     ),
   };
 
-  fetchUserDetails = (user_id) => {
+  fetchUserDetails = async (user_id) => {
     axios({
       method: "post",
       url: "/getUserDetails",
       baseURL: baseURL,
       data: {
         userid: user_id,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
@@ -119,7 +122,7 @@ class Profile extends Component {
       })
       .catch((err) => console.log(err));
   };
-  UpdateFollowing = (following) => {
+  UpdateFollowing = async (following) => {
     axios({
       method: "post",
       url: "/updatefollowing",
@@ -127,6 +130,9 @@ class Profile extends Component {
       data: {
         userid: this.state.id,
         following: following,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
@@ -138,7 +144,7 @@ class Profile extends Component {
       })
       .catch((err) => console.log(err));
   };
-  UpdateFollowers = (followers) => {
+  UpdateFollowers = async (followers) => {
     axios({
       method: "post",
       url: "/updatefollowers",
@@ -146,6 +152,9 @@ class Profile extends Component {
       data: {
         userid: this.state.id,
         followers: followers,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
@@ -299,13 +308,10 @@ class Profile extends Component {
                   justifyContent: "center",
                 }}
                 onPress={() => {
-                  if (item.Id === Id) {
-                    props.navigation.navigate("Profile");
-                  } else {
-                    console.log("toudaaaa");
+                  if (item.Id) {
                     AsyncStorage.setItem("publicProfileId", item.Id);
-
-                    props.navigation.navigate("ProfilePub");
+                    this.setState({ ProfilePubId: item.name._id });
+                    this.props.navigation.navigate("ProfilePub");
                   }
                 }}
               >

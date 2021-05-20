@@ -100,6 +100,9 @@ const AddPost = () => {
           description: caption,
           date: new Date().toISOString(),
         },
+        headers: {
+          "auth-token": await AsyncStorage.getItem("token"),
+        },
       })
         .then((res) => {
           const message = res.data.message;

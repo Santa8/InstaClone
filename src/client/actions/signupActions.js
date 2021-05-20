@@ -31,7 +31,7 @@ export const signupFailure = (errMsg) => {
 export const signup = (signupData) => {
   return (dispatch) => {
     dispatch(signupRequest());
-    //const signupUri = 'http://localhost:3000/register';
+    
     axios({
       method: "post",
       url: "/register",
@@ -51,16 +51,13 @@ export const signup = (signupData) => {
         if (res.data.value) {
           dispatch(signupSuccess(signupData));
         } else {
-          /*swal({
-            title: res.data.message,
-            icon: "warning",
-          });*/
-          dispatch(signupFailure(message));
+          
+          dispatch(signupFailure(res.data.message));
         }
       })
       .catch((err) => {
-        console.log("signupActions.js, Signup Request Error: ", err);
-        dispatch(signupFailure("Fail to Sign Up"));
+      
+        dispatch(signupFailure(err.response.data.message));
       });
   };
 };

@@ -43,11 +43,14 @@ function Search(props) {
     return () => {};
   }, []);
 
-  const fetchUsers = () => {
+  const fetchUsers = async () => {
     axios({
       method: "post",
       url: "/listUsers",
       baseURL: baseURL,
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
+      },
     })
       .then((res) => {
         setfilteredData(res.data.lista);

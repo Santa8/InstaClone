@@ -17,6 +17,7 @@ import { COLORS, SIZES, FONTS } from "../../constants";
 import AsyncStorage from "@react-native-community/async-storage";
 //import { Icon } from 'react-native-elements'
 import { uploadpost } from "../../actions/postsActions";
+import { displaylikes } from "../../actions/postsActions";
 import PostComponent from "../Home/PostComponent";
 
 import {
@@ -77,7 +78,7 @@ class ProfilePub extends Component {
     ),
   };
 
-  getIsFollowing = (userId, followId) => {
+  getIsFollowing = async (userId, followId) => {
     axios({
       method: "post",
       url: "/getIsFollowing",
@@ -85,6 +86,9 @@ class ProfilePub extends Component {
       data: {
         userId: userId,
         followId: followId,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
@@ -95,13 +99,16 @@ class ProfilePub extends Component {
       });
   };
 
-  fetchUserDetails = (user_id) => {
+  fetchUserDetails = async (user_id) => {
     axios({
       method: "post",
       url: "/getUserDetails",
       baseURL: baseURL,
       data: {
         userid: user_id,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
@@ -295,7 +302,9 @@ class ProfilePub extends Component {
           Id={id}
           userpicurl={this.state.url}
           caption={caption}
+          navigation={this.props.navigation}
           date={date}
+          displaylikes={this.props.displaylikes}
         />
       );
     });
@@ -355,7 +364,7 @@ class ProfilePub extends Component {
     });
   };
 
-  followRequest = () => {
+  followRequest = async () => {
     axios({
       method: "post",
       url: "/follow",
@@ -364,6 +373,9 @@ class ProfilePub extends Component {
         Id: this.userId,
 
         followId: this.id,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
@@ -376,7 +388,7 @@ class ProfilePub extends Component {
         console.log(err.message);
       });
   };
-  unfollowRequest = () => {
+  unfollowRequest = async () => {
     axios({
       method: "post",
       url: "/unfollow",
@@ -385,6 +397,9 @@ class ProfilePub extends Component {
         Id: this.userId,
 
         followId: this.id,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
@@ -506,6 +521,7 @@ const mapDispatchToProps = (dispatch) => {
     // only map needed dispatches here
     logout: () => dispatch(logout()),
     uploadpost: (Data) => dispatch(uploadpost(Data)),
+    displaylikes: (data) => dispatch(displaylikes(data)),
   };
 };
 

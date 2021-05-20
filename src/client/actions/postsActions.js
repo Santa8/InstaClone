@@ -1,5 +1,6 @@
 import axios from "axios";
 import { baseURL } from "../constants";
+import AsyncStorage from "@react-native-community/async-storage";
 
 // action types
 export const UPLOAD_REQUEST = "UPLOAD_REQUEST";
@@ -46,8 +47,8 @@ export const displayLikes = (data) => {
 };
 
 // async impure action creator enabled by redux-thunk
-export const uploadprofilephoto = (Data) => {
-  return (dispatch) => {
+export const uploadprofilephoto =  (Data) => {
+  return async (dispatch) => {
     dispatch(uploadRequest());
     //const signupUri = 'http://localhost:3000/register';
     axios({
@@ -57,6 +58,9 @@ export const uploadprofilephoto = (Data) => {
       data: {
         id: Data.userid,
         url: Data.urlpost,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
@@ -74,13 +78,13 @@ export const uploadprofilephoto = (Data) => {
   };
 };
 
-export const editpost = (postdata) => {
+export const editpost =  (postdata) => {
   return (dispatch) => {
     dispatch(editPost(postdata));
   };
 };
 export const displaylikes = (ddata) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     console.log(ddata)
     axios({
       method: "post",
@@ -89,6 +93,9 @@ export const displaylikes = (ddata) => {
       data: {
         postid:ddata.postid,
         
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
@@ -107,7 +114,7 @@ export const displaylikes = (ddata) => {
 
 export const modifypost = (postdata) => {
   const postdataa = postdata;
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(modifyPost(postdataa));
     axios({
       method: "post",
@@ -117,6 +124,9 @@ export const modifypost = (postdata) => {
         userid: postdataa.userid,
         postid: postdataa.postid,
         description: postdataa.description,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {

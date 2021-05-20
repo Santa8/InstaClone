@@ -51,7 +51,7 @@ class EditProfile extends Component {
     this.props.uploadprofilephoto(Data);
   };
 
-  saveEditProfile = () => {
+  saveEditProfile = async () => {
     if (!this.state.name) {
       Alert.alert("Name is empty");
     } else if (!this.state.username) {
@@ -68,6 +68,9 @@ class EditProfile extends Component {
           website: this.state.website,
           bio: this.state.bio,
         },
+        headers: {
+          "auth-token": await AsyncStorage.getItem("token"),
+        },
       })
         .then((res) => {
           Alert.alert("Data is saved");
@@ -82,13 +85,16 @@ class EditProfile extends Component {
     }
   };
 
-  fetchUserDetails = (user_id) => {
+  fetchUserDetails = async (user_id) => {
     axios({
       method: "post",
       url: "/getUserDetails",
       baseURL: baseURL,
       data: {
         userid: user_id,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
