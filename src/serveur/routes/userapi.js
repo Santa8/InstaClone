@@ -259,6 +259,7 @@ router.post("/listPosts", verifyToken, async (req, res) => {
               date: post.date,
               likes: post.likes,
               Id: post.Id,
+              caption: post.description,
             });
           });
         }

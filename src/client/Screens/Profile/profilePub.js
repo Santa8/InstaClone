@@ -16,7 +16,6 @@ import { COLORS, SIZES, FONTS } from "../../constants";
 
 import AsyncStorage from "@react-native-community/async-storage";
 
-import { uploadpost } from "../../actions/postsActions";
 import { displaylikes } from "../../actions/postsActions";
 import PostComponent from "../Home/PostComponent";
 
@@ -499,9 +498,7 @@ const mapStatetoProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    // only map needed dispatches here
     logout: () => dispatch(logout()),
-    uploadpost: (Data) => dispatch(uploadpost(Data)),
     displaylikes: (data) => dispatch(displaylikes(data)),
   };
 };

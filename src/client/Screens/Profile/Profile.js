@@ -15,8 +15,7 @@ import {
 import { editpost } from "../../actions/postsActions";
 import { displaylikes } from "../../actions/postsActions";
 import AsyncStorage from "@react-native-community/async-storage";
-//import { Icon } from 'react-native-elements'
-import { uploadpost } from "../../actions/postsActions";
+
 import PostComponent from "./PostComponent";
 import { LinearGradient } from "expo-linear-gradient";
 import { COLORS, SIZES, FONTS } from "../../constants";
@@ -445,7 +444,18 @@ class Profile extends Component {
     if (this.state.posts.length < 1) {
       return (
         <View>
-          <Text>AUCUN POST </Text>
+          <Text
+            style={{
+              marginTop: 20,
+              marginBottom: 0,
+              textAlign: "center",
+              color: COLORS.black,
+              fontWeight: "bold",
+              ...FONTS.h2,
+            }}
+          >
+            AUCUN POST
+          </Text>
         </View>
       );
     } else {
@@ -496,7 +506,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     // only map needed dispatches here
     logout: () => dispatch(logout()),
-    uploadpost: (Data) => dispatch(uploadpost(Data)),
     editpost: (postdata) => dispatch(editpost(postdata)),
     displaylikes: (data) => dispatch(displaylikes(data)),
   };

@@ -1,5 +1,3 @@
-//import {createStackNavigator} from '@react-navigation/stack';
-//import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createStackNavigator } from "react-navigation-stack";
 
@@ -14,7 +12,6 @@ import {
   Platform,
 } from "react-native";
 
-//import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import LogIn from "../Screens/LogIn/LogIn";
 import Register from "../Screens/LogIn/Register";
