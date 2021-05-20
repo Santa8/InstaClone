@@ -19,7 +19,7 @@ import { connect } from "react-redux";
 import axios from "axios";
 import { modifypost } from "../../actions/postsActions";
 import { baseURL } from "../../constants";
-import LikesStyle from "./style/LikesStyle";
+import { LikesStyle } from "./style/LikesStyle";
 
 const styles = StyleSheet.create({ ...LikesStyle });
 function LikesPage(props) {

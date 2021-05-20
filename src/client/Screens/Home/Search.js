@@ -21,7 +21,7 @@ import { Icon } from "native-base";
 import { ForceTouchGestureHandler } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-community/async-storage";
 import { baseURL } from "../../constants";
-import SearchStyle from "./style/SearchStyle";
+import { SearchStyle } from "./style/SearchStyle";
 import Searchh from "react-native-search-box";
 
 const styles = StyleSheet.create({ ...SearchStyle });

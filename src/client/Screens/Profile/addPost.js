@@ -35,6 +35,8 @@ import firebase from "firebase";
 import { baseURL } from "../../constants";
 import { set } from "react-native-reanimated";
 
+console.disableYellowBox = true;
+
 const AddPost = () => {
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);

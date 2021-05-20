@@ -16,6 +16,7 @@ import { COLORS, SIZES, FONTS } from "../../constants";
 
 import AsyncStorage from "@react-native-community/async-storage";
 
+import { uploadpost } from "../../actions/postsActions";
 import { displaylikes } from "../../actions/postsActions";
 import PostComponent from "../Home/PostComponent";
 
@@ -38,6 +39,8 @@ import { logout } from "../../actions/loginActions";
 import { baseURL } from "../../constants";
 
 import { Icon } from "native-base";
+
+console.disableYellowBox = true;
 
 class ProfilePub extends Component {
   constructor(props) {
@@ -451,7 +454,18 @@ class ProfilePub extends Component {
     if (this.state.posts.length < 1) {
       return (
         <View>
-          <Text>AUCUN POST </Text>
+         <Text
+            style={{
+              marginTop: 20,
+              marginBottom: 0,
+              textAlign: "center",
+              color: COLORS.black,
+              fontWeight: "bold",
+              ...FONTS.h2,
+            }}
+          >
+            AUCUN POST
+          </Text>
         </View>
       );
     } else {
@@ -498,7 +512,9 @@ const mapStatetoProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
+    // only map needed dispatches here
     logout: () => dispatch(logout()),
+    uploadpost: (Data) => dispatch(uploadpost(Data)),
     displaylikes: (data) => dispatch(displaylikes(data)),
   };
 };

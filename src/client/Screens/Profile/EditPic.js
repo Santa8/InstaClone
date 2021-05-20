@@ -20,6 +20,7 @@ import * as ImagePicker from "expo-image-picker";
 
 import { firebaseConfig } from "../../fireBaseConfig";
 import uuid from "uuid";
+console.disableYellowBox = true;
 
 import {
   AddImageProfile,

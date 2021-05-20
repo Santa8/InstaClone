@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     marginTop: 17,
   },
 });
-
+console.disableYellowBox = true;
 class Home extends Component {
   list = [];
 

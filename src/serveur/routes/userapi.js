@@ -135,7 +135,7 @@ router.post("/follow", verifyToken, async (req, res) => {
     );
 
     const namUser = await User.findById(id, { username: 1, name: 1, url: 1 });
-    if (!alreadyFollowing.length && FollowDetails) {
+    if (!alreadyFollowing.length) {
       User.findById(id, function (error, user) {
         user.following.push({
           Id: followId,
@@ -259,7 +259,7 @@ router.post("/listPosts", verifyToken, async (req, res) => {
               date: post.date,
               likes: post.likes,
               Id: post.Id,
-              caption: post.description,
+              caption : post.description
             });
           });
         }
