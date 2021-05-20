@@ -21,7 +21,7 @@ import { Icon } from "native-base";
 import { ForceTouchGestureHandler } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-community/async-storage";
 import { baseURL } from "../../constants";
-import { SearchStyle } from "./SearchStyle";
+import { SearchStyle } from "./style/SearchStyle";
 import Searchh from "react-native-search-box";
 
 const styles = StyleSheet.create({ ...SearchStyle });
@@ -43,11 +43,14 @@ function Search(props) {
     return () => {};
   }, []);
 
-  const fetchUsers = () => {
+  const fetchUsers = async () => {
     axios({
       method: "post",
       url: "/listUsers",
       baseURL: baseURL,
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
+      },
     })
       .then((res) => {
         setfilteredData(res.data.lista);
@@ -102,7 +105,6 @@ function Search(props) {
                   if (item.Id === Id) {
                     props.navigation.navigate("Profile");
                   } else {
-                    console.log("toudaaaa");
                     AsyncStorage.setItem("publicProfileId", item.Id);
 
                     props.navigation.navigate("ProfilePub");

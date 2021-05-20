@@ -15,8 +15,9 @@ import {
 import { COLORS, SIZES, FONTS } from "../../constants";
 
 import AsyncStorage from "@react-native-community/async-storage";
-//import { Icon } from 'react-native-elements'
+
 import { uploadpost } from "../../actions/postsActions";
+import { displaylikes } from "../../actions/postsActions";
 import PostComponent from "../Home/PostComponent";
 
 import {
@@ -31,7 +32,7 @@ import profileStyles from "./style/ProfileStyle";
 export const ImageProfil = require("./images/photo_cv.jpg");
 const styles = StyleSheet.create({ ...profileStyles });
 import { Item, Input } from "native-base";
-import Posts from "./Posts";
+
 import { connect } from "react-redux";
 import axios from "axios";
 import { logout } from "../../actions/loginActions";
@@ -77,7 +78,7 @@ class ProfilePub extends Component {
     ),
   };
 
-  getIsFollowing = (userId, followId) => {
+  getIsFollowing = async (userId, followId) => {
     axios({
       method: "post",
       url: "/getIsFollowing",
@@ -85,6 +86,9 @@ class ProfilePub extends Component {
       data: {
         userId: userId,
         followId: followId,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
@@ -95,13 +99,16 @@ class ProfilePub extends Component {
       });
   };
 
-  fetchUserDetails = (user_id) => {
+  fetchUserDetails = async (user_id) => {
     axios({
       method: "post",
       url: "/getUserDetails",
       baseURL: baseURL,
       data: {
         userid: user_id,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
@@ -305,7 +312,9 @@ class ProfilePub extends Component {
           Id={id}
           userpicurl={this.state.url}
           caption={caption}
+          navigation={this.props.navigation}
           date={date}
+          displaylikes={this.props.displaylikes}
         />
       );
     });
@@ -365,7 +374,7 @@ class ProfilePub extends Component {
     });
   };
 
-  followRequest = () => {
+  followRequest = async () => {
     axios({
       method: "post",
       url: "/follow",
@@ -375,9 +384,11 @@ class ProfilePub extends Component {
 
         followId: this.id,
       },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
+      },
     })
       .then((res) => {
-        console.log(res.data.message);
         this.getIsFollowing(this.userId, this.id);
         this.fetchUserDetails(this.id);
       })
@@ -386,7 +397,7 @@ class ProfilePub extends Component {
         console.log(err.message);
       });
   };
-  unfollowRequest = () => {
+  unfollowRequest = async () => {
     axios({
       method: "post",
       url: "/unfollow",
@@ -396,9 +407,11 @@ class ProfilePub extends Component {
 
         followId: this.id,
       },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
+      },
     })
       .then((res) => {
-        console.log(res.data.message);
         this.getIsFollowing(this.userId, this.id);
         this.fetchUserDetails(this.id);
       })
@@ -428,40 +441,35 @@ class ProfilePub extends Component {
   }
 
   renderContactHeader = () => {
+    let onpress = this.state.isFollowing
+      ? this.unfollowRequest
+      : this.followRequest;
+    let text = this.state.isFollowing ? "unfollow" : "follow";
     return (
       <View style={styles.headerContainer}>
-        <View>
-          <View style={{ marginLeft: 30, marginBottom: 20, marginTop: 20 }}>
+        <View style={styles.item}>
+          <View style={styles.userRow}>
             <Image style={styles.userImage} source={{ uri: this.state.url }} />
           </View>
         </View>
 
-        <View>
-          <View style={{ marginBottom: 5, marginLeft: 10 }}>
-            <View>
-              <Text
-                style={{
-                  fontSize: 20,
-                  marginBottom: 5,
-                  marginRight: 95,
-                  fontWeight: "bold",
-                }}
-              >
-                {this.state.name}
-              </Text>
-            </View>
-            <View style={{ marginBottom: 5 }}>
-              <Text>@{this.state.username}</Text>
-            </View>
-            <View style={{ marginBottom: 5 }}>
-              <Text>{this.state.bio}</Text>
-            </View>
+        <View style={styles.userRow}>
+          <View style={styles.userNameRow}>
+            <Text style={styles.userNameText}>{this.state.name}</Text>
+          </View>
+          <View style={styles.userNameRow}>
+            <Text style={styles.userNameText}>@{this.state.username}</Text>
+          </View>
+          <View style={styles.userBioRow}>
+            <Text style={styles.userBioText}>{this.state.bio}</Text>
+          </View>
+          <View style={styles.item2}>
+            {this.renderButton(text, "#048ba8", onpress)}
           </View>
         </View>
       </View>
     );
   };
-
   renderMansonry2Col = () => {
     if (this.state.posts.length < 1) {
       return (
@@ -516,6 +524,7 @@ const mapDispatchToProps = (dispatch) => {
     // only map needed dispatches here
     logout: () => dispatch(logout()),
     uploadpost: (Data) => dispatch(uploadpost(Data)),
+    displaylikes: (data) => dispatch(displaylikes(data)),
   };
 };
 

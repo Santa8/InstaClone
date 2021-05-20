@@ -109,6 +109,9 @@ const EditPic = (props) => {
         id: props.postdata.userid,
         url: imageUrl,
       },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
+      },
     })
       .then((res) => {
         const message = res.data.message;

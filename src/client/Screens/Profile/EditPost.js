@@ -38,6 +38,7 @@ function EditPost(props) {
     if (didMountRef.current) {
       // if login success, go to home screen
       if (props.isModified) {
+        Alert.alert('Post has been updated!')
         props.navigation.navigate("Profile");
       }
     } else {

@@ -3,7 +3,6 @@ import AsyncStorage from "@react-native-community/async-storage";
 // Setup config/headers and token
 export const tokenConfig = () => {
   // Get token from localstorage
-  //const token = getState().auth.token;
   const token = AsyncStorage.getItem("token");
 
   // Headers
@@ -23,9 +22,4 @@ export const tokenConfig = () => {
 
 export const isLogedIn = () => {
   return true;
-  //const token = localStorage.getItem("token");
-  /*console.log(token);
-  if (token) {
-    return true;
-  } else return false;*/
 };

@@ -34,8 +34,6 @@ function LogIn(props) {
   // useEffect()to check if states have changed
   // 2nd argument is the list of states you want to watch for
   useEffect(() => {
-    console.log("loginScreen.js, props.isAuth: ", props.isAuth);
-    console.log("loginScreen.js, props.isLoading: ", props.isLoading);
     if (didMountRef.current) {
       // if login success, go to home screen
       if (props.isAuth) {
@@ -130,7 +128,6 @@ function LogIn(props) {
             {renderButton("SignUp", () =>
               props.navigation.navigate("Register")
             )}
-            {renderButton("Passage", () => props.navigation.navigate("Home"))}
           </View>
         </ScrollView>
       </LinearGradient>

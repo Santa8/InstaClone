@@ -12,7 +12,7 @@ const { verifyToken } = require("../middleware/verifyToken");
 //=================================================================
 // signup a new user
 
-router.post("/getIsLiking", async (req, res) => {
+router.post("/getIsLiking", verifyToken, async (req, res) => {
   const userid = req.body.userid;
   const postid = req.body.Id;
   let value = false;
@@ -22,17 +22,15 @@ router.post("/getIsLiking", async (req, res) => {
     "username"
   );
 
-  console.log(isLiking);
-
   if (!isLiking.length) {
     value = false;
   } else {
     value = true;
   }
-  res.send({ value: value });
+  res.status(200).send({ value: value });
 });
 
-router.post("/like", async function (req, res) {
+router.post("/like", verifyToken, async function (req, res) {
   var postid = req.body.Id;
   var userid = req.body.userid;
   isLiking = await User.find(
@@ -52,14 +50,14 @@ router.post("/like", async function (req, res) {
       }
     );
   } else {
-    res.send({
+    res.status(200).send({
       value: false,
       message: "already liked",
     });
   }
 });
 
-router.post("/unlike", async function (req, res) {
+router.post("/unlike", verifyToken, async function (req, res) {
   var postid = req.body.Id;
   var userid = req.body.userid;
 
@@ -69,7 +67,7 @@ router.post("/unlike", async function (req, res) {
     { safe: true, multi: true },
 
     function (err, doc) {
-      res.send({
+      res.status(200).send({
         value: true,
         message: "POST UNLIKED",
       });
@@ -77,7 +75,7 @@ router.post("/unlike", async function (req, res) {
   );
 });
 
-router.post("/unfollow", async (req, res) => {
+router.post("/unfollow", verifyToken, async (req, res) => {
   const id = req.body.Id;
   const followId = req.body.followId;
 
@@ -93,7 +91,7 @@ router.post("/unfollow", async (req, res) => {
       { $pull: { followers: { Id: id } } },
       { safe: true, multi: true },
       function (err, obj) {
-        res.send({
+        res.status(200).send({
           value: true,
           message: "Follower deleted",
         });
@@ -102,7 +100,7 @@ router.post("/unfollow", async (req, res) => {
   }
 });
 
-router.post("/getIsFollowing", async (req, res) => {
+router.post("/getIsFollowing", verifyToken, async (req, res) => {
   const id = req.body.userId;
   const followId = req.body.followId;
   let value = false;
@@ -117,10 +115,10 @@ router.post("/getIsFollowing", async (req, res) => {
   } else {
     value = true;
   }
-  res.send({ value: value });
+  res.status(200).send({ value: value });
 });
 
-router.post("/follow", async (req, res) => {
+router.post("/follow", verifyToken, async (req, res) => {
   const id = req.body.Id;
   const followId = req.body.followId;
   if (id) {
@@ -150,10 +148,10 @@ router.post("/follow", async (req, res) => {
         user
           .save()
           .then((doc) => {
-            res.send({ value: true, message: "succes" });
+            res.status(200).send({ value: true, message: "succes" });
           })
           .catch((error) => {
-            res.json(error);
+            res.status(400).send(error);
           });
       });
 
@@ -169,12 +167,12 @@ router.post("/follow", async (req, res) => {
         user.save();
       });
     } else {
-      res.send({ value: false, message: "already following" });
+      res.status(200).send({ value: false, message: "already following" });
     }
   }
 });
 
-router.post("/updatefollowing", async (req, res) => {
+router.post("/updatefollowing", verifyToken, async (req, res) => {
   var following = req.body.following;
   var userid = req.body.userid;
 
@@ -201,13 +199,13 @@ router.post("/updatefollowing", async (req, res) => {
     );
   }
   const Following = await User.findById(userid, "following");
-  res.status(200).json({
+  res.status(200).send({
     value: true,
     results: Following,
   });
 });
 
-router.post("/updatefollowers", async (req, res) => {
+router.post("/updatefollowers", verifyToken, async (req, res) => {
   var followers = req.body.followers;
   var userid = req.body.userid;
 
@@ -234,13 +232,13 @@ router.post("/updatefollowers", async (req, res) => {
     );
   }
   const Followers = await User.findById(userid, "followers");
-  res.status(200).json({
+  res.status(200).send({
     value: true,
     results: Followers,
   });
 });
 
-router.post("/listPosts", async (req, res) => {
+router.post("/listPosts", verifyToken, async (req, res) => {
   const id = req.body.Id;
 
   const following = await User.findById(id, "following");
@@ -270,7 +268,7 @@ router.post("/listPosts", async (req, res) => {
   return res.send({ totalPosts });
 });
 
-router.post("/listUsers", async (req, res) => {
+router.post("/listUsers", verifyToken, async (req, res) => {
   const list = await User.find(
     { _id: { $ne: req.body.Id } },
     { username: 1, name: 1, url: 1 }
@@ -300,22 +298,19 @@ router.post("/listUsers", async (req, res) => {
     });
   }
 
-  return res.send({ lista });
+  return res.status(200).send({ lista });
 });
 
-router.post("/getlikesname", async (req, res) => {
+router.post("/getlikesname", verifyToken, async (req, res) => {
   const postid = req.body.postid;
   const usr = await User.find({ "posts.Id": postid });
-  console.log("aaaaaa");
-  console.log(usr[0]);
+
   for (let i = 0; i < usr[0].posts.length; i++) {
     if (usr[0].posts[i].Id === postid) {
       listId = usr[0].posts[i].likes;
     }
   }
 
-  console.log("aminnnne");
-  console.log(listId);
   var likesDetails = [];
   for (let i = 0; i < listId.length; i++) {
     const userDetails = await User.find(
@@ -330,10 +325,8 @@ router.post("/getlikesname", async (req, res) => {
       url: userDetails[0].url,
     });
   }
-  console.log("ser");
-  console.log(likesDetails);
 
-  res.send({ value: true, likes: likesDetails });
+  res.status(200).send({ value: true, likes: likesDetails });
 });
 
 router.post("/register", async (req, res) => {
@@ -341,13 +334,17 @@ router.post("/register", async (req, res) => {
 
   const { error } = registerValidation(req.body);
   if (error) {
-    return res.send({ value: false, message: error.details[0].message });
+    return res
+      .status(400)
+      .send({ value: false, message: error.details[0].message });
   }
 
   // check if user already exist
   const emailExist = await User.findOne({ email: req.body.email });
   if (emailExist) {
-    return res.send({ value: false, message: "Email already exist" });
+    return res
+      .status(400)
+      .send({ value: false, message: "Email already exist" });
   }
 
   //Hash the password
@@ -365,11 +362,12 @@ router.post("/register", async (req, res) => {
     user
       .save()
       .then((doc) => {
-        return res.send({ value: true, message: "User registred" });
+        return res.status(200).send({ value: true, message: "User registred" });
       })
       .catch((err) => {
-        console.log(err);
-        return res.send({ value: false, message: "Error saving user" });
+        return res
+          .status(400)
+          .send({ value: false, message: "Error saving user" });
       });
   }
 });
@@ -391,14 +389,16 @@ router.post(
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
       //return throw new Error('Something broke! 😱')
-      return res.send({ value: false, message: "Email not found" });
+      return res.status(400).send({ value: false, message: "Email not found" });
     }
 
     // check password
     const validPass = await bcrypt.compare(req.body.password, user.password);
 
     if (!validPass) {
-      return res.send({ value: false, message: "Password is not correct" });
+      return res
+        .status(400)
+        .send({ value: false, message: "Password is not correct" });
       //return next(new Error('password is not correct'))
     }
 
@@ -408,7 +408,7 @@ router.post(
       });
       //res.header('auth-token', authToken).send(authToken);
       if (!authToken) throw Error("Couldnt sign the token");
-      return res.send({
+      return res.status(200).send({
         value: true,
         message: "User Found",
         token: authToken,
@@ -418,7 +418,7 @@ router.post(
   })
 );
 
-router.post("/getUserDetails", function (req, res) {
+router.post("/getUserDetails", verifyToken, function (req, res) {
   var id = req.body.userid;
   var getUserDetails = User.find(
     { _id: id },
@@ -442,11 +442,11 @@ router.post("/getUserDetails", function (req, res) {
       });
     })
     .catch((err) => {
-      res.json(err);
+      res.status(400).send(err);
     });
 });
 
-router.post("/EditProfile", function (req, res) {
+router.post("/EditProfile", verifyToken, function (req, res) {
   var id = req.body.userid;
   var name = req.body.name;
   var username = req.body.username;
@@ -468,14 +468,14 @@ router.post("/EditProfile", function (req, res) {
         });
       })
       .catch((error) => {
-        res.json(error);
+        res.status(400).send(error);
       });
   });
 });
 
 //upload profile photo
 
-router.post("/uploadprofilephoto", function (req, res) {
+router.post("/uploadprofilephoto", verifyToken, function (req, res) {
   var id = req.body.id;
   var url = req.body.url;
 
@@ -485,20 +485,20 @@ router.post("/uploadprofilephoto", function (req, res) {
     user
       .save()
       .then((doc) => {
-        res.status(201).json({
+        res.status(200).json({
           message: "POST UPLOADED",
           results: doc,
         });
       })
       .catch((error) => {
-        res.json(error);
+        res.status(400).send(error);
       });
   });
 });
 
 //upload post
 
-router.post("/uploadpost", function (req, res) {
+router.post("/uploadpost", verifyToken, function (req, res) {
   var id = req.body.id;
   var urlpost = req.body.urlpost;
   var description = req.body.description;
@@ -516,18 +516,18 @@ router.post("/uploadpost", function (req, res) {
     user
       .save()
       .then((doc) => {
-        res.send({
+        res.status(200).send({
           value: true,
           message: "POST UPLOADED",
         });
       })
       .catch((error) => {
-        res.json(error);
+        res.status(400).send(error);
       });
   });
 });
 
-router.post("/UpdatePost", function (req, res) {
+router.post("/UpdatePost", verifyToken, function (req, res) {
   var userid = req.body.userid;
   var postid = req.body.postid;
   var description = req.body.description;
@@ -537,7 +537,7 @@ router.post("/UpdatePost", function (req, res) {
     { $set: { "posts.$.description": description } },
 
     function (err, doc) {
-      res.send({
+      res.status(200).send({
         value: true,
         message: "POST UPDATED",
       });
@@ -555,32 +555,12 @@ router.post("/DeletePost", verifyToken, function (req, res) {
     { safe: true, multi: true },
     function (err, obj) {
       //do something smart
-      res.send({
+      res.status(200).send({
         value: true,
         message: "POST DELETED",
       });
     }
   );
-
-  /*User.updateOne({ },{'$pull':{ 'posts':{'Id': postid }}},{multi:true}, function(err,doc) { 
-      res.send({
-
-        value:true,
-        message:'POST DELETED'
-        
-    })
-  })*/
-  /*User.deleteOne({'posts.Id':postid }, 
-      {'$pullAll': { 'posts.Id':postid  }}
-      
-      , function(err,doc) { 
-        res.send({
-
-          value:true,
-          message:'POST DELETED'
-          
-      }); 
-    }) */
 });
 
 module.exports = router;

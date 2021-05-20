@@ -1,5 +1,5 @@
 import { Component } from "react";
-import AsyncStorage from "@react-native-community/async-storage";
+
 import React, { useState, useRef, useEffect } from "react";
 import {
   View,
@@ -18,7 +18,7 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import { LinearGradient } from "expo-linear-gradient";
-
+import AsyncStorage from "@react-native-community/async-storage";
 import { COLORS, SIZES, FONTS } from "../../constants";
 
 import axios from "axios";
@@ -65,13 +65,16 @@ class Home extends Component {
     return value;
   };
 
-  listUsers = () => {
+  listUsers = async () => {
     axios({
       method: "post",
       url: "/listUsers",
       baseURL: baseURL,
       data: {
         Id: this.Id,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
@@ -95,7 +98,7 @@ class Home extends Component {
     this.listPosts();
   }
 
-  listPosts = () => {
+  listPosts = async () => {
     axios({
       method: "post",
       url: "/listPosts",
@@ -103,6 +106,9 @@ class Home extends Component {
       baseURL: baseURL,
       data: {
         Id: this.Id,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
@@ -150,7 +156,7 @@ class Home extends Component {
 
   renderUsers = (users) => {
     return users.map((user, index) => {
-      let followRequest = () => {
+      let followRequest = async () => {
         axios({
           method: "post",
           url: "/follow",
@@ -159,6 +165,9 @@ class Home extends Component {
             Id: this.Id,
 
             followId: user.Id,
+          },
+          headers: {
+            "auth-token": await AsyncStorage.getItem("token"),
           },
         })
           .then((res) => {
@@ -172,7 +181,7 @@ class Home extends Component {
           });
       };
 
-      let unfollowRequest = () => {
+      let unfollowRequest = async () => {
         axios({
           method: "post",
           url: "/unfollow",
@@ -180,6 +189,9 @@ class Home extends Component {
           data: {
             Id: this.Id,
             followId: user.Id,
+          },
+          headers: {
+            "auth-token": await AsyncStorage.getItem("token"),
           },
         })
           .then((res) => {
@@ -266,7 +278,6 @@ class Home extends Component {
       var userpicurl = post.picurl;
       var date = post.date;
       var caption = post.caption;
-      console.log(post);
       return (
         <PostComponent
           imageSource={url}

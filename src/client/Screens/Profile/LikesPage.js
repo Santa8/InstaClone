@@ -36,8 +36,6 @@ function LikesPage(props) {
   // useEffect()to check if states have changed
   // 2nd argument is the list of states you want to watch for
   useEffect(() => {}, []);
-  console.log("yahya");
-  console.log(props.likesdata);
 
   const ItemSeparatorView = () => {
     return (

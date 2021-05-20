@@ -33,7 +33,7 @@ import profileStyles from "./style/ProfileStyle";
 export const ImageProfil = require("./images/photo_cv.jpg");
 const styles = StyleSheet.create({ ...profileStyles });
 import { Item, Input, Right } from "native-base";
-import Posts from "./Posts";
+
 import { connect } from "react-redux";
 import axios from "axios";
 import { logout } from "../../actions/loginActions";
@@ -77,13 +77,16 @@ class Profile extends Component {
     ),
   };
 
-  fetchUserDetails = (user_id) => {
+  fetchUserDetails = async (user_id) => {
     axios({
       method: "post",
       url: "/getUserDetails",
       baseURL: baseURL,
       data: {
         userid: user_id,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
@@ -119,7 +122,7 @@ class Profile extends Component {
       })
       .catch((err) => console.log(err));
   };
-  UpdateFollowing = (following) => {
+  UpdateFollowing = async (following) => {
     axios({
       method: "post",
       url: "/updatefollowing",
@@ -127,6 +130,9 @@ class Profile extends Component {
       data: {
         userid: this.state.id,
         following: following,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
@@ -138,7 +144,7 @@ class Profile extends Component {
       })
       .catch((err) => console.log(err));
   };
-  UpdateFollowers = (followers) => {
+  UpdateFollowers = async (followers) => {
     axios({
       method: "post",
       url: "/updatefollowers",
@@ -146,6 +152,9 @@ class Profile extends Component {
       data: {
         userid: this.state.id,
         followers: followers,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
@@ -319,7 +328,6 @@ class Profile extends Component {
 
   renderPosts = (posts, urlpic) => {
     return posts.map((post, index) => {
-      console.log(post.likes);
       var name = this.state.name;
       var url = post.urlpost;
       var caption = post.description;
@@ -376,26 +384,6 @@ class Profile extends Component {
       default:
         return <View />;
     }
-  };
-
-  following = () => {
-    return this.state.following.map((user, index) => {
-      return (
-        <View>
-          <Text> {user.name.username} </Text>
-        </View>
-      );
-    });
-  };
-
-  followers = () => {
-    return this.state.followers.map((user, index) => {
-      return (
-        <View>
-          <Text> {user.name.username} </Text>
-        </View>
-      );
-    });
   };
 
   EditPic = () => {

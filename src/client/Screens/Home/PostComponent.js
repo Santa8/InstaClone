@@ -14,6 +14,7 @@ import {
   Icon,
 } from "native-base";
 import axios from "axios";
+import AsyncStorage from "@react-native-community/async-storage";
 
 class PostComponent extends Component {
   constructor(props) {
@@ -29,7 +30,7 @@ class PostComponent extends Component {
     };
   }
 
-  like = () => {
+  like = async () => {
     axios({
       method: "post",
       url: "/like",
@@ -38,12 +39,14 @@ class PostComponent extends Component {
         Id: this.props.Id,
         userid: this.props.userid,
       },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
+      },
     })
       .then((res) => {
         const message = res.data.message;
 
         if (res.data.value) {
-          console.log(message);
           this.getIsLiking();
           var old = this.state.likes;
           var neww = old + 1;
@@ -53,7 +56,7 @@ class PostComponent extends Component {
       .catch((err) => console.log(err));
   };
 
-  unlike = () => {
+  unlike = async () => {
     axios({
       method: "post",
       url: "/unlike",
@@ -62,12 +65,14 @@ class PostComponent extends Component {
         Id: this.props.Id,
         userid: this.props.userid,
       },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
+      },
     })
       .then((res) => {
         const message = res.data.message;
 
         if (res.data.value) {
-          console.log(message);
           this.getIsLiking();
           var old = this.state.likes;
           var neww = old - 1;
@@ -85,7 +90,7 @@ class PostComponent extends Component {
     navigation.navigate("LikesPage");
   }
 
-  getIsLiking = () => {
+  getIsLiking = async () => {
     axios({
       method: "post",
       url: "/getIsLiking",
@@ -93,6 +98,9 @@ class PostComponent extends Component {
       data: {
         Id: this.props.Id,
         userid: this.props.userid,
+      },
+      headers: {
+        "auth-token": await AsyncStorage.getItem("token"),
       },
     })
       .then((res) => {
