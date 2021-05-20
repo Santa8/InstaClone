@@ -22,17 +22,11 @@ import { COLORS, SIZES, FONTS } from "../../constants";
 import insta from "../../assets/image/insta.png";
 
 function LogIn(props) {
-  /*if (isLogedIn()) {
-    props.navigation.navigate("Home");
-  }*/
   const [email, putEmail] = useState("");
   const [password, putPassword] = useState("");
 
-  // useRef hook to check whether the component has just mounted or updated
-  // Link: https://dev.to/savagepixie/how-to-mimic-componentdidupdate-with-react-hooks-3j8c
   const didMountRef = useRef(false);
-  // useEffect()to check if states have changed
-  // 2nd argument is the list of states you want to watch for
+
   useEffect(() => {
     if (didMountRef.current) {
       // if login success, go to home screen
@@ -46,7 +40,6 @@ function LogIn(props) {
     }
   }, [props.isAuth, props.isLoading]);
 
-  // this function make sure props.login() only be called once
   const loginHandler = () => {
     const loginData = {
       email: email,

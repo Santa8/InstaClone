@@ -175,11 +175,9 @@ class ProfilePub extends Component {
 
   componentDidUpdate() {
     if (this.props.isUploaded) {
-      // Alert.alert("POST UPLOADED");
       this.props.navigation.navigate("Profile");
     }
     if (!this.props.isUploaded && !this.props.isLoading) {
-      //Alert.alert(this.props.errMsg);
     }
   }
 
@@ -325,7 +323,7 @@ class ProfilePub extends Component {
 
     switch (key) {
       case "1":
-        return this.renderMansonry2Col();
+        return this.renderPictures();
       case "2":
         return (
           <View>
@@ -352,26 +350,6 @@ class ProfilePub extends Component {
       default:
         return <View />;
     }
-  };
-
-  following = () => {
-    return this.state.following.map((user, index) => {
-      return (
-        <View>
-          <Text> {user.name.username} </Text>
-        </View>
-      );
-    });
-  };
-
-  followers = () => {
-    return this.state.followers.map((user, index) => {
-      return (
-        <View>
-          <Text> {user.name.username} </Text>
-        </View>
-      );
-    });
   };
 
   followRequest = async () => {
@@ -470,7 +448,7 @@ class ProfilePub extends Component {
       </View>
     );
   };
-  renderMansonry2Col = () => {
+  renderPictures = () => {
     if (this.state.posts.length < 1) {
       return (
         <View>

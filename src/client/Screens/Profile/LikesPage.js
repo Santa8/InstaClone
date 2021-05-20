@@ -25,16 +25,8 @@ const styles = StyleSheet.create({ ...LikesStyle });
 function LikesPage(props) {
   const [Description, putDescription] = useState("");
 
-  /*static navigationOptions = {
-
-    tabBarIcon: ({ tintColor }) => (
-      <Icon name="ios-pencil" style={{ color: tintColor }} />
-    )
-  }*/
-
   const didMountRef = useRef(false);
-  // useEffect()to check if states have changed
-  // 2nd argument is the list of states you want to watch for
+
   useEffect(() => {}, []);
 
   const ItemSeparatorView = () => {
@@ -93,10 +85,7 @@ const mapStatetoProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    // only map needed dispatches here
-    //modifypost: (data) => dispatch(modifypost(data)),
-  };
+  return {};
 };
 
 export default connect(mapStatetoProps, mapDispatchToProps)(LikesPage);

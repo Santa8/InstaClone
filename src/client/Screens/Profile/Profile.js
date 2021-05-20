@@ -357,7 +357,7 @@ class Profile extends Component {
 
     switch (key) {
       case "1":
-        return this.renderMansonry2Col();
+        return this.renderPictures();
       case "2":
         return (
           <View>
@@ -441,7 +441,7 @@ class Profile extends Component {
     );
   };
 
-  renderMansonry2Col = () => {
+  renderPictures = () => {
     if (this.state.posts.length < 1) {
       return (
         <View>
