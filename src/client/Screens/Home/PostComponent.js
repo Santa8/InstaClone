@@ -23,36 +23,35 @@ class PostComponent extends Component {
       userpicurl:
         "https://i.pinimg.com/280x280_RS/b8/49/79/b849797ed8b78c6d2d8ab6db464d61fe.jpg",
 
-      isLiking : false,
+      isLiking: false,
 
-      likes : this.props.likes
+      likes: this.props.likes,
     };
   }
 
-  like = ()=> {
+  like = () => {
     axios({
       method: "post",
       url: "/like",
       baseURL: baseURL,
       data: {
         Id: this.props.Id,
-        userid : this.props.userid
-
+        userid: this.props.userid,
       },
     })
-    .then((res) => {
-      const message = res.data.message;
+      .then((res) => {
+        const message = res.data.message;
 
-      if (res.data.value) {
-        console.log(message)
-        this.getIsLiking()
-        var old = this.state.likes;
-        var neww = old +1 ;
-        this.setState({likes : neww })
-      }
-    })
-    .catch((err) => console.log(err));
-  }
+        if (res.data.value) {
+          console.log(message);
+          this.getIsLiking();
+          var old = this.state.likes;
+          var neww = old + 1;
+          this.setState({ likes: neww });
+        }
+      })
+      .catch((err) => console.log(err));
+  };
 
   unlike = () => {
     axios({
@@ -61,33 +60,31 @@ class PostComponent extends Component {
       baseURL: baseURL,
       data: {
         Id: this.props.Id,
-        userid : this.props.userid
-
+        userid: this.props.userid,
       },
     })
-    .then((res) => {
-      const message = res.data.message;
+      .then((res) => {
+        const message = res.data.message;
 
-      if (res.data.value) {
-        console.log(message)
-        this.getIsLiking()
-        var old = this.state.likes;
-        var neww = old -1 ;
-       this.setState({likes : neww })
-
-      }
-    })
-    .catch((err) => console.log(err));
-  }
-  DisplayLikes( postid,displaylikes, navigation) {
+        if (res.data.value) {
+          console.log(message);
+          this.getIsLiking();
+          var old = this.state.likes;
+          var neww = old - 1;
+          this.setState({ likes: neww });
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+  DisplayLikes(postid, displaylikes, navigation) {
     const data = {
-       postid: postid,
+      postid: postid,
     };
-   
+
     displaylikes(data);
     navigation.navigate("LikesPage");
   }
-  
+
   getIsLiking = () => {
     axios({
       method: "post",
@@ -95,19 +92,16 @@ class PostComponent extends Component {
       baseURL: baseURL,
       data: {
         Id: this.props.Id,
-        userid : this.props.userid
-
+        userid: this.props.userid,
       },
     })
-    .then((res) => {
-      const message = res.data.message;
+      .then((res) => {
+        const message = res.data.message;
 
-      this.setState({isLiking : res.data.value })
-    })
-    .catch((err) => console.log(err));
-
-
-  }
+        this.setState({ isLiking: res.data.value });
+      })
+      .catch((err) => console.log(err));
+  };
 
   check = () => {
     if (this.props.userpicurl) {
@@ -117,11 +111,13 @@ class PostComponent extends Component {
   componentDidMount() {
     this.check();
     this.getIsLiking();
-    this.setState({likes : this.props.likes})
+    this.setState({ likes: this.props.likes });
   }
   render() {
     let onpress = this.state.isLiking ? this.unlike : this.like;
-    let typebutton = this.state.isLiking ? "ios-heart-circle-sharp" : "ios-heart-outline";
+    let typebutton = this.state.isLiking ? "heart" : "ios-heart-outline";
+    let color = this.state.isLiking ? "red" : "black";
+
     return (
       <Card>
         <CardItem>
@@ -148,18 +144,7 @@ class PostComponent extends Component {
               </Text>
             </Body>
           </Left>
-
         </CardItem>
-        <Button
-        onPress={() =>
-                this.DisplayLikes(                 
-                  this.props.Id,
-                  this.props.displaylikes,
-                  this.props.navigation                
-                )
-              }>
-                <Text>LIKES</Text>
-        </Button>
 
         <CardItem cardBody>
           <Image
@@ -169,23 +154,28 @@ class PostComponent extends Component {
         </CardItem>
         <CardItem style={{ height: 45 }}>
           <Left>
-            
-          <Icon
-               onPress={ onpress } 
-              name={typebutton}  style={{ color: "black" }} />
-            
-            <Button transparent>
-              <Icon name="ios-chatbubbles-outline" style={{ color: "black" }} />
-            </Button>
-            <Button transparent>
-              <Icon name="ios-send-outline" style={{ color: "black" }} />
-            </Button>
+            <Icon
+              onPress={onpress}
+              name={typebutton}
+              style={{ color: color }}
+            />
+
+            <Text> {this.state.likes} </Text>
+
+            <Icon
+              name="list"
+              style={{ color: "black", marginLeft: 10 }}
+              onPress={() =>
+                this.DisplayLikes(
+                  this.props.Id,
+                  this.props.displaylikes,
+                  this.props.navigation
+                )
+              }
+            />
           </Left>
         </CardItem>
 
-        <CardItem style={{ height: 20 }}>
-          <Text>{this.state.likes} </Text>
-        </CardItem>
         <CardItem>
           <Body>
             <Text>

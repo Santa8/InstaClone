@@ -219,7 +219,7 @@ class Profile extends Component {
         <TouchableOpacity
           style={{
             height: 30,
-            width: 80,
+            width: 90,
             backgroundColor: color,
             borderRadius: SIZES.radius / 0.2,
             alignItems: "center",
@@ -299,13 +299,10 @@ class Profile extends Component {
                   justifyContent: "center",
                 }}
                 onPress={() => {
-                  if (item.Id === Id) {
-                    props.navigation.navigate("Profile");
-                  } else {
-                    console.log("toudaaaa");
+                  if (item.Id) {
                     AsyncStorage.setItem("publicProfileId", item.Id);
-
-                    props.navigation.navigate("ProfilePub");
+                    this.setState({ ProfilePubId: item.name._id });
+                    this.props.navigation.navigate("ProfilePub");
                   }
                 }}
               >
@@ -333,7 +330,6 @@ class Profile extends Component {
           key={id}
           imageSource={url}
           likes={post.likes.length}
-          likeslist={post.likes}
           username={name}
           userpicurl={urlpic}
           caption={caption}
@@ -430,7 +426,7 @@ class Profile extends Component {
               this.props.navigation.navigate("EditProfile")
             )}
 
-            {this.renderButton("Edit pdp", "#4ba3c3", () => this.EditPic())}
+            {this.renderButton("Edit picture", "#4ba3c3", () => this.EditPic())}
           </View>
           <View style={{ marginBottom: 5 }}>
             <View>
@@ -477,23 +473,23 @@ class Profile extends Component {
 
   render() {
     return (
-    //  <LinearGradient colors={[COLORS.primary, COLORS.primary]}>
-        <ScrollView style={styles.scroll}>
-          <View style={[styles.container, this.props.containerStyle]}>
-            <View style={styles.cardContainer}>
-              {this.renderContactHeader()}
+      //  <LinearGradient colors={[COLORS.primary, COLORS.primary]}>
+      <ScrollView style={styles.scroll}>
+        <View style={[styles.container, this.props.containerStyle]}>
+          <View style={styles.cardContainer}>
+            {this.renderContactHeader()}
 
-              <TabView
-                style={[styles.tabContainer, this.props.tabContainerStyle]}
-                navigationState={this.state.tabs}
-                renderScene={this.renderScene}
-                renderTabBar={this.renderTabBar}
-                onIndexChange={this.handleIndexChange}
-              />
-            </View>
+            <TabView
+              style={[styles.tabContainer, this.props.tabContainerStyle]}
+              navigationState={this.state.tabs}
+              renderScene={this.renderScene}
+              renderTabBar={this.renderTabBar}
+              onIndexChange={this.handleIndexChange}
+            />
           </View>
-        </ScrollView>
-     // </LinearGradient>
+        </View>
+      </ScrollView>
+      // </LinearGradient>
     );
   }
 }

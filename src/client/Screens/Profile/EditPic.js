@@ -1,7 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
-import { View, Text, Platform, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  Text,
+  Platform,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
+import { COLORS, SIZES, FONTS } from "../../constants";
+
 import { connect } from "react-redux";
 import ActionButton from "react-native-action-button";
 import AsyncStorage from "@react-native-community/async-storage";
@@ -107,8 +116,8 @@ const EditPic = (props) => {
           //dispatch(uploadSuccess(Data));
           Alert.alert("Image uploaded!");
         } else {
-         // dispatch(uploadFailure(message));
-         Alert.alert("Image is not uploaded!");
+          // dispatch(uploadFailure(message));
+          Alert.alert("Image is not uploaded!");
         }
       })
       .catch((err) => {
@@ -157,9 +166,20 @@ const EditPic = (props) => {
             <Text>Completed! </Text>
           </StatusWrapper>
         ) : (
-          <SubmitBtn onPress={submitPost}>
-            <SubmitBtnText>Save</SubmitBtnText>
-          </SubmitBtn>
+          <TouchableOpacity
+            style={{
+              height: 50,
+              width: 120,
+              backgroundColor: "#48bfe3",
+              borderRadius: SIZES.radius / 0.2,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 25,
+            }}
+            onPress={submitPost}
+          >
+            <Text style={{ color: COLORS.white, ...FONTS.h3 }}>Save</Text>
+          </TouchableOpacity>
         )}
       </InputWrapper>
       <ActionButton buttonColor="#f15bb5">

@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
+import { COLORS, SIZES, FONTS } from "../../constants";
 
 import {
+  TouchableOpacity,
   View,
   Text,
   Image,
@@ -88,20 +90,50 @@ function EditPost(props) {
 
         <View style={styles.container}>
           <View style={styles.item1}>
-            <Text>Description</Text>
+            <Text style={{ fontSize: 20, fontWeight: "bold" }}>Caption</Text>
           </View>
           <View regular style={styles.item2}>
             <TextInput
-              style={styles.TextBioInput}
-              onChangeText={(text) => putDescription(text)}
+              style={styles.TextInput}
               value={Description}
+              onChangeText={(text) => putDescription(text)}
               autoCapitalize="none"
             />
           </View>
         </View>
         <View style={{ marginTop: 120 }}>
-          <Button title="Modify Post" onPress={ModifyPost} />
-          <Button title="Delete Post" onPress={DeletePost} />
+          <View style={{ marginBottom: 10 }}>
+            <TouchableOpacity
+              style={{
+                height: 50,
+                width: 120,
+                backgroundColor: "#48bfe3",
+                borderRadius: SIZES.radius / 0.2,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onPress={ModifyPost}
+            >
+              <Text style={{ color: COLORS.white, ...FONTS.h3 }}>
+                Modify Post
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            style={{
+              height: 50,
+              width: 120,
+              backgroundColor: "#48bfe3",
+              borderRadius: SIZES.radius / 0.2,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            onPress={DeletePost}
+          >
+            <Text style={{ color: COLORS.white, ...FONTS.h3 }}>
+              Delete Post
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>

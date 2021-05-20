@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
+  Image,
   View,
   Button,
   TextInput,
@@ -13,6 +14,8 @@ import {
 import { connect } from "react-redux";
 import { LinearGradient } from "expo-linear-gradient";
 import { COLORS, SIZES, FONTS } from "../../constants";
+import insta from "../../assets/image/insta.png";
+
 const axios = require("axios");
 
 import AuthStyle from "./style/AuthStyle";
@@ -59,6 +62,28 @@ function Register(props) {
     props.signup(signupData);
   };
 
+  function renderLogo() {
+    return (
+      <View
+        style={{
+          marginTop: SIZES.padding * 2,
+          height: 100,
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: 50,
+        }}
+      >
+        <Image
+          source={insta}
+          resizeMode="contain"
+          style={{
+            width: "60%",
+          }}
+        />
+      </View>
+    );
+  }
+
   function renderButton(text, onPress) {
     return (
       <View style={{ margin: SIZES.padding * 0.5, alignItems: "center" }}>
@@ -86,19 +111,8 @@ function Register(props) {
         style={{ flex: 1, alignItems: "center" }}
       >
         <ScrollView>
-          <Text
-            style={{
-              marginTop: 20,
-              marginBottom: 35,
+          {renderLogo()}
 
-              marginTop: 35,
-              textAlign: "center",
-              color: "#bc6c25",
-              ...FONTS.h1,
-            }}
-          >
-            INPgram
-          </Text>
           <Text style={styles.titleText}>Sign Up </Text>
           <View style={{ marginBottom: 20 }}>
             <TextInput
@@ -127,9 +141,9 @@ function Register(props) {
               value={password}
             />
           </View>
+          {renderButton("SignUp", signupHandler)}
 
           {renderButton("LogIn", () => props.navigation.navigate("LogIn"))}
-          {renderButton("SignUp", signupHandler)}
         </ScrollView>
       </LinearGradient>
     </KeyboardAvoidingView>

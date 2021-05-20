@@ -14,7 +14,7 @@ import {
   ScrollView,
 } from "react-native";
 
-import EditStyle from "./EditStyle";
+import EditStyle from "./style/EditProfileStyle";
 import { connect } from "react-redux";
 const styles = StyleSheet.create({ ...EditStyle });
 import axios from "axios";

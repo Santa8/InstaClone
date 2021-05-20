@@ -304,47 +304,36 @@ router.post("/listUsers", async (req, res) => {
 });
 
 router.post("/getlikesname", async (req, res) => {
-  const postid= req.body.postid;
-  const usr = await User.find( {"posts.Id":postid });
-  console.log('aaaaaa')
-  console.log(usr[0])
+  const postid = req.body.postid;
+  const usr = await User.find({ "posts.Id": postid });
+  console.log("aaaaaa");
+  console.log(usr[0]);
   for (let i = 0; i < usr[0].posts.length; i++) {
-      if(usr[0].posts[i].Id===postid){
-        listId=usr[0].posts[i].likes;
-      }
-    
-
+    if (usr[0].posts[i].Id === postid) {
+      listId = usr[0].posts[i].likes;
+    }
   }
 
-  
-  console.log('aminnnne')
-  console.log(listId)
+  console.log("aminnnne");
+  console.log(listId);
   var likesDetails = [];
   for (let i = 0; i < listId.length; i++) {
     const userDetails = await User.find(
-      { _id: listId[i].userid},
+      { _id: listId[i].userid },
       { username: 1, name: 1, url: 1 }
     );
-    
+
     likesDetails.push({
       userid: listId[i].userid,
       name: userDetails[0].name,
-      username: userDetails[0].username,    
+      username: userDetails[0].username,
       url: userDetails[0].url,
     });
-
-
   }
-  console.log('ser')
-    console.log(likesDetails)
-  
-  
-  res.send({ value: true,  likes: likesDetails });
+  console.log("ser");
+  console.log(likesDetails);
 
-  
-
-  
-  
+  res.send({ value: true, likes: likesDetails });
 });
 
 router.post("/register", async (req, res) => {

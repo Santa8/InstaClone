@@ -257,19 +257,29 @@ class ProfilePub extends Component {
         </View>
         <View style={styles.itemUser2}>
           <View style={styles.userRow}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                if (item.Id) {
-                  AsyncStorage.setItem("publicProfileId", item.name._id);
-                  this.setState({ ProfilePubId: item.name._id });
-                  this.props.navigation.navigate("ProfilePub");
-                }
-              }}
-            >
-              <Text>{item.nameVrai}</Text>
-            </TouchableOpacity>
-            <Text>{item.usernameVrai}</Text>
+            <View style={{ margin: SIZES.padding * 0.5, alignItems: "center" }}>
+              <TouchableOpacity
+                style={{
+                  height: 35,
+                  width: 100,
+                  backgroundColor: "#023047",
+                  borderRadius: SIZES.radius / 0.2,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onPress={() => {
+                  if (item.Id) {
+                    AsyncStorage.setItem("publicProfileId", item.Id);
+                    this.setState({ ProfilePubId: item.name._id });
+                    this.props.navigation.navigate("ProfilePub");
+                  }
+                }}
+              >
+                <Text style={{ color: COLORS.white, ...FONTS.h3 }}>
+                  {item.usernameVrai}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </View>

@@ -90,6 +90,7 @@ class PostComponent extends Component {
         const message = res.data.message;
 
         this.setState({ isLiking: res.data.value });
+        console.log(res.data.value);
       })
       .catch((err) => console.log(err));
   };
@@ -105,11 +106,11 @@ class PostComponent extends Component {
     navigation.navigate("EditPost");
   }
 
-  DisplayLikes( postid,displaylikes, navigation) {
+  DisplayLikes(postid, displaylikes, navigation) {
     const data = {
-       postid: postid,
+      postid: postid,
     };
-   
+
     displaylikes(data);
     navigation.navigate("LikesPage");
   }
@@ -125,9 +126,8 @@ class PostComponent extends Component {
   }
   render() {
     let onpress = this.state.isLiking ? this.unlike : this.like;
-    let typebutton = this.state.isLiking
-      ? "ios-heart-circle-sharp"
-      : "ios-heart-outline";
+    let typebutton = this.state.isLiking ? "heart" : "ios-heart-outline";
+    let color = this.state.isLiking ? "red" : "black";
 
     return (
       <Card>
@@ -155,16 +155,7 @@ class PostComponent extends Component {
               </Text>
             </Body>
           </Left>
-          <Button
-        onPress={() =>
-                this.DisplayLikes(                 
-                  this.props.Id,
-                  this.props.displaylikes,
-                  this.props.navigation                
-                )
-              }>
-                <Text>LIKES</Text>
-        </Button>
+
           <Right>
             <Icon
               onPress={() =>
@@ -188,27 +179,30 @@ class PostComponent extends Component {
             style={{ height: 400, width: 400, flex: 1 }}
           />
         </CardItem>
+
         <CardItem style={{ height: 45 }}>
           <Left>
             <Icon
               onPress={onpress}
               name={typebutton}
-              style={{ color: "black" }}
+              style={{ color: color }}
             />
 
-            <Button transparent>
-              <Icon name="ios-chatbubbles-outline" style={{ color: "black" }} />
-            </Button>
-            <Button transparent>
-              <Icon name="ios-send-outline" style={{ color: "black" }} />
-            </Button>
+            <Text> {this.state.likes} </Text>
+
+            <Icon
+              name="list"
+              style={{ color: "black", marginLeft: 10 }}
+              onPress={() =>
+                this.DisplayLikes(
+                  this.props.Id,
+                  this.props.displaylikes,
+                  this.props.navigation
+                )
+              }
+            />
           </Left>
         </CardItem>
-
-        <CardItem style={{ height: 20 }}>
-          <Text>{this.state.likes} </Text>
-        </CardItem>
-        
         <CardItem>
           <Body>
             <Text>

@@ -7,11 +7,14 @@ import {
   TextInput,
   Text,
   Alert,
+  RefreshControl,
   StyleSheet,
   Header,
   Image,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
+  SafeAreaView,
 } from "react-native";
 import { connect } from "react-redux";
 import { LinearGradient } from "expo-linear-gradient";
@@ -33,15 +36,13 @@ import { isLogedIn } from "../../actions/AuthActions";
 
 import { baseURL } from "../../constants";
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    marginTop: 15,
+    marginTop: 17,
   },
 });
-
 
 class Home extends Component {
   list = [];
@@ -54,6 +55,7 @@ class Home extends Component {
       posts: [],
       Id: "",
       test: 0,
+      refreshing: true,
     };
   }
 
@@ -81,6 +83,18 @@ class Home extends Component {
       });
   };
 
+  _onRefresh = () => {
+    this.setState({ refreshing: true });
+    this.listPosts().then(() => {
+      this.setState({ refreshing: false });
+    });
+  };
+  onRefresh() {
+    //Clear old data of the list
+    //Call the Service to get the latest data
+    this.listPosts();
+  }
+
   listPosts = () => {
     axios({
       method: "post",
@@ -92,7 +106,11 @@ class Home extends Component {
       },
     })
       .then((res) => {
-        this.setState({ posts: res.data.totalPosts });
+        this.setState({
+          refreshing: false,
+
+          posts: res.data.totalPosts,
+        });
       })
 
       .catch((err) => {
@@ -278,6 +296,11 @@ class Home extends Component {
     );
   };
 
+  onRefresh = () => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  };
+
   render() {
     return (
       <View
@@ -322,6 +345,12 @@ class Home extends Component {
             >
               <View style={{ flex: 3 }}>
                 <ScrollView
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={this.state.refreshing}
+                      onRefresh={this.onRefresh}
+                    />
+                  }
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
                   contentContainerStyle={{
@@ -343,20 +372,13 @@ class Home extends Component {
   }
 }
 
-
-
 const mapStatetoProps = (state) => {
-  return {
-    
-  };
+  return {};
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-  
     displaylikes: (data) => dispatch(displaylikes(data)),
   };
 };
 
-export default connect(mapStatetoProps,mapDispatchToProps)(Home);
-
-
+export default connect(mapStatetoProps, mapDispatchToProps)(Home);

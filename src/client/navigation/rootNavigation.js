@@ -20,7 +20,7 @@ import LogIn from "../Screens/LogIn/LogIn";
 import Register from "../Screens/LogIn/Register";
 import Profile from "../Screens/Profile/Profile";
 import Home from "../Screens/Home/Home";
-import EditProfile from "../Screens/EditProfile/EditProfile";
+import EditProfile from "../Screens/Profile/EditProfile";
 import ProfilePub from "../Screens/Profile/profilePub";
 import AddPost from "../Screens/Profile/addPost";
 import EditPost from "../Screens/Profile/EditPost";

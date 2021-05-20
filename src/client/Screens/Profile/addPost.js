@@ -1,7 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
+import { COLORS, SIZES, FONTS } from "../../constants";
 
 import {
+  TouchableOpacity,
   View,
   Text,
   Platform,
@@ -161,9 +163,19 @@ const AddPost = () => {
             <Text>{transferred} Completed!</Text>
           </StatusWrapper>
         ) : (
-          <SubmitBtn onPress={submitPost}>
-            <SubmitBtnText>publish</SubmitBtnText>
-          </SubmitBtn>
+          <TouchableOpacity
+            style={{
+              height: 50,
+              width: 120,
+              backgroundColor: "#48bfe3",
+              borderRadius: SIZES.radius / 0.2,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            onPress={submitPost}
+          >
+            <Text style={{ color: COLORS.white, ...FONTS.h3 }}>publish</Text>
+          </TouchableOpacity>
         )}
       </InputWrapper>
       <ActionButton buttonColor="#f15bb5">
